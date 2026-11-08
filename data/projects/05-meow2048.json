@@ -1,0 +1,631 @@
+{
+  "schemaVersion": 2,
+  "id": "05-meow2048",
+  "doc": "기술문서.md",
+  "title": "Meow2048",
+  "tagline": "동물 이미지 타일로 만든 모바일 2D 캐주얼 퍼즐 2048",
+  "cover": "images/title.jpg",
+  "team": {
+    "type": "solo",
+    "size": "1인",
+    "role": "개인 프로젝트 — 턴 처리(이동 · 합치기) · 코루틴 연출 · Firebase 기록 저장 · 사운드"
+  },
+  "meta": [
+    {
+      "label": "장르",
+      "value": "모바일 2D 캐주얼 퍼즐 (2048)"
+    },
+    {
+      "label": "기간",
+      "value": "2025.09 ~ 2025.12 (「인벤토리 플레이어」와 같은 기간의 서브 프로젝트)"
+    },
+    {
+      "label": "인원",
+      "value": "개인 프로젝트"
+    },
+    {
+      "label": "환경",
+      "value": "Unity 2022.3.62f3 (2D) · Android (세로 540×960), C#, Firebase Realtime Database"
+    }
+  ],
+  "tags": [
+    "Unity 2022 LTS",
+    "C#",
+    "Android",
+    "Firebase RTDB",
+    "코루틴 연출",
+    "EaseOutElastic",
+    "턴 처리"
+  ],
+  "links": {
+    "github": "",
+    "video": "https://youtu.be/_ddYiKwi6YQ",
+    "extra": [
+      {
+        "label": "Windows 실행 파일",
+        "url": "https://drive.google.com/file/d/1OAPT0y5rDcTFP749rAGN4_4eXQJjMAhI/view?usp=drive_link"
+      },
+      {
+        "label": "Android 실행 파일",
+        "url": "https://drive.google.com/file/d/1dljWg_zfzrOo9sCURy_s_vqRm34iGEiZ/view?usp=drive_link"
+      }
+    ]
+  },
+  "intent": {
+    "text": "스와이프 한 번에 이동 · 합치기 · 연출 · 새 타일 생성이 한꺼번에 일어나도 2048 규칙이 깨지지 않도록, 보드 데이터를 먼저 끝까지 계산하고 화면은 그 결과를 따라가게 턴을 설계했습니다.",
+    "verbatim": false
+  },
+  "highlights": [
+    {
+      "title": "턴 처리: 이동 · 합치기",
+      "what": "스와이프 한 번에 여러 타일이 동시에 움직이고 합쳐져도, 한 턴에 한 타일은 한 번만 합쳐집니다.",
+      "how": "판정 단계에서 `board[,]`와 타일 좌표를 즉시 갱신하고 이동 · 합치기 목록만 모읍니다. 합칠 두 타일에 `hasMergedThisTurn`을 표시하고, 값은 연출이 끝난 뒤 `ProcessMerges`에서 바꿉니다.",
+      "why": "각 타일이 언제 도착하느냐에 판정이 기대면 규칙이 화면 속도에 따라 달라지기 때문에 \"데이터가 먼저 맞고, 화면은 따라간다\"를 원칙으로 두었습니다.",
+      "section": "3.4 핵심 기능 ③: 한 턴에 한 번만 합치기",
+      "image": null
+    },
+    {
+      "title": "연출: 병렬 이동 · 이징",
+      "what": "모든 타일이 동시에 미끄러지고, 생성 · 합치기 때는 탄성 스케일과 파티클 · 동물 소리가 나옵니다.",
+      "how": "타일마다 이동 코루틴을 띄우고 완료 카운트로 \"전부 도착\"을 기다린 뒤 합칩니다. `EaseOutElastic`을 직접 구현했습니다.",
+      "why": "필요한 연출이 이동과 스케일 두 종류뿐이라, 라이브러리를 익히기보다 직접 만들며 원리를 이해하는 쪽을 택했습니다.",
+      "section": "4.3 핵심 기능 ②: EaseOutElastic 직접 구현",
+      "image": null
+    },
+    {
+      "title": "기록 저장: Firebase 필드별 병합",
+      "what": "기기별 게스트 계정으로 최고 점수와 누적 플레이 시간을 클라우드에 저장합니다.",
+      "how": "`UpdatePlayerData`가 서버의 현재 값을 읽은 뒤, 이름은 값이 있을 때만 · 최고 점수는 더 클 때만 · 플레이 시간은 누적하는 규칙으로 합쳐 저장합니다.",
+      "why": "60초마다 플레이 시간만 저장하는데, 통째로 덮어쓰면 그때마다 최고 점수가 지워질 위험이 있기 때문입니다.",
+      "section": "5.2 핵심 기능 ①: 필드별 병합 저장",
+      "image": null
+    },
+    {
+      "title": "사운드 · 볼륨",
+      "what": "상태별 BGM 3종과, 계속 생성 · 파괴되는 타일의 효과음을 설정 슬라이더 하나로 조절합니다.",
+      "how": "타일의 `SFX_Control`이 `OnEnable`에서 현재 볼륨을 적용하고 `Setting_Manager`에 스스로 등록, `OnDisable`에서 해제합니다.",
+      "why": "타일은 미리 등록해 둘 수 없으므로, 생성되는 쪽이 스스로 등록하게 했습니다.",
+      "section": "4.4 핵심 기능 ③: 사운드·볼륨",
+      "image": {
+        "src": "images/settings.jpg",
+        "w": 540,
+        "h": 960,
+        "caption": "설정 팝업 — Sound Fx / Music 볼륨 슬라이더"
+      }
+    }
+  ],
+  "troubleshooting": [
+    {
+      "title": "연출 도중 다음 스와이프가 들어와 두 턴이 섞임",
+      "problem": "연출 도중 다음 스와이프가 들어와 두 턴이 섞임",
+      "cause": "이동 코루틴이 끝나기 전에 새 턴 코루틴이 시작됨",
+      "solution": "연출 중 입력 무시(`isMoving`) + 입력 쿨다운 0.15초",
+      "result": "한 턴이 끝나야 다음 턴 시작",
+      "lesson": "",
+      "section": "6.1 문제 해결 (Troubleshooting)"
+    },
+    {
+      "title": "합쳐져 사라진 타일을 코루틴이 계속 움직임",
+      "problem": "합쳐져 사라진 타일을 코루틴이 계속 움직임 (`MissingReferenceException` 위험)",
+      "cause": "소스 타일은 이동이 끝나자마자 `Destroy`되는데, 이동 · 스케일 코루틴은 따로 돌고 있음",
+      "solution": "코루틴이 매 프레임 `null` 확인 후 종료, 완료 콜백은 반드시 호출. 합치기 전에 소스 타일을 이동 목록에서 제거",
+      "result": "예외 없이 턴 종료",
+      "lesson": "코루틴은 자기가 다루는 오브젝트보다 오래 살 수 있다",
+      "section": "6.1 문제 해결 (Troubleshooting)"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "images/play_4x4.jpg",
+      "caption": "4×4 플레이 화면 (최고 점수 · 현재 점수 · 보드 크기 버튼)",
+      "w": 540,
+      "h": 960
+    },
+    {
+      "src": "images/gameover.jpg",
+      "caption": "게임 오버 화면",
+      "w": 540,
+      "h": 960
+    },
+    {
+      "src": "images/settings.jpg",
+      "caption": "설정 팝업 — Sound Fx / Music 볼륨 슬라이더",
+      "w": 540,
+      "h": 960
+    }
+  ],
+  "retro": {
+    "achieved": [
+      "스와이프 → 판정 → 병렬 이동 → 합치기 → 새 타일 순서가 매 턴 지켜짐 (4×4 · 8×8)",
+      "트윈 라이브러리 없이 병렬 이동 · 탄성 스케일 · 파티클 · 동물 소리 피드백",
+      "기기별 자동 로그인, 최고 점수와 누적 플레이 시간을 클라우드에 저장 (Android 동작)"
+    ],
+    "regrets": [
+      "최고 점수를 갱신하면 플레이 시간이 두 배가 됨",
+      "막힌 뒤 한 번 더 스와이프해야 게임 오버",
+      "이동 속도 설정이 실제로 쓰이지 않음",
+      "Game_System 1,402줄 한 클래스",
+      "쓰지 않는 이전 이동 코드 약 250줄"
+    ],
+    "plans": [
+      "바꿀 필드만 넘기기: new PlayerData { high_score = score }",
+      "새 타일 생성 직후에도 게임 오버 판정",
+      "픽셀 기준 속도로 변경하거나 moveSpeed 제거",
+      "입력 / 보드 판정(순수 C#) / 연출 / 저장 연동으로 분리",
+      "미사용 코드 삭제"
+    ],
+    "section": "6. 결과 · 회고"
+  },
+  "deck": {
+    "chapters": [
+      {
+        "key": "overview",
+        "title": "프로젝트 개요",
+        "sectionPath": [
+          "1. 프로젝트 개요"
+        ]
+      },
+      {
+        "key": "arch",
+        "title": "전체 구조",
+        "sectionPath": [
+          "2. 전체 구조"
+        ]
+      },
+      {
+        "key": "turn",
+        "title": "시스템 ① 턴 처리: 이동·합치기 ★",
+        "sectionPath": [
+          "3. 시스템 ① 턴 처리: 이동·합치기 ★"
+        ]
+      },
+      {
+        "key": "fx",
+        "title": "시스템 ② 연출: 병렬 이동·이징",
+        "sectionPath": [
+          "4. 시스템 ② 연출: 병렬 이동·이징"
+        ]
+      },
+      {
+        "key": "save",
+        "title": "시스템 ③ 기록 저장: Firebase",
+        "sectionPath": [
+          "5. 시스템 ③ 기록 저장: Firebase"
+        ]
+      },
+      {
+        "key": "result",
+        "title": "결과 · 회고",
+        "sectionPath": [
+          "6. 결과 · 회고"
+        ]
+      }
+    ],
+    "slides": [
+      {
+        "key": "what",
+        "chapter": "overview",
+        "layout": "overview",
+        "tab": "개요",
+        "title": {
+          "text": "1.1 무엇을 만들었나 (What)",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "숫자 대신 동물 이미지 타일이 합쳐지며 커지고, 4×4와 8×8 두 가지 보드를 고를 수 있습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "1. 프로젝트 개요",
+          "1.1 무엇을 만들었나 (What)"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/title.jpg",
+            "w": 540,
+            "h": 960,
+            "caption": {
+              "text": "Meow2048 타이틀 화면",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "why",
+        "chapter": "overview",
+        "layout": "full",
+        "tab": "개요",
+        "title": {
+          "text": "1.2 왜, 무엇에 집중했나 (Why)",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "이 턴 처리가 이 프로젝트의 핵심입니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "1. 프로젝트 개요",
+          "1.2 왜, 무엇에 집중했나 (Why)"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "집중한 것|내용"
+          }
+        ]
+      },
+      {
+        "key": "arch",
+        "chapter": "arch",
+        "layout": "visual",
+        "tab": "구조",
+        "title": {
+          "text": "2.1 아키텍처",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "씬은 하나이고, Game_System이 상태(Main / Game / Result)·입력·턴 처리·연출·점수를 모두 맡습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "2. 전체 구조",
+          "2.1 아키텍처"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "flowchart LR"
+          }
+        ]
+      },
+      {
+        "key": "play",
+        "chapter": "arch",
+        "layout": "visual",
+        "tab": "화면",
+        "title": {
+          "text": "2.2 상태 흐름",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "상태마다 BGM이 바뀝니다(타이틀 / 인게임 / 게임 오버 3종, Game_System.Update).",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "2. 전체 구조",
+          "2.2 상태 흐름"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/play_4x4.jpg",
+            "w": 540,
+            "h": 960,
+            "caption": {
+              "text": "4×4 플레이 화면 (최고 점수 · 현재 점수 · 보드 크기 버튼)",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "layer-choice",
+        "chapter": "arch",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "2.4 고민과 선택: 타일을 칸 안에 넣을 것인가, 따로 둘 것인가",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "2. 전체 구조",
+          "2.4 고민과 선택: 타일을 칸 안에 넣을 것인가, 따로 둘 것인가"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|[A] 타일을 칸의 자식으로|[B] 칸(프레임)과 타일 레이어 분리 ✓"
+          }
+        ]
+      },
+      {
+        "key": "turn-flow",
+        "chapter": "turn",
+        "layout": "visual",
+        "tab": "흐름",
+        "title": {
+          "text": "3.1 개요",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "판정(1)은 그 자리에서 끝까지 계산하고, 연출(2~3)은 그 결과를 따라갑니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "3. 시스템 ① 턴 처리: 이동·합치기 ★",
+          "3.1 개요"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "sequenceDiagram"
+          }
+        ]
+      },
+      {
+        "key": "move-step",
+        "chapter": "turn",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "3.3 핵심 기능 ②: 이동 판정 — 한 칸씩 밀기를 반복",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "MoveSlotToImmediate는 원래 칸 Empty → 좌표 변경 → 새 칸 Occupied 세 가지만 하고, 화면 위치는 건드리지 않습니다",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "3. 시스템 ① 턴 처리: 이동·합치기 ★",
+          "3.3 핵심 기능 ②: 이동 판정 — 한 칸씩 밀기를 반복"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 2,
+            "fp": "// Game_System.cs:949 ProcessSlotsLineStepWithAnimation (발췌)",
+            "lines": [
+              4,
+              22
+            ]
+          }
+        ]
+      },
+      {
+        "key": "merge-once",
+        "chapter": "turn",
+        "layout": "visual",
+        "tab": "구현",
+        "title": {
+          "text": "3.4 핵심 기능 ③: 한 턴에 한 번만 합치기",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "합치기는 예약만 하고 값은 바꾸지 않습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "3. 시스템 ① 턴 처리: 이동·합치기 ★",
+          "3.4 핵심 기능 ③: 한 턴에 한 번만 합치기"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "flowchart LR"
+          }
+        ]
+      },
+      {
+        "key": "data-choice",
+        "chapter": "turn",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "3.6 고민과 선택: 보드 데이터를 언제 바꿀 것인가",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 시스템 ① 턴 처리: 이동·합치기 ★",
+          "3.6 고민과 선택: 보드 데이터를 언제 바꿀 것인가"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "\"데이터가 먼저 맞고, 화면은 따라간다\"를 원칙으로 두었습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|[A] 애니메이션이 끝난 뒤 갱신|[B] 판정 때 즉시 갱신, 화면은 뒤따라감 ✓"
+          }
+        ]
+      },
+      {
+        "key": "parallel",
+        "chapter": "fx",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "4.2 핵심 기능 ①: 병렬 이동과 완료 대기",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "턴 코루틴(OnSwipeCoroutine)은 이 대기가 끝난 뒤에 합치기를 확정하고 새 타일을 만듭니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "4. 시스템 ② 연출: 병렬 이동·이징",
+          "4.2 핵심 기능 ①: 병렬 이동과 완료 대기"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "// Game_System.cs:518 AnimateSlots — 모든 타일을 동시에 출발시키고 전부 도착할"
+          }
+        ]
+      },
+      {
+        "key": "elastic",
+        "chapter": "fx",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "4.3 핵심 기능 ②: EaseOutElastic 직접 구현",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "새 타일은 0에서 \"톡\" 튀어나오고, 합쳐진 타일은 1.2배에서 출렁이며 원래 크기로 돌아옵니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "4. 시스템 ② 연출: 병렬 이동·이징",
+          "4.3 핵심 기능 ②: EaseOutElastic 직접 구현"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "// Game_System.cs:592 EaseOutElastic"
+          }
+        ]
+      },
+      {
+        "key": "tween-choice",
+        "chapter": "fx",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "4.5 고민과 선택: 트윈 라이브러리를 쓸 것인가",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "4. 시스템 ② 연출: 병렬 이동·이징",
+          "4.5 고민과 선택: 트윈 라이브러리를 쓸 것인가"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|[A] 트윈 라이브러리|[B] 코루틴 + 이징 직접 구현 ✓"
+          }
+        ]
+      },
+      {
+        "key": "merge-save",
+        "chapter": "save",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "5.2 핵심 기능 ①: 필드별 병합 저장",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "호출하는 쪽은 바꾸고 싶은 필드만 담아 넘깁니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "5. 시스템 ③ 기록 저장: Firebase",
+          "5.2 핵심 기능 ①: 필드별 병합 저장"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "// User_Data.cs:371 UpdatePlayerData (발췌)"
+          }
+        ]
+      },
+      {
+        "key": "save-choice",
+        "chapter": "save",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "5.4 고민과 선택: 기록을 어디에, 어떻게 저장할 것인가",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "5. 시스템 ③ 기록 저장: Firebase",
+          "5.4 고민과 선택: 기록을 어디에, 어떻게 저장할 것인가"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "게임 오버 때 최고 점수를 저장하는 코드는 이 약속을 어기고 서버에서 받은 전체 데이터를 그대로 넘기고 있어, 플레이 시간이 두 배가 되는 버그가 있습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|[A] 통째로 덮어쓰기|[B] 필드별 병합 ✓"
+          }
+        ]
+      },
+      {
+        "key": "troubleshoot",
+        "chapter": "result",
+        "layout": "full",
+        "tab": "문제 해결",
+        "title": {
+          "text": "6.1 문제 해결 (Troubleshooting)",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "6. 결과 · 회고",
+          "6.1 문제 해결 (Troubleshooting)"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "증상|원인|해결|결과"
+          }
+        ]
+      },
+      {
+        "key": "debt",
+        "chapter": "result",
+        "layout": "full",
+        "tab": "회고",
+        "title": {
+          "text": "기술 부채 (문서를 쓰며 코드를 다시 보고 발견한 것 포함)",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "6. 결과 · 회고",
+          "6.3 아쉬운 점과 개선 계획"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "문제|원인·당시 판단|개선 계획"
+          }
+        ]
+      }
+    ]
+  }
+}

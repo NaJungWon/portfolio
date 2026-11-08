@@ -1,0 +1,748 @@
+{
+  "schemaVersion": 2,
+  "id": "04-inventory-player",
+  "doc": "기술문서.md",
+  "title": "인벤토리 플레이어",
+  "tagline": "가방 정리가 곧 전투력인 모바일 2D 캐주얼 웨이브 방어 게임",
+  "cover": "images/title.jpg",
+  "team": {
+    "type": "solo",
+    "size": "1인",
+    "role": "개인 프로젝트 — Firebase 계정 데이터 · 모바일 빌드 · 그리드 인벤토리 · 머지와 전투 · 웨이브 · UI 연출"
+  },
+  "meta": [
+    {
+      "label": "장르",
+      "value": "모바일 2D 캐주얼 웨이브 방어"
+    },
+    {
+      "label": "기간",
+      "value": "2025.09 ~ 2025.12 (약 15주)"
+    },
+    {
+      "label": "인원",
+      "value": "개인 프로젝트"
+    },
+    {
+      "label": "환경",
+      "value": "Unity 2022.3.62f3 (2D) · Android (세로 540×960), C#, Firebase Realtime Database, NavMeshPlus"
+    }
+  ],
+  "tags": [
+    "Unity 2022 LTS",
+    "C#",
+    "Android",
+    "Firebase RTDB",
+    "GridLayoutGroup",
+    "드래그 앤 드롭",
+    "ScriptableObject",
+    "NavMeshPlus"
+  ],
+  "links": {
+    "github": "",
+    "video": "https://youtu.be/irNj6mxdZbU",
+    "extra": [
+      {
+        "label": "Windows 실행 파일",
+        "url": "https://drive.google.com/file/d/1EXKoKSK5ZjoUS6K-guy7PDsMTsIcnTyK/view"
+      },
+      {
+        "label": "Android 실행 파일",
+        "url": "https://drive.google.com/file/d/1oe80GqxYBO_P2ZSlpxeFSt-d2LHG5U4L/view?usp=drive_link"
+      }
+    ]
+  },
+  "intent": {
+    "text": "Firebase로 데이터를 유지하고 모바일 기기에서 실행된다는 조건 위에서, GridLayout이 가방 모양을 흔드는 문제를 칸 상태 2차원 배열을 원본으로 두는 구조로 정리했습니다.",
+    "verbatim": false
+  },
+  "highlights": [
+    {
+      "title": "그리드 인벤토리 · 드래그 배치",
+      "what": "모양이 다른 아이템(1×1, 1×2, 2×1, L자)을 5×7 가방에 끌어다 놓고, 슬롯 아이템으로 잠긴 칸을 열어 가방을 넓힙니다.",
+      "how": "칸 상태의 원본은 2차원 배열 `slots[x, y]` 하나이고, 배치 검증 · 가방 크기 · 칸 활성화를 모두 이 배열에서 계산합니다. 드래그 중에는 100px 안의 가장 가까운 칸에 초록/빨강 미리보기를 보여 줍니다.",
+      "why": "GridLayout은 켜진 칸만 차례로 채워서, 칸을 숨기거나 가방이 커지면 가방 모양과 아이템 위치가 어긋났기 때문입니다.",
+      "section": "4.1 개요: GridLayout이 가방 모양을 바꿔 버리는 문제",
+      "image": {
+        "src": "images/rest.jpg",
+        "w": 540,
+        "h": 960,
+        "caption": "정비(Rest) 화면 — 가운데 3×3 가방과 아래 리롤 영역"
+      }
+    },
+    {
+      "title": "Firebase 계정 데이터 · 모바일 빌드",
+      "what": "게스트 로그인 버튼 한 번으로 기기별 계정을 만들고, 다시 접속하면 같은 UID로 이어서 플레이합니다.",
+      "how": "`device_mapping/{기기 ID}`로 기존 UID를 찾고, 없으면 `uid_counter`로 새 UID를 발급합니다. Android 빌드는 빌드 전처리 스크립트로 `google-services.json`을 Gradle 경로에 미리 복사해 해결했습니다.",
+      "why": "서버를 직접 만들지 않고도 데이터를 유지하는 방법을 실제 모바일 프로젝트에 적용하는 것이 개발 조건이었습니다.",
+      "section": "3.1 개요",
+      "image": {
+        "src": "images/lobby.jpg",
+        "w": 540,
+        "h": 960,
+        "caption": "로비 화면 — 왼쪽 위에 발급된 UID(1000002) 표시"
+      }
+    },
+    {
+      "title": "머지 · 장착 → 전투",
+      "what": "같은 아이템 · 같은 레벨을 겹치면 레벨이 오르고, 웨이브가 시작되면 장착한 아이템마다 전투 슬롯이 생겨 자동으로 공격합니다.",
+      "how": "가방은 장착 기록(`OccupiedItemDatas`)만 남기고, `InGame_System`이 그 기록마다 전투 슬롯(`Item_Function`)을 생성합니다.",
+      "why": "\"정비 턴에 가방을 정리하고, 전투 턴에는 그 결과로 싸운다\"는 흐름을 위해 가방(UI)과 전투(월드)를 나눴습니다.",
+      "section": "5.3 핵심 기능 ②: 장착 기록에서 전투 슬롯으로",
+      "image": {
+        "src": "images/fight.jpg",
+        "w": 540,
+        "h": 960,
+        "caption": "전투(Fight) 화면 — 아래 전투 슬롯의 아이템이 자동으로 공격"
+      }
+    },
+    {
+      "title": "웨이브 · 몬스터",
+      "what": "스테이지 ScriptableObject에 \"몇 번째 웨이브의, 몇 초에, 어떤 몬스터가, 몇 마리\"를 적어 두면 코드 수정 없이 스테이지를 만듭니다.",
+      "how": "시작할 때 스폰 목록을 웨이브 → 시간 순으로 정렬해 Queue에 넣고, 매 프레임 맨 앞 하나만 확인합니다. 몬스터는 NavMeshPlus로 장애물을 돌아 추적합니다.",
+      "why": "스폰 데이터는 앞에서부터 한 번씩 꺼내 쓰고 다시 보지 않아, \"맨 앞이 다음 웨이브 것이면 이번 웨이브 스폰은 끝\"이라는 판단이 자연스럽게 나옵니다.",
+      "section": "6.3 핵심 기능: 정렬 큐로 스폰하기",
+      "image": null
+    }
+  ],
+  "troubleshooting": [
+    {
+      "title": "Android 빌드에서 Firebase 연동 실패",
+      "problem": "에디터에서는 로그인이 되는데, Android로 빌드해 기기에서 실행하면 Firebase 연동이 계속 실패",
+      "cause": "Android 빌드 설정이 맞지 않았고, `google-services.json`이 Gradle 빌드 폴더에 복사되기 전에 Gradle이 실행됨",
+      "solution": "빌드 직전에 가장 먼저 실행되는 에디터 스크립트로 `google-services.json`을 미리 복사하고, `launcherTemplate.gradle`에 Google Services 플러그인 추가",
+      "result": "Android 기기에서 게스트 로그인과 데이터 저장이 동작했습니다.",
+      "lesson": "모바일 빌드 문제는 코드보다 빌드 파이프라인(설정 파일이 언제, 어디에 놓이는가)에서 생길 수 있다",
+      "section": "3.5 트러블슈팅: Android 빌드에서 Firebase 연동 실패"
+    },
+    {
+      "title": "가방 모양 깨짐",
+      "problem": "잠긴 칸을 숨기거나 가방이 커지면 칸 배치가 일그러짐",
+      "cause": "GridLayout은 켜진 칸만 순서대로 채움. 칸을 끄면 뒤 칸이 당겨지고, 가방 너비가 바뀌면 한 줄 칸 수가 바뀜",
+      "solution": "열린 영역 사각형 안의 잠긴 칸은 투명하게 켜 두고, 가방 크기를 사각형에 맞춰 한 줄 칸 수를 고정",
+      "result": "",
+      "lesson": "",
+      "section": "4.8 트러블슈팅"
+    },
+    {
+      "title": "장착 아이템 위치 어긋남",
+      "problem": "슬롯 아이템으로 가방이 넓어진 뒤, 이미 놓인 아이템이 칸과 어긋난 위치에 남음",
+      "cause": "가방 크기가 바뀌면 GridLayout이 다음 프레임에 칸을 다시 배치함. 아이템은 이전 좌표에 그대로 있음",
+      "solution": "한 프레임 기다린 뒤 각 아이템이 점유한 칸들의 중심으로 다시 이동",
+      "result": "",
+      "lesson": "아이템의 위치를 좌표로 기억하지 말고 \"어느 칸을 차지하는가\"로 기억해야 한다",
+      "section": "4.8 트러블슈팅"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "images/lobby.jpg",
+      "caption": "로비 화면 — 왼쪽 위에 발급된 UID(1000002) 표시",
+      "w": 540,
+      "h": 960
+    },
+    {
+      "src": "images/rest.jpg",
+      "caption": "정비(Rest) 화면 — 가운데 3×3 가방과 아래 리롤 영역",
+      "w": 540,
+      "h": 960
+    },
+    {
+      "src": "images/fight.jpg",
+      "caption": "전투(Fight) 화면 — 아래 전투 슬롯의 아이템이 자동으로 공격",
+      "w": 540,
+      "h": 960
+    },
+    {
+      "src": "images/launcher_gradle.png",
+      "caption": "launcherTemplate.gradle에 google-services 플러그인을 추가한 부분",
+      "w": 508,
+      "h": 221
+    }
+  ],
+  "retro": {
+    "achieved": [
+      "버튼 한 번으로 기기별 계정 생성, 재접속 시 같은 UID로 이어서 플레이",
+      "Android 빌드의 Firebase 연동 실패를 빌드 전처리 스크립트와 Gradle 템플릿 수정으로 해결",
+      "4종 모양 아이템을 미리보기 · 스냅으로 배치, 가방을 넓혀도 모양과 장착 위치 유지",
+      "아이템 모양은 프리팹 설정, 스테이지 · 몬스터는 ScriptableObject로 코드 수정 없이 추가"
+    ],
+    "regrets": [
+      "6레벨 머지 시 오류 (최대 레벨 미확인)",
+      "스폰 시각을 ±0.1초로 비교해 건너뛸 수 있음",
+      "기기 ID만으로 식별, DB 보안 규칙 개방",
+      "Item_System 1,150줄",
+      "UI 아이템과 장착 기록의 이중 관리"
+    ],
+    "plans": [
+      "CanUpgrade에 최대 레벨 조건 추가",
+      "inGameTimer >= triggerTime으로 변경",
+      "Firebase 익명 인증 + auth.uid 기준 보안 규칙",
+      "배치 검증 · 머지 · 연출을 별도 클래스로 분리",
+      "장착 기록을 원본으로 두고 UI 아이템은 기록을 참조"
+    ],
+    "section": "8. 결과 · 회고"
+  },
+  "deck": {
+    "chapters": [
+      {
+        "key": "overview",
+        "title": "프로젝트 개요",
+        "sectionPath": [
+          "1. 프로젝트 개요"
+        ]
+      },
+      {
+        "key": "arch",
+        "title": "전체 구조",
+        "sectionPath": [
+          "2. 전체 구조"
+        ]
+      },
+      {
+        "key": "account",
+        "title": "시스템 ① 계정 데이터 · 모바일 빌드",
+        "sectionPath": [
+          "3. 시스템 ① 계정 데이터 · 모바일 빌드"
+        ]
+      },
+      {
+        "key": "inventory",
+        "title": "시스템 ② 그리드 인벤토리 · 드래그 배치 ★",
+        "sectionPath": [
+          "4. 시스템 ② 그리드 인벤토리 · 드래그 배치 ★"
+        ]
+      },
+      {
+        "key": "merge",
+        "title": "시스템 ③ 머지 · 장착 → 전투",
+        "sectionPath": [
+          "5. 시스템 ③ 머지 · 장착 → 전투"
+        ]
+      },
+      {
+        "key": "wave",
+        "title": "시스템 ④ 웨이브 · 몬스터",
+        "sectionPath": [
+          "6. 시스템 ④ 웨이브 · 몬스터"
+        ]
+      },
+      {
+        "key": "result",
+        "title": "결과 · 회고",
+        "sectionPath": [
+          "8. 결과 · 회고"
+        ]
+      }
+    ],
+    "slides": [
+      {
+        "key": "what",
+        "chapter": "overview",
+        "layout": "overview",
+        "tab": "개요",
+        "title": {
+          "text": "1.1 무엇을 만들었나 (What)",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "테트리스처럼 모양이 다른 아이템을 가방 칸에 배치하고, 같은 아이템끼리 합쳐 강화하면, 다음 웨이브에서 장착한 아이템이 자동으로 싸우는 모바일 2D 캐주얼 웨이브 방어 게임입니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "1. 프로젝트 개요",
+          "1.1 무엇을 만들었나 (What)"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/title.jpg",
+            "w": 540,
+            "h": 960,
+            "caption": {
+              "text": "인벤토리 플레이어 타이틀 화면 (게스트 로그인)",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "why",
+        "chapter": "overview",
+        "layout": "full",
+        "tab": "개요",
+        "title": {
+          "text": "1.2 왜, 무엇에 집중했나 (Why)",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "이 인벤토리 시스템이 이 프로젝트의 핵심입니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "1. 프로젝트 개요",
+          "1.2 왜, 무엇에 집중했나 (Why)"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "집중한 것|내용"
+          }
+        ]
+      },
+      {
+        "key": "arch",
+        "chapter": "arch",
+        "layout": "visual",
+        "tab": "구조",
+        "title": {
+          "text": "2.1 아키텍처",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "가방 쪽은 \"어디에 무엇을 놓았는가\"만 알고, 전투 쪽은 가방이 남긴 장착 기록(OccupiedItemDatas) 만 보고 무기를 만듭니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "2. 전체 구조",
+          "2.1 아키텍처"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "flowchart LR"
+          }
+        ]
+      },
+      {
+        "key": "split-choice",
+        "chapter": "arch",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "2.3 고민과 선택: 가방과 전투를 어떻게 나눌 것인가",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "2. 전체 구조",
+          "2.3 고민과 선택: 가방과 전투를 어떻게 나눌 것인가"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|[A] 가방 아이템이 직접 공격|[B] 가방(UI) · 전투(인게임) 분리 ✓"
+          }
+        ]
+      },
+      {
+        "key": "login-intro",
+        "chapter": "account",
+        "layout": "visual",
+        "tab": "개요",
+        "title": {
+          "text": "3.1 개요",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "로그인 폼 없이 \"게스트 로그인\" 버튼 한 번으로 플레이를 시작합니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "3. 시스템 ① 계정 데이터 · 모바일 빌드",
+          "3.1 개요"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "기기 ID로 이전 플레이 기록을 찾고, 있으면 그 계정을 이어서 쓰고, 없으면 새 UID를 발급합니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/lobby.jpg",
+            "w": 540,
+            "h": 960,
+            "caption": {
+              "text": "로비 화면 — 왼쪽 위에 발급된 UID(1000002) 표시",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "login-branch",
+        "chapter": "account",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "신규·기존 플레이어 분기",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 시스템 ① 계정 데이터 · 모바일 빌드",
+          "3.3 핵심 기능"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 2,
+            "fp": "// User_Data.cs:76"
+          }
+        ]
+      },
+      {
+        "key": "build-fix",
+        "chapter": "account",
+        "layout": "code",
+        "tab": "문제 해결",
+        "title": {
+          "text": "3.5 트러블슈팅: Android 빌드에서 Firebase 연동 실패",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "Firebase 설정 파일 google-services.json이 Gradle 빌드 폴더에 복사되기 전에 Gradle이 실행되어, Google Services 플러그인이 파일을 찾지 못했습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "3. 시스템 ① 계정 데이터 · 모바일 빌드",
+          "3.5 트러블슈팅: Android 빌드에서 Firebase 연동 실패"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "// Editor/CopyGoogleServicesJson.cs",
+            "lines": [
+              6,
+              23
+            ]
+          }
+        ]
+      },
+      {
+        "key": "inv-intro",
+        "chapter": "inventory",
+        "layout": "visual",
+        "tab": "개요",
+        "title": {
+          "text": "4.1 개요: GridLayout이 가방 모양을 바꿔 버리는 문제",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "문제는 GridLayout이 \"켜져 있는 자식만\" 차례대로 채워 넣는다는 점이었습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "4. 시스템 ② 그리드 인벤토리 · 드래그 배치 ★",
+          "4.1 개요: GridLayout이 가방 모양을 바꿔 버리는 문제"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "칸 상태의 원본은 2차원 배열 slots[x, y] 하나이고, 화면의 칸(Slot_State)은 그 배열을 비추는 거울이다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/rest.jpg",
+            "w": 540,
+            "h": 960,
+            "caption": {
+              "text": "정비(Rest) 화면 — 가운데 3×3 가방과 아래 리롤 영역",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "drag-preview",
+        "chapter": "inventory",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "② 드래그 중 — 자석 스냅과 미리보기.",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "실제 배치는 하지 않고 색만 바꿉니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "4. 시스템 ② 그리드 인벤토리 · 드래그 배치 ★",
+          "4.3 핵심 기능 ①: 드래그 3단계"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 2,
+            "fp": "// Item_System.cs:187"
+          }
+        ]
+      },
+      {
+        "key": "place-check",
+        "chapter": "inventory",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "4.4 핵심 기능 ②: 배치 검증",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "배치 가능 여부는 배열만 읽어서 판단합니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "4. 시스템 ② 그리드 인벤토리 · 드래그 배치 ★",
+          "4.4 핵심 기능 ②: 배치 검증"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "// Item_System.cs:410",
+            "lines": [
+              4,
+              21
+            ]
+          }
+        ]
+      },
+      {
+        "key": "bag-size",
+        "chapter": "inventory",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "4.5 핵심 기능 ③: 가방 크기와 칸 활성화",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "사각형 안의 칸은 잠겨 있어도 끄지 않고 투명하게 둡니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "4. 시스템 ② 그리드 인벤토리 · 드래그 배치 ★",
+          "4.5 핵심 기능 ③: 가방 크기와 칸 활성화"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "// Inventory_System.cs:331 — 슬롯 아이템 장착 후",
+            "lines": [
+              8,
+              22
+            ]
+          }
+        ]
+      },
+      {
+        "key": "cell-choice",
+        "chapter": "inventory",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "4.6 고민과 선택: 칸 상태를 어디에 둘 것인가",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "4. 시스템 ② 그리드 인벤토리 · 드래그 배치 ★",
+          "4.6 고민과 선택: 칸 상태를 어디에 둘 것인가"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|[A] 칸 오브젝트마다 상태 보관|[B] 2차원 배열 원본 + 화면은 거울 ✓"
+          }
+        ]
+      },
+      {
+        "key": "inv-trouble",
+        "chapter": "inventory",
+        "layout": "full",
+        "tab": "문제 해결",
+        "title": {
+          "text": "4.8 트러블슈팅",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "4. 시스템 ② 그리드 인벤토리 · 드래그 배치 ★",
+          "4.8 트러블슈팅"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "문제|증상|원인|해결"
+          }
+        ]
+      },
+      {
+        "key": "merge-code",
+        "chapter": "merge",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "5.2 핵심 기능 ①: 머지",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "5. 시스템 ③ 머지 · 장착 → 전투",
+          "5.2 핵심 기능 ①: 머지"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "다만 6레벨 머지를 막는 코드가 없습니다",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "// Item_System.cs:649",
+            "lines": [
+              12,
+              28
+            ]
+          }
+        ]
+      },
+      {
+        "key": "fight",
+        "chapter": "merge",
+        "layout": "visual",
+        "tab": "결과",
+        "title": {
+          "text": "5.3 핵심 기능 ②: 장착 기록에서 전투 슬롯으로",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "쿨타임이 끝나면 공격 범위 안에서 살아 있는 가장 가까운 몬스터를 찾아 투사체를 던집니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "5. 시스템 ③ 머지 · 장착 → 전투",
+          "5.3 핵심 기능 ②: 장착 기록에서 전투 슬롯으로"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/fight.jpg",
+            "w": 540,
+            "h": 960,
+            "caption": {
+              "text": "전투(Fight) 화면 — 아래 전투 슬롯의 아이템이 자동으로 공격",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "wave-queue",
+        "chapter": "wave",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "6.3 핵심 기능: 정렬 큐로 스폰하기",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "이후 매 프레임에는 큐의 맨 앞 하나만 확인합니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "6. 시스템 ④ 웨이브 · 몬스터",
+          "6.3 핵심 기능: 정렬 큐로 스폰하기"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 2,
+            "fp": "// InGame_System.cs:143 — Fight 상태에서 매 프레임"
+          }
+        ]
+      },
+      {
+        "key": "queue-choice",
+        "chapter": "wave",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "6.4 고민과 선택: 스폰 시점을 어떻게 확인할 것인가",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "6. 시스템 ④ 웨이브 · 몬스터",
+          "6.4 고민과 선택: 스폰 시점을 어떻게 확인할 것인가"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "Queue가 \"최적화\"라기보다는 \"한 번 쓰고 버린다\"는 의도를 코드에 드러내는 선택이었다고 봅니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|[A] 매 프레임 목록 전체 검사|[B] 정렬 후 Queue ✓"
+          }
+        ]
+      },
+      {
+        "key": "debt",
+        "chapter": "result",
+        "layout": "full",
+        "tab": "회고",
+        "title": {
+          "text": "기술 부채 (문서를 쓰며 코드를 다시 보고 발견한 것 포함)",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "8. 결과 · 회고",
+          "8.2 아쉬운 점과 개선 계획"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 2,
+            "fp": "문제|원인·당시 판단|개선 계획"
+          }
+        ]
+      }
+    ]
+  }
+}

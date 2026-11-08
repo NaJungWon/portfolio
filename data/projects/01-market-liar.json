@@ -1,0 +1,787 @@
+{
+  "schemaVersion": 2,
+  "id": "01-market-liar",
+  "doc": "기술문서.md",
+  "title": "시장에 가면",
+  "tagline": "4인이 WebSocket 서버로 접속해 플레이하는 3D 쿼터뷰 추리 게임",
+  "cover": "images/cover.png",
+  "team": {
+    "type": "team",
+    "size": "4인",
+    "role": "클라이언트 전반 중 마트의 캐릭터·아이템 상호작용과 회의실의 지목·투표 입력"
+  },
+  "meta": [
+    {
+      "label": "장르",
+      "value": "3D 쿼터뷰 추리 게임 (라이어 게임 모티브)"
+    },
+    {
+      "label": "기간",
+      "value": "2026.08.25 ~ 2026.09.08 (공식 개발 기간)"
+    },
+    {
+      "label": "인원",
+      "value": "4인 팀 프로젝트"
+    },
+    {
+      "label": "환경",
+      "value": "Unity 6000.3.15f1 (Unity 6), C#, .NET 10 콘솔 서버(팀원 작성) · WebSocket · JSON"
+    }
+  ],
+  "tags": [
+    "Unity 6",
+    "C#",
+    "WebSocket",
+    "UniTask",
+    "DOTween",
+    "Kinematic · BoxCast",
+    "지수 보간"
+  ],
+  "links": {
+    "github": "https://github.com/KooHoo-Dev/3rd-TeamProject-SH",
+    "video": "",
+    "extra": [
+      {
+        "label": "서버 GitHub",
+        "url": "https://github.com/KooHoo-Dev/3rd-TeamProject-SH-Server"
+      }
+    ]
+  },
+  "intent": {
+    "text": "4명이 같은 물건을 동시에 집거나 서로 밀칠 때 PC마다 결과가 갈리지 않도록, 다툼이 생기는 데이터만 서버가 판정하고 각 클라이언트는 자기 캐릭터만 직접 계산하도록 나눴습니다.",
+    "verbatim": false
+  },
+  "highlights": [
+    {
+      "title": "캐릭터 이동 · 충돌 · 위치 동기화",
+      "what": "로컬 캐릭터는 직접 충돌을 계산하며 움직이고, 원격 캐릭터는 서버 좌표만 부드럽게 따라갑니다.",
+      "how": "Kinematic Rigidbody에서 X·Z 축을 따로 BoxCast로 검사해 이동하고, 넉백도 같은 충돌 검사를 거치게 했습니다.",
+      "why": "점프 등 y축 이동이 없어 중력이 필요 없고, 이동·충돌·넉백을 전부 코드로 통제하려고 수업의 2D Kinematic 컨트롤러를 3D로 옮겼습니다.",
+      "section": "3.1 개요",
+      "image": {
+        "src": "images/move.gif",
+        "w": 640,
+        "h": 360,
+        "caption": "WASD로 마트를 이동하는 장면"
+      }
+    },
+    {
+      "title": "플레이어 밀치기",
+      "what": "Space로 다른 플레이어를 밀쳐 방해할 수 있습니다.",
+      "how": "애니메이션 타이밍에 켜지는 트리거로 판정 → `PushQuery`로 서버 승인 → 맞은 사람이 자기 화면에서만 넉백을 적용합니다.",
+      "why": "모든 클라이언트가 넉백을 계산하면 좌표 오차로 방향이 PC마다 달라 튕겼기 때문에, 넉백 결과를 맞은 사람 한 곳에서만 결정하도록 했습니다.",
+      "section": "4.1 개요",
+      "image": {
+        "src": "images/push.gif",
+        "w": 640,
+        "h": 360,
+        "caption": "Space로 다른 플레이어를 밀치는 장면"
+      }
+    },
+    {
+      "title": "아이템 집기 · 운반 · 가방 · 교체",
+      "what": "F키로 가장 가까운 아이템을 집고, 다시 F키를 누르면 위치에 따라 가방에 넣거나 원래 매대에 돌려놓습니다. 같은 카테고리는 교체됩니다.",
+      "how": "집기는 서버 선착순(`TryAdd`) 응답을 받은 뒤에만 반영하고, 내려놓을 곳은 `ItemPutDownResolver`가 가방 → 원래 매대 순으로 판정합니다.",
+      "why": "누르는 즉시 집으면 PC마다 상태가 갈리고 동시 집기의 승자를 정할 곳이 없어, 서버 선착순 + 응답 후 반영을 선택했습니다.",
+      "section": "5.1 개요",
+      "image": {
+        "src": "images/item_pick.gif",
+        "w": 640,
+        "h": 360,
+        "caption": "F키로 아이템을 집어 들고 이동해 가방에 넣는 장면"
+      }
+    },
+    {
+      "title": "회의실 지목 · 투표 입력",
+      "what": "의심 가는 3D 캐릭터를 직접 클릭해 지목·취소·재지목하고, 3지선다로 투표합니다.",
+      "how": "`Vote_System`의 Point 상태에서 Raycast로 `RemotePlayer`만 지목하고, 재지목은 \"취소 → 지목\" 두 메시지로 보냅니다.",
+      "why": "서버는 지목을 덮어쓰고 중계만 하므로, 취소와 지목을 독립 이벤트로 알려 모든 클라이언트가 같은 화살표 연출을 같은 순서로 재생하게 했습니다.",
+      "section": "6.1 개요",
+      "image": {
+        "src": "images/point.gif",
+        "w": 640,
+        "h": 360,
+        "caption": "지목 단계: 캐릭터를 클릭해 지목 화살표가 그려지는 장면"
+      }
+    }
+  ],
+  "troubleshooting": [
+    {
+      "title": "씬 이동 후 원격 캐릭터가 고무줄처럼 끌려감",
+      "problem": "원격 캐릭터가 씬 이동 후 고무줄처럼 끌려감",
+      "cause": "씬 전환 직후 이전 씬에서 보낸 좌표가 늦게 도착하고, 원격 보간이 그 좌표를 따라감",
+      "solution": "`Teleport` 시 1초간 좌표 무시 + 마지막 목표점에서 3m 이상 떨어진 좌표는 버림",
+      "result": "회의실 ↔ 마트 반복 진입에도 고무줄 현상 없음",
+      "lesson": "원인을 잘못 짚으면 올바른 기술도 효과가 없다. 고치기 전에 \"어떤 데이터가 언제 들어오는지\"를 먼저 로그로 확인하게 됐습니다.",
+      "section": "7.2 문제 해결 경험 (Troubleshooting)"
+    },
+    {
+      "title": "밀치기 시 캐릭터가 이리저리 튕겨 나감",
+      "problem": "밀치기 시 캐릭터가 이리저리 튕겨 나감",
+      "cause": "모든 클라이언트가 모든 캐릭터에 넉백 적용 → PC마다 좌표 오차만큼 방향이 다름",
+      "solution": "맞은 사람이 본인일 때만 적용",
+      "result": "튕김 현상 제거, 모든 화면에서 같은 위치로 밀림",
+      "lesson": "각 클라이언트는 자기 캐릭터만 계산한다.",
+      "section": "7.2 문제 해결 경험 (Troubleshooting)"
+    },
+    {
+      "title": "같은 플레이어가 PC마다 다른 색으로 보임",
+      "problem": "같은 플레이어가 PC마다 다른 색으로 보임",
+      "cause": "`welcome` / `join` 처리 순서와 색상 적용 순서가 PC마다 달라 색 배정이 갈림",
+      "solution": "입장 순서로 매겨진 ID를 오름차순 정렬한 `userOrder` 인덱스로 색을 고정하고, 전원 색을 한 번에 다시 칠하도록 순서를 변경",
+      "result": "",
+      "lesson": "협업 코드는 서로의 전제를 맞춰야 한다.",
+      "section": "7.2 문제 해결 경험 (Troubleshooting)"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "images/move.gif",
+      "caption": "WASD로 마트를 이동하는 장면",
+      "w": 640,
+      "h": 360
+    },
+    {
+      "src": "images/push.gif",
+      "caption": "Space로 다른 플레이어를 밀치는 장면",
+      "w": 640,
+      "h": 360
+    },
+    {
+      "src": "images/item_pick.gif",
+      "caption": "F키로 아이템을 집어 들고 이동해 가방에 넣는 장면",
+      "w": 640,
+      "h": 360
+    },
+    {
+      "src": "images/item_swap.gif",
+      "caption": "같은 카테고리 아이템으로 교체하는 장면 (5배속)",
+      "w": 640,
+      "h": 360
+    },
+    {
+      "src": "images/point.gif",
+      "caption": "지목 단계: 캐릭터를 클릭해 지목 화살표가 그려지는 장면",
+      "w": 640,
+      "h": 360
+    },
+    {
+      "src": "images/vote_ui.png",
+      "caption": "투표 UI (3지선다 버튼)",
+      "w": 1280,
+      "h": 720
+    }
+  ],
+  "retro": {
+    "achieved": [
+      "4인 동시 플레이에서 같은 아이템 중복 소유 없음 (서버 선착순 + 응답 후 반영)",
+      "밀치기 튕김 현상 제거, 모든 화면에서 같은 위치로 밀림",
+      "회의실 ↔ 마트 반복 진입에도 고무줄 현상 없음 (1초 무시 + 3m 기준 좌표 버리기)"
+    ],
+    "regrets": [
+      "밀치면 들고 있던 아이템이 떨어지는 기능을 넣지 못함",
+      "`LiarClient`가 약 1,700줄로 비대함",
+      "밀치기 · 위치를 서버가 검증하지 않음"
+    ],
+    "plans": [
+      "`PushAnswer` 처리 시 들고 있던 아이템의 소유권 해제 + 바닥 드롭 상태 추가",
+      "회의 · 마트 · 상호작용 · 씬 배치를 기능별 핸들러로 분리하고, `LiarClient`는 수신 분기만 담당",
+      "공개 서비스라면 서버에서 거리 · 쿨다운 · 이동 속도 상한 검증 추가"
+    ],
+    "section": "7. 결과 및 배운 점"
+  },
+  "deck": {
+    "chapters": [
+      {
+        "key": "overview",
+        "title": "프로젝트 개요",
+        "sectionPath": [
+          "1. 프로젝트 개요"
+        ]
+      },
+      {
+        "key": "base",
+        "title": "공통 기반 — 서버와 클라이언트의 역할 분담",
+        "sectionPath": [
+          "2. 공통 기반 — 서버와 클라이언트의 역할 분담"
+        ]
+      },
+      {
+        "key": "move",
+        "title": "기능 A — 캐릭터 이동 · 충돌 · 위치 동기화",
+        "sectionPath": [
+          "3. 기능 A — 캐릭터 이동 · 충돌 · 위치 동기화"
+        ]
+      },
+      {
+        "key": "push",
+        "title": "기능 B — 플레이어 밀치기",
+        "sectionPath": [
+          "4. 기능 B — 플레이어 밀치기"
+        ]
+      },
+      {
+        "key": "item",
+        "title": "기능 C — 아이템 집기 · 운반 · 가방 · 교체",
+        "sectionPath": [
+          "5. 기능 C — 아이템 집기 · 운반 · 가방 · 교체"
+        ]
+      },
+      {
+        "key": "vote",
+        "title": "기능 D — 회의실 지목 · 투표 입력",
+        "sectionPath": [
+          "6. 기능 D — 회의실 지목 · 투표 입력"
+        ]
+      },
+      {
+        "key": "result",
+        "title": "결과 및 배운 점",
+        "sectionPath": [
+          "7. 결과 및 배운 점"
+        ]
+      }
+    ],
+    "slides": [
+      {
+        "key": "what",
+        "chapter": "overview",
+        "layout": "overview",
+        "tab": "개요",
+        "title": {
+          "text": "1.1 What — 무엇을 만들었나",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "시장에 가면은 4인이 WebSocket 서버로 접속해 플레이하는 3D 쿼터뷰 추리 게임입니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "1. 프로젝트 개요",
+          "1.1 What — 무엇을 만들었나"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "이 중 저는 클라이언트 전반 중 마트의 캐릭터·아이템 상호작용과 회의실의 지목·투표 입력을 담당했습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/cover.png",
+            "w": 1280,
+            "h": 720,
+            "caption": {
+              "text": "시장에 가면 타이틀 화면",
+              "verbatim": true
+            }
+          },
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "회의실(장르·키워드 확인) → 마트(이동·밀치기·물건 집기·가방 제출) → 회의실(발언 → 지목 → 변론 →"
+          }
+        ]
+      },
+      {
+        "key": "role",
+        "chapter": "overview",
+        "layout": "full",
+        "tab": "개요",
+        "title": {
+          "text": "1.2 담당 범위",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "1. 프로젝트 개요",
+          "1.2 담당 범위"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "구분|내용"
+          }
+        ]
+      },
+      {
+        "key": "why",
+        "chapter": "overview",
+        "layout": "full",
+        "tab": "개요",
+        "title": {
+          "text": "1.3 Why — 왜 이렇게 만들었나",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "1. 프로젝트 개요",
+          "1.3 Why — 왜 이렇게 만들었나"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "문제 상황 (Before)|결과적으로 생기는 비용|해결 방향"
+          }
+        ]
+      },
+      {
+        "key": "arch",
+        "chapter": "overview",
+        "layout": "full",
+        "tab": "구조",
+        "title": {
+          "text": "1.5 전체 구조 한눈에 보기",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "1. 프로젝트 개요",
+          "1.5 전체 구조 한눈에 보기"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "flowchart TB"
+          }
+        ]
+      },
+      {
+        "key": "authority",
+        "chapter": "base",
+        "layout": "full",
+        "tab": "구조",
+        "title": {
+          "text": "2.1 원칙: \"다툼이 생기는 것만 서버가 판정한다\"",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "여러 명이 동시에 같은 자원을 다툴 수 있는 것만 서버가 판정",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "2. 공통 기반 — 서버와 클라이언트의 역할 분담",
+          "2.1 원칙: \"다툼이 생기는 것만 서버가 판정한다\""
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "데이터|판정 주체|이유"
+          }
+        ]
+      },
+      {
+        "key": "req-flow",
+        "chapter": "base",
+        "layout": "visual",
+        "tab": "흐름",
+        "title": {
+          "text": "2.2 요청 → 응답 흐름",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "클라이언트는 자기 화면을 먼저 바꾸지 않습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "2. 공통 기반 — 서버와 클라이언트의 역할 분담",
+          "2.2 요청 → 응답 흐름"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "sequenceDiagram"
+          }
+        ]
+      },
+      {
+        "key": "move-intro",
+        "chapter": "move",
+        "layout": "visual",
+        "tab": "개요",
+        "title": {
+          "text": "3.1 개요",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "로컬은 직접 충돌을 계산하며 움직이고, 원격은 충돌 계산 없이 좌표만 부드럽게 따라갑니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "3. 기능 A — 캐릭터 이동 · 충돌 · 위치 동기화",
+          "3.1 개요"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/move.gif",
+            "w": 640,
+            "h": 360,
+            "caption": {
+              "text": "WASD로 마트를 이동하는 장면",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "move-boxcast",
+        "chapter": "move",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "축을 나눠 검사하는 BoxCast 이동",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 기능 A — 캐릭터 이동 · 충돌 · 위치 동기화",
+          "3.3 핵심 기능 및 사용법"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "넉백도 ResolveAxisMovement를 거치기 때문에, 벽에 부딪히면 더 이상 밀리지 않습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "// CharacterController3D.cs",
+            "lines": [
+              1,
+              19
+            ]
+          }
+        ]
+      },
+      {
+        "key": "move-choice",
+        "chapter": "move",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "결정 1. 이동을 무엇으로 구현할 것인가?",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 기능 A — 캐릭터 이동 · 충돌 · 위치 동기화",
+          "3.4 고민과 선택"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|대안 A: Dynamic Rigidbody (물리 엔진)|대안 B: Unity CharacterController|대안 C: Kinematic Rigidbody + BoxCast 직접 구현 ✅"
+          }
+        ]
+      },
+      {
+        "key": "push-intro",
+        "chapter": "push",
+        "layout": "visual",
+        "tab": "개요",
+        "title": {
+          "text": "4.1 개요",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "서버 승인을 받은 뒤 맞은 사람이 자기 화면에서만 넉백을 적용합니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "4. 기능 B — 플레이어 밀치기",
+          "4.1 개요"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/push.gif",
+            "w": 640,
+            "h": 360,
+            "caption": {
+              "text": "Space로 다른 플레이어를 밀치는 장면",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "push-flow",
+        "chapter": "push",
+        "layout": "visual",
+        "tab": "흐름",
+        "title": {
+          "text": "4.2 흐름",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "4. 기능 B — 플레이어 밀치기",
+          "4.2 흐름"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "sequenceDiagram"
+          }
+        ]
+      },
+      {
+        "key": "push-choice",
+        "chapter": "push",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "4.4 고민과 선택 — 넉백을 누가 계산할 것인가?",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "각 클라이언트는 자기 캐릭터만 계산하고, 다른 캐릭터는 결과 좌표만 받아 그린다",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "4. 기능 B — 플레이어 밀치기",
+          "4.4 고민과 선택 — 넉백을 누가 계산할 것인가?"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|대안 A: 모든 클라이언트가 모든 캐릭터 넉백 계산|대안 B: 맞은 본인만 넉백 계산, 나머지는 좌표만 받음 ✅"
+          }
+        ]
+      },
+      {
+        "key": "item-intro",
+        "chapter": "item",
+        "layout": "screens",
+        "tab": "개요",
+        "title": {
+          "text": "5.1 개요",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "5. 기능 C — 아이템 집기 · 운반 · 가방 · 교체",
+          "5.1 개요"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/item_pick.gif",
+            "w": 640,
+            "h": 360,
+            "caption": {
+              "text": "F키로 아이템을 집어 들고 이동해 가방에 넣는 장면",
+              "verbatim": true
+            }
+          },
+          {
+            "kind": "image",
+            "src": "images/item_swap.gif",
+            "w": 640,
+            "h": 360,
+            "caption": {
+              "text": "같은 카테고리 아이템으로 교체하는 장면 (5배속)",
+              "verbatim": true
+            }
+          },
+          {
+            "kind": "image",
+            "src": "images/bag_ui.png",
+            "w": 1280,
+            "h": 720,
+            "caption": {
+              "text": "Q키 가방 UI에 카테고리별 아이템이 표시된 화면",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "item-resolve",
+        "chapter": "item",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "F키 하나로 가방 / 원래 매대 판정",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "5. 기능 C — 아이템 집기 · 운반 · 가방 · 교체",
+          "5.3 핵심 기능 및 사용법"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 2,
+            "fp": "// ItemPutDownResolver.cs",
+            "lines": [
+              6,
+              22
+            ]
+          }
+        ]
+      },
+      {
+        "key": "item-choice",
+        "chapter": "item",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "결정 1. 집기를 서버 응답 전에 먼저 보여줄 것인가?",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "5. 기능 C — 아이템 집기 · 운반 · 가방 · 교체",
+          "5.4 고민과 선택"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|대안 A: 누르는 즉시 집고, 서버에는 알리기만|대안 B: 서버 응답을 받은 뒤에만 집기 ✅"
+          }
+        ]
+      },
+      {
+        "key": "vote-intro",
+        "chapter": "vote",
+        "layout": "screens",
+        "tab": "개요",
+        "title": {
+          "text": "6.1 개요",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "6. 기능 D — 회의실 지목 · 투표 입력",
+          "6.1 개요"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/point.gif",
+            "w": 640,
+            "h": 360,
+            "caption": {
+              "text": "지목 단계: 캐릭터를 클릭해 지목 화살표가 그려지는 장면",
+              "verbatim": true
+            }
+          },
+          {
+            "kind": "image",
+            "src": "images/vote_ui.png",
+            "w": 1280,
+            "h": 720,
+            "caption": {
+              "text": "투표 UI (3지선다 버튼)",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "vote-click",
+        "chapter": "vote",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "6.3 핵심 기능",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "6. 기능 D — 회의실 지목 · 투표 입력",
+          "6.3 핵심 기능"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "// Vote_System.cs — 지목 단계에서만 클릭을 받는다",
+            "lines": [
+              9,
+              28
+            ]
+          }
+        ]
+      },
+      {
+        "key": "vote-choice",
+        "chapter": "vote",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "결정 2. 재지목을 \"취소 + 지목\" 두 메시지로 보낸 이유",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "6. 기능 D — 회의실 지목 · 투표 입력",
+          "6.4 고민과 선택"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 2,
+            "fp": "|대안 A: 새 지목 메시지 1개|대안 B: 취소 → 지목 2개 ✅"
+          }
+        ]
+      },
+      {
+        "key": "troubleshoot",
+        "chapter": "result",
+        "layout": "full",
+        "tab": "문제 해결",
+        "title": {
+          "text": "7.2 문제 해결 경험 (Troubleshooting)",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "7. 결과 및 배운 점",
+          "7.2 문제 해결 경험 (Troubleshooting)"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "#|문제|원인|해결 / 개선|상태"
+          }
+        ]
+      }
+    ]
+  }
+}
