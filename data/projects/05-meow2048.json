@@ -138,21 +138,20 @@
     "achieved": [
       "스와이프 → 판정 → 병렬 이동 → 합치기 → 새 타일 순서가 매 턴 지켜짐 (4×4 · 8×8)",
       "트윈 라이브러리 없이 병렬 이동 · 탄성 스케일 · 파티클 · 동물 소리 피드백",
-      "기기별 자동 로그인, 최고 점수와 누적 플레이 시간을 클라우드에 저장 (Android 동작)"
+      "기기별 자동 로그인, 최고 점수와 누적 플레이 시간을 클라우드에 저장 (Android 동작)",
+      "문서를 쓰며 발견한 오류 6건 수정 (플레이 시간 중복 누적, 게임 오버 지연 등)"
     ],
     "regrets": [
-      "최고 점수를 갱신하면 플레이 시간이 두 배가 됨",
-      "막힌 뒤 한 번 더 스와이프해야 게임 오버",
-      "이동 속도 설정이 실제로 쓰이지 않음",
-      "Game_System 1,402줄 한 클래스",
-      "쓰지 않는 이전 이동 코드 약 250줄"
+      "Game_System 1,167줄 한 클래스",
+      "칸 조회가 매번 전체 순회",
+      "기기 ID 식별, DB 보안 규칙 개방",
+      "UID 발급이 원자적이지 않음"
     ],
     "plans": [
-      "바꿀 필드만 넘기기: new PlayerData { high_score = score }",
-      "새 타일 생성 직후에도 게임 오버 판정",
-      "픽셀 기준 속도로 변경하거나 moveSpeed 제거",
       "입력 / 보드 판정(순수 C#) / 연출 / 저장 연동으로 분리",
-      "미사용 코드 삭제"
+      "판정 시작 때 Move_Slot[,] 배열을 만들어 바로 조회",
+      "Firebase 익명 인증으로 UID 발급, 보안 규칙을 auth.uid 기준으로 제한, Delete() 제거",
+      "RunTransaction 사용, 또는 Auth UID로 대체"
     ],
     "section": "6. 결과 · 회고"
   },
@@ -387,7 +386,7 @@
           {
             "kind": "code",
             "n": 2,
-            "fp": "// Game_System.cs:949 ProcessSlotsLineStepWithAnimation (발췌)",
+            "fp": "// Game_System.cs:837 ProcessSlotsLineStepWithAnimation (발췌)",
             "lines": [
               4,
               22
@@ -472,7 +471,7 @@
           {
             "kind": "code",
             "n": 1,
-            "fp": "// Game_System.cs:518 AnimateSlots — 모든 타일을 동시에 출발시키고 전부 도착할"
+            "fp": "// Game_System.cs:520 AnimateSlots — 모든 타일을 동시에 출발시키고 전부 도착할"
           }
         ]
       },
@@ -498,7 +497,7 @@
           {
             "kind": "code",
             "n": 1,
-            "fp": "// Game_System.cs:592 EaseOutElastic"
+            "fp": "// Game_System.cs:593 EaseOutElastic"
           }
         ]
       },
@@ -568,7 +567,7 @@
         "points": [
           {
             "label": "",
-            "text": "게임 오버 때 최고 점수를 저장하는 코드는 이 약속을 어기고 서버에서 받은 전체 데이터를 그대로 넘기고 있어, 플레이 시간이 두 배가 되는 버그가 있습니다.",
+            "text": "실제로 게임 오버 때 최고 점수를 저장하는 코드가 이 약속을 어기고 서버에서 받은 전체 데이터를 넘기고 있어, 플레이 시간이 두 배가 되는 버그가 있었습니다.",
             "verbatim": true
           }
         ],
@@ -604,12 +603,12 @@
         ]
       },
       {
-        "key": "debt",
+        "key": "doc-fixes",
         "chapter": "result",
         "layout": "full",
-        "tab": "회고",
+        "tab": "결과",
         "title": {
-          "text": "기술 부채 (문서를 쓰며 코드를 다시 보고 발견한 것 포함)",
+          "text": "문서를 쓰며 발견해 수정한 것",
           "verbatim": true
         },
         "lead": null,
@@ -622,6 +621,57 @@
           {
             "kind": "table",
             "n": 1,
+            "fp": "문제|증상|원인|수정"
+          }
+        ]
+      },
+      {
+        "key": "fix-code",
+        "chapter": "result",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "6.3 아쉬운 점과 개선 계획",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "6. 결과 · 회고",
+          "6.3 아쉬운 점과 개선 계획"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "// 최고 점수 저장 — 수정 전"
+          },
+          {
+            "kind": "code",
+            "n": 2,
+            "fp": "// OnSwipeCoroutine (Game_System.cs:495-498) — 새 타일 생성 직후에도 "
+          }
+        ]
+      },
+      {
+        "key": "debt",
+        "chapter": "result",
+        "layout": "full",
+        "tab": "회고",
+        "title": {
+          "text": "남은 기술 부채",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "6. 결과 · 회고",
+          "6.3 아쉬운 점과 개선 계획"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 2,
             "fp": "문제|원인·당시 판단|개선 계획"
           }
         ]

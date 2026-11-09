@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-08",
+  "generatedAt": "2026-11-10",
   "profile": {
     "name": "나정원",
     "nameEn": "NA JUNG WON",
@@ -93,8 +93,8 @@
   "projects": [
     "01-market-liar",
     "02-katana-zero",
-    "05-meow2048",
     "04-inventory-player",
+    "05-meow2048",
     "03-dgs"
   ]
 }

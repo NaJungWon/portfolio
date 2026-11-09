@@ -168,15 +168,11 @@
       "아이템 모양은 프리팹 설정, 스테이지 · 몬스터는 ScriptableObject로 코드 수정 없이 추가"
     ],
     "regrets": [
-      "6레벨 머지 시 오류 (최대 레벨 미확인)",
-      "스폰 시각을 ±0.1초로 비교해 건너뛸 수 있음",
       "기기 ID만으로 식별, DB 보안 규칙 개방",
       "Item_System 1,150줄",
       "UI 아이템과 장착 기록의 이중 관리"
     ],
     "plans": [
-      "CanUpgrade에 최대 레벨 조건 추가",
-      "inGameTimer >= triggerTime으로 변경",
       "Firebase 익명 인증 + auth.uid 기준 보안 규칙",
       "배치 검증 · 머지 · 연출을 별도 클래스로 분리",
       "장착 기록을 원본으로 두고 UI 아이템은 기록을 참조"
@@ -517,7 +513,7 @@
           {
             "kind": "code",
             "n": 1,
-            "fp": "// Item_System.cs:410",
+            "fp": "// Item_System.cs:412",
             "lines": [
               4,
               21
@@ -618,7 +614,7 @@
         "points": [
           {
             "label": "",
-            "text": "다만 6레벨 머지를 막는 코드가 없습니다",
+            "text": "최대 레벨을 숫자로 따로 두지 않고 아이콘 수에서 읽기 때문에, 아이콘을 추가하면 최대 레벨도 함께 늘어납니다",
             "verbatim": true
           }
         ],
@@ -626,10 +622,10 @@
           {
             "kind": "code",
             "n": 1,
-            "fp": "// Item_System.cs:649",
+            "fp": "// Item_System.cs:651",
             "lines": [
-              12,
-              28
+              13,
+              29
             ]
           }
         ]
@@ -721,12 +717,38 @@
         ]
       },
       {
+        "key": "bug-fix",
+        "chapter": "result",
+        "layout": "full",
+        "tab": "회고",
+        "title": {
+          "text": "문서를 쓰며 발견해 수정한 것",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "이 문서를 쓰면서 코드를 다시 읽다가, 플레이 중에 실제로 문제가 될 수 있는 오류 다섯 개를 발견해 빌드 전에 고쳤습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "8. 결과 · 회고",
+          "8.2 아쉬운 점과 개선 계획"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 2,
+            "fp": "문제|증상|원인|수정"
+          }
+        ]
+      },
+      {
         "key": "debt",
         "chapter": "result",
         "layout": "full",
         "tab": "회고",
         "title": {
-          "text": "기술 부채 (문서를 쓰며 코드를 다시 보고 발견한 것 포함)",
+          "text": "남은 기술 부채",
           "verbatim": true
         },
         "lead": null,
@@ -738,7 +760,7 @@
         "visuals": [
           {
             "kind": "table",
-            "n": 2,
+            "n": 3,
             "fp": "문제|원인·당시 판단|개선 계획"
           }
         ]
