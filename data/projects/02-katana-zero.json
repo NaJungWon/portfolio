@@ -4,7 +4,7 @@
   "doc": "기술문서.md",
   "title": "카타나 제로 (모작)",
   "tagline": "원작 Katana ZERO의 핵심 플레이를 따라 만든 2D 액션 플랫포머",
-  "cover": "images/ready.png",
+  "cover": "images/title.jpg",
   "team": {
     "type": "solo",
     "size": "1인",
@@ -250,11 +250,11 @@
         "visuals": [
           {
             "kind": "image",
-            "src": "images/ready.png",
-            "w": 1283,
-            "h": 726,
+            "src": "images/title.jpg",
+            "w": 1270,
+            "h": 720,
             "caption": {
-              "text": "스테이지 시작 화면 (공격을 눌러 계획 시작)",
+              "text": "타이틀 화면",
               "verbatim": true
             }
           }
