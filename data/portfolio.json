@@ -34,7 +34,7 @@
           "project": "04-inventory-player"
         },
         {
-          "text": "NavMeshAgent stoppingDistance를 공격 사거리로 두어 근접 · 원거리 몬스터 행동 분리",
+          "text": "공격 레이어 + 아바타 마스크로 상체 공격 · 하체 이동을 나누고 발걸음은 공격 방향 기준으로 블렌드 트리에",
           "project": "03-dgs"
         }
       ]
@@ -59,7 +59,7 @@
           "project": "04-inventory-player"
         },
         {
-          "text": "Dictionary + Queue로 몬스터 타입 · 인덱스별 오브젝트 풀",
+          "text": "생성/파괴 → List → Queue로 바꿔 몬스터 타입 · 종류별 오브젝트 풀",
           "project": "03-dgs"
         }
       ]

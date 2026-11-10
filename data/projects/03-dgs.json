@@ -8,7 +8,7 @@
   "team": {
     "type": "team",
     "size": "3인",
-    "role": "시스템 구조 설계 · 게임 루프와 상태 전환 · 시간표 웨이브와 몬스터 풀링 · 증강 카드 · 무기 진화 시스템 · 상점과 로비 복귀"
+    "role": "캐릭터 이동 · 조준 · 공격 애니메이션 동기화 · 시스템 구조 설계 · 시간표 웨이브와 몬스터 풀링 · 증강 카드 · 무기 진화 시스템 전체 · 상점과 로비 복귀"
   },
   "meta": [
     {
@@ -16,12 +16,8 @@
       "value": "PC 3D 액션 뱀서라이크"
     },
     {
-      "label": "기간",
-      "value": "2025.03 ~ 2025.06 (약 14주) ⟨확인 필요⟩"
-    },
-    {
       "label": "인원",
-      "value": "3인 팀 프로젝트"
+      "value": "3인 팀 졸업작품"
     },
     {
       "label": "환경",
@@ -33,9 +29,9 @@
     "C#",
     "ScriptableObject",
     "Queue 오브젝트 풀링",
-    "NavMeshAgent",
-    "이벤트 구독",
-    "DontDestroyOnLoad"
+    "블렌드 트리",
+    "아바타 마스크",
+    "이벤트 구독"
   ],
   "links": {
     "github": "https://github.com/NaJungWon/BGS_Project",
@@ -48,24 +44,32 @@
     ]
   },
   "intent": {
-    "text": "몬스터가 끊임없이 늘어나는 장르라 생성 비용을 Queue 풀로 없애고, 웨이브와 증강을 인스펙터 데이터(시간표 · ScriptableObject)로 정의해 코드 수정 없이 조정하도록 했습니다.",
+    "text": "원본인 집중포화와 뱀서라이크 장르의 재미를 전하고, 모든 무기를 강화 · 진화해 보며 이펙트와 효과가 어떻게 바뀔지 기대하게 만드는 것",
     "verbatim": false
   },
   "highlights": [
     {
+      "title": "캐릭터 조작감 — 이동 · 조준 · 공격 동기화",
+      "what": "마우스 방향으로 몸을 돌려 공격하면서, 이동 방향에 맞는 발걸음(뒷걸음질 등)이 나오게 했습니다.",
+      "how": "공격 모션은 상체만 덮어쓰는 별도 레이어로 두고, 공격 중에는 이동 입력을 공격 방향 기준의 앞 / 옆 값으로 바꿔 블렌드 트리에 넣습니다.",
+      "why": "마우스로 조준하는 게임이라 공격 방향이 가장 중요하다고 봤고, 그러면서도 발이 미끄러지듯 보이지 않게 발걸음을 다시 계산하는 방식을 골랐습니다.",
+      "section": "3.2 시스템 구조",
+      "image": null
+    },
+    {
       "title": "시간표 기반 웨이브 · 몬스터 풀링",
-      "what": "\"몇 초에 · 무엇을 · 어떤 방식으로 · 몇 마리\" 소환할지를 인스펙터 시간표로 정의합니다.",
-      "how": "`GameTimer`가 `triggerTime`에 도달하면 항목이 발동하고, 몬스터는 타입 × 인덱스별 `Queue` 풀에서 꺼내고 사망 시 반납합니다.",
-      "why": "생성/파괴는 프레임 드랍, List 풀은 탐색 비용이 남아 Queue 풀로 바꿨고, 난이도 조정이 데이터 수정으로 끝나도록 시간표를 택했습니다.",
-      "section": "3.3 핵심 기능",
+      "what": "\"메인 + 서브\" 몹 조합을 시간표로 바꿔 가며 계속 소환합니다.",
+      "how": "다음 시간표가 앞 시간표의 몹 종류와 간격을 덮어쓰고, 몬스터는 타입 × 종류별 Queue 풀에서 꺼내고 사망 시 반납합니다.",
+      "why": "생성/파괴 → List 풀 → 활성/비활성 분리를 거치며 탐색 비용이 남는 것을 보고, 꺼진 것만 모아 앞에서 꺼내는 Queue 풀로 직접 바꿨습니다.",
+      "section": "4.2 시스템 구조",
       "image": null
     },
     {
       "title": "증강 카드 선택",
-      "what": "레벨업 시 카드 3장 중 하나를 고르면 바로 스탯에 반영되고 전투가 재개됩니다.",
+      "what": "레벨업 시 카드 3장 중 하나를 고르면 바로 스탯에 반영되고 전투가 재개됩니다. 리롤도 할 수 있습니다.",
       "how": "만렙 · 진화 조건과 무기 5 / 능력치 6 슬롯으로 후보를 거르고, 후보가 0장이면 회복 · 골드 카드를 내보냅니다.",
-      "why": "규칙대로 거르면 후반에 뽑을 카드가 없어지므로, 레벨업 보상이 항상 의미 있게 대체 카드를 두었습니다.",
-      "section": "4.1 개요",
+      "why": "개발 도중 후보가 0장이 되어 무한 로딩에 빠진 경험으로, 후보가 없을 때 회복 · 골드 카드를 내보내는 안전장치를 넣었습니다.",
+      "section": "5.1 개요",
       "image": {
         "src": "images/card_select.jpg",
         "w": 1280,
@@ -75,58 +79,40 @@
     },
     {
       "title": "무기 증강 · 진화",
-      "what": "무기 4종을 구현하고, 5단계 강화 후 짝이 맞는 능력치가 있으면 진화하는 시스템 전체를 만들었습니다.",
-      "how": "`CardInfo`가 단계별 수치와 `isArousal`을 필드 이름으로 주입하고, 투사체는 피격 위치만 이벤트로 알려 이펙트 풀은 무기 본체가 관리합니다.",
-      "why": "팀원 3명이 이미 각자 무기를 만든 상태라 이름만 맞추면 연결되는 방식을 골랐고, 후속 프로젝트에서 부모 클래스 방식으로 바꿨습니다.",
-      "section": "5.1 개요",
-      "image": {
-        "src": "images/weapon_tooltip.jpg",
-        "w": 1280,
-        "h": 720,
-        "caption": "무기 증강 툴팁 — 각성(진화)에 필요한 능력치 표시"
-      }
-    },
-    {
-      "title": "상점 · 로비 복귀",
-      "what": "인게임 골드로 로비 상점에서 능력치를 영구 강화하는 로그라이크 루프입니다.",
-      "how": "`DontDestroyOnLoad`인 `GameManager`가 골드와 상점 강화값을 보관하고, 로비 복귀 시 복원합니다.",
-      "why": "씬이 바뀌면 상점 UI · 플레이어가 모두 사라지므로, 씬을 넘는 데이터는 GameManager 한 곳에만 두었습니다.",
-      "section": "6.1 개요",
-      "image": {
-        "src": "images/lobby_shop.jpg",
-        "w": 1280,
-        "h": 720,
-        "caption": "로비 — 캐릭터 선택과 상점 능력치 슬롯"
-      }
+      "what": "무기 5단계 + 짝이 되는 능력치를 가지면 진화하는 시스템 전체와, 진화 조건을 알려 주는 툴팁을 만들었습니다.",
+      "how": "낙뢰는 첫 타격 + 장판 지속 피해, 부메랑은 맞은 자리에서 주변 적을 다시 찾아 분열한 뒤 플레이어에게 귀환합니다.",
+      "why": "원본의 진화 방식은 일정과 기술 문제로 줄이되, 무기와 능력치의 짝을 맞추는 재미는 남겼습니다.",
+      "section": "6.3 핵심 기능",
+      "image": null
     }
   ],
   "troubleshooting": [
     {
-      "title": "로비로 돌아오면 상점 강화값이 없다고 표시",
-      "problem": "로비로 돌아오면 상점 강화값이 없다고 표시",
-      "cause": "로비의 `UpgradeInRoom`이 GameManager의 저장값이 복원되기 전에 먼저 값을 읽음 (스크립트 실행 순서)",
-      "solution": "로비 씬 로드 후 2프레임 기다린 뒤 `haveAbilityData`를 켜고, 켜져 있으면 저장값을 우선 사용",
+      "title": "공격 속도가 빨라지면 이동 모션이 버벅임",
+      "problem": "공격 속도가 빨라지면 이동 모션이 크게 버벅임",
+      "cause": "기본 이동과 공격 중 이동을 두 상태로 나눠 만들어서, 공격할 때마다 두 상태를 오가며 몸 방향도 계속 바뀜",
+      "solution": "당시에는 다른 방식이 떠오르지 않아 그대로 둠. 지금이라면 이동은 블렌드 트리 하나로 합치고, \"어디를 볼지\"만 따로 정함",
       "result": "",
-      "lesson": "",
-      "section": "8.2 문제 해결 경험 (Troubleshooting)"
+      "lesson": "\"어디를 볼지\"와 \"어떻게 걸을지\"를 섞어서 두 벌로 만들었는데 둘을 나눴어야 했습니다.",
+      "section": "3.3 고민과 선택"
     },
     {
-      "title": "후반에 카드가 생성되지 않음",
-      "problem": "후반에 카드가 생성되지 않음",
-      "cause": "슬롯 · 만렙 · 진화 조건으로 거르면 후보가 0장이 되는데, 회복 · 골드 카드 2장이 후보에 없었음",
-      "solution": "4가지 경우마다 하위 조건을 나누고, 후보가 0장이면 Else 카드로 대체",
-      "result": "",
+      "title": "테스트 중 레벨업 때 무한 로딩",
+      "problem": "테스트 중 레벨업 때 무한 로딩에 빠져 에디터를 강제 종료",
+      "cause": "회복 · 골드 카드 데이터를 아직 만들지 않은 상태에서 후보가 0장이 되자, 빈 목록에서 계속 카드를 찾음",
+      "solution": "후보가 0장일 때 회복 · 골드 카드를 내보내는 처리를 안전장치로 넣음",
+      "result": "후반에 슬롯과 강화가 다 차도 레벨업 보상이 항상 의미 있게 남습니다.",
       "lesson": "",
-      "section": "8.2 문제 해결 경험 (Troubleshooting)"
+      "section": "5.4 고민과 선택"
     },
     {
       "title": "경험치 구가 많이 쌓이면 프레임 드랍",
       "problem": "경험치 구가 많이 쌓이면 프레임 드랍",
       "cause": "경험치 구가 일반 `Rigidbody` + 트리거라, 살아 있는 동안 매 프레임 물리 연산 비용이 구 수만큼 쌓임",
-      "solution": "DGS에서는 미수정, 후속 프로젝트에서 물리 없이 이동하도록 변경",
+      "solution": "보스전에서는 일반 몬스터를 모두 풀로 돌려보내 맵을 비움. 근본 원인은 완성 후에 파악해 후속 프로젝트에서 물리 없이 이동하도록 변경",
       "result": "",
       "lesson": "최적화 대상은 생성 횟수만이 아니라 매 프레임 유지 비용도 포함한다",
-      "section": "8.2 문제 해결 경험 (Troubleshooting)"
+      "section": "4.4 고민과 선택"
     }
   ],
   "screenshots": [
@@ -138,7 +124,7 @@
     },
     {
       "src": "images/weapon_tooltip.jpg",
-      "caption": "무기 증강 툴팁 — 각성(진화)에 필요한 능력치 표시",
+      "caption": "무기 증강 툴팁 — 진화에 필요한 능력치 표시",
       "w": 1280,
       "h": 720
     },
@@ -151,27 +137,24 @@
   ],
   "retro": {
     "achieved": [
+      "공격 방향으로 몸을 돌리면서 이동 방향에 맞는 발걸음(뒷걸음질 등) 재생",
       "생성/파괴 → List → Queue 풀로 단계적 개선 (체감, 수치 미측정)",
-      "시간표만 바꿔 5분 웨이브 · 보스전 구성",
-      "레벨업 → 3장 선택 → 즉시 반영 → 재개, 카드가 바닥나도 루프 유지",
-      "무기 16종 모두에 5단계 강화 + 진화 연결",
-      "사망 → 로비 → 상점 강화 → 재도전"
+      "무기 16종 모두에 5단계 강화 + 진화 연결, 진화 조건 안내 툴팁",
+      "실행 파일 빌드 · 시연 영상 · 졸업작품 전시"
     ],
     "regrets": [
-      "무기 수치를 필드 이름 문자열 + 리플렉션으로 주입",
-      "SelectedCardSystem 약 800줄, 4가지 경우마다 비슷한 뽑기 코드 반복",
+      "무기 수치를 변수 이름 문자열로 찾아 주입",
+      "기본 이동과 공격 중 이동을 두 상태로 나눠 공격 속도가 빨라지면 이동 모션이 버벅임",
       "상점 데이터가 메모리에만 있음",
-      "Profiler로 측정하지 않음",
       "실행 순서 문제를 프레임 대기로 해결"
     ],
     "plans": [
-      "무기 증강 추상 부모 클래스 WeaponAugment + SetLevelData",
-      "공용 ObjectPoolManager + IObjectPoolItem",
-      "SaveService로 JSON 파일 저장",
-      "GameManager.BootAsync에서 초기화 순서 명시",
-      "WorldClock으로 게임 시간 분리"
+      "무기 증강 추상 부모 클래스 WeaponAugment + SetLevelData (후속 프로젝트)",
+      "이동은 블렌드 트리 하나로 합치고 \"어디를 볼지\"만 따로 정하기 (아직 미적용)",
+      "SaveService로 JSON 파일 저장 (후속 프로젝트)",
+      "GameManager.BootAsync에서 초기화 순서 명시 (후속 프로젝트)"
     ],
-    "section": "8. 결과 및 배운 점"
+    "section": "9. 결과 및 배운 점"
   },
   "deck": {
     "chapters": [
@@ -190,38 +173,38 @@
         ]
       },
       {
-        "key": "wave",
-        "title": "기능 A — 시간표 기반 웨이브 · 몬스터 풀링",
+        "key": "control",
+        "title": "기능 A — 캐릭터 조작감: 이동 · 조준 · 공격 동기화",
         "sectionPath": [
-          "3. 기능 A — 시간표 기반 웨이브 · 몬스터 풀링"
+          "3. 기능 A — 캐릭터 조작감: 이동 · 조준 · 공격 동기화"
+        ]
+      },
+      {
+        "key": "wave",
+        "title": "기능 B — 시간표 기반 웨이브 · 몬스터 풀링",
+        "sectionPath": [
+          "4. 기능 B — 시간표 기반 웨이브 · 몬스터 풀링"
         ]
       },
       {
         "key": "card",
-        "title": "기능 B — 증강 카드 선택",
+        "title": "기능 C — 증강 카드 선택",
         "sectionPath": [
-          "4. 기능 B — 증강 카드 선택"
+          "5. 기능 C — 증강 카드 선택"
         ]
       },
       {
         "key": "weapon",
-        "title": "기능 C — 무기 증강 · 진화",
+        "title": "기능 D — 무기 증강 · 진화",
         "sectionPath": [
-          "5. 기능 C — 무기 증강 · 진화"
+          "6. 기능 D — 무기 증강 · 진화"
         ]
       },
       {
         "key": "shop",
-        "title": "기능 D — 상점 · 로비 복귀",
+        "title": "기능 E — 상점 · 로비 복귀",
         "sectionPath": [
-          "6. 기능 D — 상점 · 로비 복귀"
-        ]
-      },
-      {
-        "key": "result",
-        "title": "결과 및 배운 점",
-        "sectionPath": [
-          "8. 결과 및 배운 점"
+          "7. 기능 E — 상점 · 로비 복귀"
         ]
       }
     ],
@@ -236,14 +219,25 @@
           "verbatim": true
         },
         "lead": {
-          "text": "플레이어는 몰려오는 몬스터를 자동 공격으로 처치하고, 레벨업마다 증강 카드를 골라 무기와 능력치를 키우며 5분을 버틴 뒤 보스를 잡습니다.",
+          "text": "플레이어는 몰려오는 몬스터를 처치하고, 레벨업마다 증강 카드를 골라 무기와 능력치를 키우며 5분을 버틴 뒤 보스를 잡습니다.",
           "verbatim": true
         },
         "sectionPath": [
           "1. 프로젝트 개요",
           "1.1 What — 무엇을 만들었나"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "",
+            "text": "이 게임을 해 보고 원본인 집중포화에 관심을 갖거나, 뱀서라이크 장르의 재미를 느끼는 것",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "모든 무기를 한 번씩 강화해 보며 \"강화하고 진화하면 이펙트와 효과가 어떻게 바뀔까\" 하는 기대감을 느끼는 것",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "image",
@@ -258,95 +252,39 @@
         ]
       },
       {
-        "key": "role",
-        "chapter": "overview",
-        "layout": "full",
-        "tab": "개요",
-        "title": {
-          "text": "1.2 담당 범위",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "1. 프로젝트 개요",
-          "1.2 담당 범위"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 1,
-            "fp": "구분|내용"
-          }
-        ]
-      },
-      {
-        "key": "why",
-        "chapter": "overview",
-        "layout": "full",
-        "tab": "개요",
-        "title": {
-          "text": "1.3 Why — 왜 이렇게 만들었나",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "1. 프로젝트 개요",
-          "1.3 Why — 왜 이렇게 만들었나"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 1,
-            "fp": "문제 상황 (Before)|결과적으로 생기는 비용|해결 방향"
-          }
-        ]
-      },
-      {
-        "key": "state-flow",
+        "key": "stat-sources",
         "chapter": "base",
         "layout": "visual",
-        "tab": "흐름",
+        "tab": "구조",
         "title": {
-          "text": "2.2 게임 상태 흐름",
+          "text": "2.3 능력치는 어디서 오는가 — 출처별로 나눠 보관하고 한 곳에서 합치기",
           "verbatim": true
         },
         "lead": {
-          "text": "증강 선택 중에는 몬스터 · 투사체 · 타이머가 모두 멈춥니다.",
+          "text": "이 값들을 하나로 섞어 더하지 않고, 출처마다 따로 보관한 뒤 바뀔 때마다 한 함수에서 최종 값을 다시 계산합니다.",
           "verbatim": true
         },
         "sectionPath": [
           "2. 공통 기반 — 게임 루프와 상태 전환",
-          "2.2 게임 상태 흐름"
+          "2.3 능력치는 어디서 오는가 — 출처별로 나눠 보관하고 한 곳에서 합치기"
         ],
-        "points": [],
-        "visuals": [
+        "points": [
           {
-            "kind": "mermaid",
-            "n": 1,
-            "fp": "stateDiagram-v2"
+            "label": "이유",
+            "text": "버프 · 디버프를 나중에 붙이기 쉽게",
+            "verbatim": true
+          },
+          {
+            "label": "이유",
+            "text": "카드 값만 버리고 상점 값만 따로 쓸 수 있게",
+            "verbatim": true
+          },
+          {
+            "label": "이유",
+            "text": "고르는 순서와 상관없이 같은 결과",
+            "verbatim": true
           }
-        ]
-      },
-      {
-        "key": "wave-flow",
-        "chapter": "wave",
-        "layout": "visual",
-        "tab": "구조",
-        "title": {
-          "text": "3.2 시스템 구조",
-          "verbatim": true
-        },
-        "lead": {
-          "text": "풀이 비면 새로 만드는 폴백이 있어 부족해도 소환이 멈추지 않습니다.",
-          "verbatim": true
-        },
-        "sectionPath": [
-          "3. 기능 A — 시간표 기반 웨이브 · 몬스터 풀링",
-          "3.2 시스템 구조"
         ],
-        "points": [],
         "visuals": [
           {
             "kind": "mermaid",
@@ -356,35 +294,227 @@
         ]
       },
       {
-        "key": "pool-get",
-        "chapter": "wave",
-        "layout": "code",
-        "tab": "구현",
+        "key": "stat-rule",
+        "chapter": "base",
+        "layout": "full",
+        "tab": "구조",
         "title": {
-          "text": "② 풀에서 꺼내기",
+          "text": "능력치마다 합치는 방식을 나눔",
           "verbatim": true
         },
         "lead": null,
         "sectionPath": [
-          "3. 기능 A — 시간표 기반 웨이브 · 몬스터 풀링",
-          "3.3 핵심 기능"
+          "2. 공통 기반 — 게임 루프와 상태 전환",
+          "2.3 능력치는 어디서 오는가 — 출처별로 나눠 보관하고 한 곳에서 합치기"
         ],
         "points": [
           {
             "label": "",
-            "text": "재사용한 몬스터에 이전 판의 체력이 남지 않습니다.",
+            "text": "원본인 집중포화를 참고해, 공격력 · 방어력 · 체력처럼 수치로 나오는 능력치와 공격 속도 · 범위 · 지속시간처럼 %나 비율로 나오는 능력치를 구분해 적용했습니다.",
             "verbatim": true
           }
         ],
         "visuals": [
           {
-            "kind": "code",
+            "kind": "table",
+            "n": 1,
+            "fp": "능력치|합치는 방식"
+          }
+        ]
+      },
+      {
+        "key": "control-intro",
+        "chapter": "control",
+        "layout": "overview",
+        "tab": "개요",
+        "title": {
+          "text": "3.1 개요",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "DGS에서 가장 처음 공을 들인 부분입니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "3. 기능 A — 캐릭터 조작감: 이동 · 조준 · 공격 동기화",
+          "3.1 개요"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "캐릭터마다 기본 공격 무기 증강이 하나씩 주어지고, 그 무기의 판정이 캐릭터의 공격 애니메이션과 맞게 나갑니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "공격할 때는 마우스 방향(또는 자동 조준 대상)으로 몸을 돌립니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "예를 들어 A(왼쪽)로 이동하면서 D(오른쪽)로 공격하면, 몸은 오른쪽으로 돌아가고 발은 뒷걸음질을 칩니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": []
+      },
+      {
+        "key": "control-flow",
+        "chapter": "control",
+        "layout": "visual",
+        "tab": "구조",
+        "title": {
+          "text": "3.2 시스템 구조",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 기능 A — 캐릭터 조작감: 이동 · 조준 · 공격 동기화",
+          "3.2 시스템 구조"
+        ],
+        "points": [
+          {
+            "label": "공격 레이어",
+            "text": "공격 모션은 상체만 덮어쓰는 별도 레이어. 그래서 하체는 계속 걷기 모션을 재생",
+            "verbatim": true
+          },
+          {
+            "label": "발걸음",
+            "text": "공격 방향 반대로 움직이면 '뒤' 값이 되어 뒷걸음질",
+            "verbatim": true
+          },
+          {
+            "label": "판정",
+            "text": "휘두르는 순간에 맞아 들어가게",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "flowchart LR"
+          }
+        ]
+      },
+      {
+        "key": "control-choice",
+        "chapter": "control",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "결정. 공격 중에 몸과 발을 어디로 향하게 할 것인가?",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 기능 A — 캐릭터 조작감: 이동 · 조준 · 공격 동기화",
+          "3.3 고민과 선택"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "마우스로 조준하는 게임이라 공격 방향이 가장 중요하다고 봤고, 그러면서도 움직임이 어색하지 않게 하려고 ③을 골랐습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|대안 ① 이동 방향 그대로|대안 ② 몸만 공격 방향으로|대안 ③ 몸은 공격 방향 + 발걸음 다시 계산 ✅"
+          }
+        ]
+      },
+      {
+        "key": "control-retro",
+        "chapter": "control",
+        "layout": "full",
+        "tab": "문제 해결",
+        "title": {
+          "text": "돌아보면 — 공격 속도가 빨라지면 이동이 버벅임",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 기능 A — 캐릭터 조작감: 이동 · 조준 · 공격 동기화",
+          "3.3 고민과 선택"
+        ],
+        "points": [
+          {
+            "label": "배운 점",
+            "text": "\"어디를 볼지\"와 \"어떻게 걸을지\"를 섞어서 두 벌로 만들었는데 둘을 나눴어야 했습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
             "n": 2,
-            "fp": "private GameObject ActivateMonsterFromPool(MonsterType poolT",
-            "lines": [
-              1,
-              18
-            ]
+            "fp": "증상|원인|당시|지금이라면"
+          }
+        ]
+      },
+      {
+        "key": "wave-flow",
+        "chapter": "wave",
+        "layout": "visual",
+        "tab": "구조",
+        "title": {
+          "text": "4.2 시스템 구조",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "예를 들어 메인은 계속 몰려오는 근접 몹, 서브는 드문드문 섞여 나오는 원거리 몹으로 두고 이 조합을 계속 소환합니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "4. 기능 B — 시간표 기반 웨이브 · 몬스터 풀링",
+          "4.2 시스템 구조"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "시간이 지나 몹이 바뀌어야 하면, 다음 시간표가 앞 시간표의 몹 종류와 간격을 덮어씁니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "엘리트 풀만 200으로 큰 이유는, 분열 몹이 죽으면서 낳는 새끼 몹도 엘리트 풀에서 꺼내 쓰기 때문입니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "flowchart LR"
+          }
+        ]
+      },
+      {
+        "key": "wave-data",
+        "chapter": "wave",
+        "layout": "code",
+        "tab": "구조",
+        "title": {
+          "text": "시간표 한 줄의 데이터 묶음",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "메인과 서브를 같은 모양으로 한 줄에 묶었습니다",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "4. 기능 B — 시간표 기반 웨이브 · 몬스터 풀링",
+          "4.2 시스템 구조"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "[System.Serializable]"
           }
         ]
       },
@@ -394,18 +524,18 @@
         "layout": "full",
         "tab": "선택",
         "title": {
-          "text": "결정 1. 몬스터를 어떻게 만들고 없앨 것인가? — 세 번 바꿨습니다",
+          "text": "결정 1. 몬스터를 어떻게 만들고 없앨 것인가? — 네 번 바꿨습니다",
           "verbatim": true
         },
         "lead": null,
         "sectionPath": [
-          "3. 기능 A — 시간표 기반 웨이브 · 몬스터 풀링",
-          "3.4 고민과 선택"
+          "4. 기능 B — 시간표 기반 웨이브 · 몬스터 풀링",
+          "4.4 고민과 선택"
         ],
         "points": [
           {
             "label": "",
-            "text": "다만 개선 효과를 Profiler 수치로 측정하지 않았습니다.",
+            "text": "그때 \"어차피 꺼진 것만 따로 모아 둘 거라면, 순서대로 앞에서 꺼내기만 하면 된다\"는 생각이 들어 Queue로 바꿨습니다.",
             "verbatim": true
           }
         ],
@@ -413,9 +543,45 @@
           {
             "kind": "table",
             "n": 1,
-            "fp": "|1단계: Instantiate / Destroy|2단계: List 풀|3단계: Queue 풀 ✅"
+            "fp": "|1단계: 생성 / 파괴|2단계: List 풀|3단계: 활성 / 비활성 List 분리|4단계: Queue 풀 ✅"
           }
         ]
+      },
+      {
+        "key": "boss-clear",
+        "chapter": "wave",
+        "layout": "overview",
+        "tab": "선택",
+        "title": {
+          "text": "결정 3. 보스가 나오면 일반 몬스터를 어떻게 할 것인가?",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "보스가 나오면 살아 있는 일반 몬스터를 모두 풀로 돌려보내고 보스방을 엽니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "4. 기능 B — 시간표 기반 웨이브 · 몬스터 풀링",
+          "4.4 고민과 선택"
+        ],
+        "points": [
+          {
+            "label": "이유",
+            "text": "시간 끌기 방지 — 보스에게 다가가지 않고 일반 몹만 잡으며 버티는 플레이를 막기 위해",
+            "verbatim": true
+          },
+          {
+            "label": "이유",
+            "text": "프레임 확보 — 당시 경험치 구 처리를 잘못 설계해서, 맵에 구가 쌓이면 프레임이 심하게 떨어졌습니다",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "보스전만큼은 맵을 비워 프레임을 잡으려 했습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": []
       },
       {
         "key": "card-intro",
@@ -423,7 +589,7 @@
         "layout": "visual",
         "tab": "개요",
         "title": {
-          "text": "4.1 개요",
+          "text": "5.1 개요",
           "verbatim": true
         },
         "lead": {
@@ -431,13 +597,18 @@
           "verbatim": true
         },
         "sectionPath": [
-          "4. 기능 B — 증강 카드 선택",
-          "4.1 개요"
+          "5. 기능 C — 증강 카드 선택",
+          "5.1 개요"
         ],
         "points": [
           {
             "label": "",
-            "text": "하나를 고르면 그 효과가 바로 스탯에 반영되고 전투가 다시 시작됩니다.",
+            "text": "마음에 드는 카드가 없으면 리롤 버튼으로 3장을 다시 뽑을 수 있습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "졸업작품 전시 때 관람객이 편하게 즐기도록 리롤 횟수는 제한 없이 두었습니다.",
             "verbatim": true
           }
         ],
@@ -455,115 +626,240 @@
         ]
       },
       {
-        "key": "card-filter",
+        "key": "card-data",
         "chapter": "card",
         "layout": "code",
-        "tab": "구현",
+        "tab": "구조",
         "title": {
-          "text": "① 후보 필터링",
+          "text": "카드 한 장의 데이터 묶음",
           "verbatim": true
         },
         "lead": {
-          "text": "어느 경우든 후보가 0장이면 Else 카드 2장을 내보냅니다.",
+          "text": "무기마다 키우는 능력치가 다르기 때문에(어떤 무기는 투사체 수, 어떤 무기는 지속시간), \"무엇을 얼마나 키우는지\"를 무기 코드가 아니라 카드 데이터의 목록으로 두었습니다.",
           "verbatim": true
         },
         "sectionPath": [
-          "4. 기능 B — 증강 카드 선택",
-          "4.3 핵심 기능"
+          "5. 기능 C — 증강 카드 선택",
+          "5.2 시스템 구조"
         ],
         "points": [],
         "visuals": [
           {
             "kind": "code",
             "n": 1,
-            "fp": "// 만렙 + 진화 완료 무기, 만렙 능력치는 후보에서 제외"
+            "fp": "[CreateAssetMenu(menuName = \"CardData\")]",
+            "lines": [
+              1,
+              20
+            ]
           }
         ]
       },
       {
-        "key": "card-stat",
+        "key": "card-apply",
         "chapter": "card",
-        "layout": "code",
-        "tab": "구현",
+        "layout": "visual",
+        "tab": "흐름",
         "title": {
-          "text": "③ 스탯 재계산",
+          "text": "② 카드 한 장이 캐릭터에 적용되기까지",
           "verbatim": true
         },
-        "lead": {
-          "text": "원본 값(CharacterInfo, 상점값, 카드값, 패시브값)은 그대로 두고, 바뀔 때마다 이 함수에서 최종 값을 다시 계산합니다.",
-          "verbatim": true
-        },
+        "lead": null,
         "sectionPath": [
-          "4. 기능 B — 증강 카드 선택",
-          "4.3 핵심 기능"
+          "5. 기능 C — 증강 카드 선택",
+          "5.3 핵심 기능"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "무기",
+            "text": "이후 고를 때마다 그 카드의 강화 목록(무엇을 얼마나 키우는지)대로 수치를 올리고, 5단계를 넘겨 고르면 진화합니다.",
+            "verbatim": true
+          },
+          {
+            "label": "능력치",
+            "text": "능력치 종류에 맞는 카드 값 칸에만 더한 뒤 최종 능력치를 다시 계산합니다.",
+            "verbatim": true
+          },
+          {
+            "label": "미리 보기",
+            "text": "카드를 고를 때마다 카드 설명을 \"공격력 10 → 15\"처럼 지금 값과 다음 단계 값으로 바꿔",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
-            "kind": "code",
-            "n": 3,
-            "fp": "// 최대 체력 = (기본 + 카드 + 패시브) × 상점 배율"
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "flowchart LR"
           }
         ]
       },
       {
-        "key": "weapon-intro",
-        "chapter": "weapon",
-        "layout": "visual",
-        "tab": "개요",
+        "key": "card-empty",
+        "chapter": "card",
+        "layout": "overview",
+        "tab": "선택",
         "title": {
-          "text": "5.1 개요",
+          "text": "결정 2. 뽑을 카드가 없을 때 무엇을 보여줄 것인가?",
           "verbatim": true
         },
         "lead": {
-          "text": "5단계를 채우고 짝이 맞는 능력치 카드를 갖고 있으면 진화 카드가 나오고, 진화하면 무기의 공격 방식 자체가 바뀝니다.",
+          "text": "처음 이 문제를 만난 건 개발 도중이었습니다.",
           "verbatim": true
         },
         "sectionPath": [
-          "5. 기능 C — 무기 증강 · 진화",
-          "5.1 개요"
+          "5. 기능 C — 증강 카드 선택",
+          "5.4 고민과 선택"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "문제",
+            "text": "뽑을 카드가 없는데도 계속 카드를 찾느라 무한 로딩에 빠져 에디터를 강제 종료해야 하는 일이 여러 번 생겼습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "해결",
+            "text": "후보가 0장일 때 회복 · 골드 카드를 내보내는 처리를 안전장치로 넣었습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "결과",
+            "text": "결과적으로 후반에 슬롯과 강화가 다 차도 레벨업 보상이 항상 의미 있게 남습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": []
+      },
+      {
+        "key": "arousal-guide",
+        "chapter": "weapon",
+        "layout": "visual",
+        "tab": "구현",
+        "title": {
+          "text": "① 진화 조건과 안내 UI",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "튜토리얼이 없는 게임이라, 뱀서라이크를 처음 하거나 집중포화를 해 보지 않은 사람은 진화 조건을 모를 것이라고 생각했습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "6. 기능 D — 무기 증강 · 진화",
+          "6.3 핵심 기능"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "그래서 집중포화의 UI를 참고해, 능력치 아이콘을 기준으로 \"이 능력치가 있어야 진화하는 무기\"를 따로 표시하는 툴팁을 만들었습니다.",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "image",
             "src": "images/weapon_tooltip.jpg",
             "w": 1280,
             "h": 720,
+            "sectionPath": [
+              "6. 기능 D — 무기 증강 · 진화",
+              "6.1 개요"
+            ],
             "caption": {
-              "text": "무기 증강 툴팁 — 각성(진화)에 필요한 능력치 표시",
+              "text": "무기 증강 툴팁 — 진화에 필요한 능력치 표시",
               "verbatim": true
             }
           }
         ]
       },
       {
-        "key": "weapon-inject",
+        "key": "lightning",
         "chapter": "weapon",
-        "layout": "code",
+        "layout": "full",
         "tab": "구현",
         "title": {
-          "text": "② 강화 · 진화 값 주입",
+          "text": "② 낙뢰 진화 — 두 번 때리는 번개",
           "verbatim": true
         },
-        "lead": {
-          "text": "당시에는 공통 인터페이스나 부모 클래스를 다루는 데 익숙하지 않아 선택한 우회책입니다.",
-          "verbatim": true
-        },
+        "lead": null,
         "sectionPath": [
-          "5. 기능 C — 무기 증강 · 진화",
-          "5.3 핵심 기능"
+          "6. 기능 D — 무기 증강 · 진화",
+          "6.3 핵심 기능"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "",
+            "text": "\"한 번 + 장판\"의 2단 피해 구조와, 진화했을 때 한눈에 달라 보이는 이펙트에 특히 신경 썼습니다.",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
-            "kind": "code",
-            "n": 2,
-            "fp": "case 5: // 5단계 이후 선택 = 진화",
-            "lines": [
-              1,
-              9
-            ]
+            "kind": "table",
+            "n": 1,
+            "fp": "|기본|진화"
+          }
+        ]
+      },
+      {
+        "key": "boomerang",
+        "chapter": "weapon",
+        "layout": "visual",
+        "tab": "구현",
+        "title": {
+          "text": "③ 부메랑 진화 — 맞은 자리에서 다시 찾아가는 분열",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "6. 기능 D — 무기 증강 · 진화",
+          "6.3 핵심 기능"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "진화한 부메랑은 몬스터에 맞는 순간 사라지고, 맞은 좌표를 기준으로 주변 적을 다시 찾아 분열 부메랑 4개를 날립니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "분열 부메랑은 다시 분열하지 않고, 적을 맞힌 뒤 모두 플레이어에게 되돌아옵니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "flowchart LR"
+          }
+        ]
+      },
+      {
+        "key": "evo-scope",
+        "chapter": "weapon",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "결정 0. 원본의 진화 방식을 그대로 만들 것인가?",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "6. 기능 D — 무기 증강 · 진화",
+          "6.4 고민과 선택"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "그래서 진화의 핵심인 \"무기와 능력치의 짝을 맞추는 재미\"는 남기고, 획득 방법은 기존 카드 뽑기 안으로 줄였습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|원본 집중포화|DGS ✅"
           }
         ]
       },
@@ -578,21 +874,31 @@
         },
         "lead": null,
         "sectionPath": [
-          "5. 기능 C — 무기 증강 · 진화",
-          "5.4 고민과 선택"
+          "6. 기능 D — 무기 증강 · 진화",
+          "6.4 고민과 선택"
         ],
         "points": [
           {
             "label": "",
-            "text": "지금 보면 기술 부채입니다.",
+            "text": "그렇다면 부를 때 쓰는 변수 이름을 통일하자고 정했습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "일정이 촉박한 시점에 AI와 주고받으며 모든 무기에 진화를 급하게 붙였습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "그래도 그중 낙뢰와 부메랑 진화만큼은 직접 공들여 만들었습니다(6.3).",
             "verbatim": true
           }
         ],
         "visuals": [
           {
             "kind": "table",
-            "n": 1,
-            "fp": "|당시 선택: 필드 이름 통일 + 리플렉션|대안: 공통 부모 클래스 / 인터페이스"
+            "n": 2,
+            "fp": "|당시 선택: 변수 이름 통일 + 이름으로 찾아 넣기|대안: 공통 부모 클래스 (상속)"
           }
         ]
       },
@@ -602,7 +908,7 @@
         "layout": "visual",
         "tab": "개요",
         "title": {
-          "text": "6.1 개요",
+          "text": "7.1 개요",
           "verbatim": true
         },
         "lead": {
@@ -610,10 +916,16 @@
           "verbatim": true
         },
         "sectionPath": [
-          "6. 기능 D — 상점 · 로비 복귀",
-          "6.1 개요"
+          "7. 기능 E — 상점 · 로비 복귀",
+          "7.1 개요"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "",
+            "text": "강화를 다 끝낸 뒤 처음부터 다시 해 보고 싶을 때를 위해 상점 초기화 버튼도 두었습니다(7.4).",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "image",
@@ -624,85 +936,6 @@
               "text": "로비 — 캐릭터 선택과 상점 능력치 슬롯",
               "verbatim": true
             }
-          }
-        ]
-      },
-      {
-        "key": "shop-restore",
-        "chapter": "shop",
-        "layout": "code",
-        "tab": "구현",
-        "title": {
-          "text": "로비 복귀 시 저장값 복원",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "6. 기능 D — 상점 · 로비 복귀",
-          "6.3 핵심 기능"
-        ],
-        "points": [
-          {
-            "label": "",
-            "text": "UpgradeInRoom은 haveAbilityData가 켜져 있으면 기본값 대신 GameManager에 저장된 강화 횟수를 먼저 사용합니다",
-            "verbatim": true
-          }
-        ],
-        "visuals": [
-          {
-            "kind": "code",
-            "n": 1,
-            "fp": "public void ReturnRoom()",
-            "lines": [
-              8,
-              22
-            ]
-          }
-        ]
-      },
-      {
-        "key": "troubleshoot",
-        "chapter": "result",
-        "layout": "full",
-        "tab": "문제 해결",
-        "title": {
-          "text": "8.2 문제 해결 경험 (Troubleshooting)",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "8. 결과 및 배운 점",
-          "8.2 문제 해결 경험 (Troubleshooting)"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 1,
-            "fp": "#|문제|원인|해결 / 개선|상태"
-          }
-        ]
-      },
-      {
-        "key": "follow-up",
-        "chapter": "result",
-        "layout": "full",
-        "tab": "배운 점",
-        "title": {
-          "text": "8.4 배운 점 → 후속 프로젝트에서 적용",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "8. 결과 및 배운 점",
-          "8.4 배운 점 → 후속 프로젝트에서 적용"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 1,
-            "fp": "DGS 기술 부채|후속 프로젝트에서 바꾼 방식|근거"
           }
         ]
       }

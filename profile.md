@@ -28,6 +28,9 @@
 - Unity
 - C#
 - 디자인 패턴
+- Firebase 
+- Android 
+- WebSocket
 
 ## 페이지 설정
 
