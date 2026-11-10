@@ -52,8 +52,13 @@
       "what": "계단 대각선 이동, 플랫폼 통과, 벽 붙기 · 공중제비, 구르기를 직접 계산하는 2D 이동입니다.",
       "how": "`PlayerController`는 요청만 보내고 `CharacterController2D`가 x축 → y축 순서로 BoxCast하며, 계단은 `maxStepHeight`를 4번 나눠 올려 보는 step 방식으로 처리합니다.",
       "why": "기본 물리로는 원작 같은 \"딱 떨어지는\" 조작감을 만들려면 보정이 많아, 수업의 Kinematic 컨트롤러를 기반으로 계단 · 플랫폼 · 벽 · 구르기를 추가했습니다.",
-      "section": "3.3 핵심 기능",
-      "image": null
+      "section": "3.1 개요",
+      "image": {
+        "src": "images/stairs.gif",
+        "w": 800,
+        "h": 450,
+        "caption": "계단 대각선 이동 (Step 높이 보정)"
+      }
     },
     {
       "title": "크로노스 · 히트스탑",
@@ -62,10 +67,10 @@
       "why": "대상마다 속도 배율을 주면 바꿀 곳이 너무 많아 timeScale을 택했고, 히트스탑과 겹쳐도 감속 상태가 풀리거나 굳지 않도록 복귀 값을 다시 계산합니다.",
       "section": "4.1 개요",
       "image": {
-        "src": "images/chronos_gauge.png",
-        "w": 1390,
-        "h": 300,
-        "caption": "크로노스 게이지와 lShift 키 UI"
+        "src": "images/chronos.gif",
+        "w": 800,
+        "h": 450,
+        "caption": "크로노스: lShift로 감속해 원거리 적의 총알에 대응"
       }
     },
     {
@@ -73,16 +78,26 @@
       "what": "사망하면 기록을 되감은 뒤 재시작하고, 클리어하면 정방향 리플레이를 보여 줍니다.",
       "how": "매 틱 `TimelineFrame`(플레이어 · 적 · 오브젝트 · 이펙트 상태)을 기록하고, 재생은 `float` 틱 위치로 두 프레임 사이를 보간하며 `unscaledDeltaTime`으로 진행합니다.",
       "why": "입력만 기록하면 크로노스 · 적 AI 때문에 결과가 달라지고 역방향 시뮬레이션이 불가능해, 되돌릴 수 있는 상태 스냅샷을 택했습니다.",
-      "section": "5.3 핵심 기능",
-      "image": null
+      "section": "5.1 개요",
+      "image": {
+        "src": "images/rewind.gif",
+        "w": 800,
+        "h": 450,
+        "caption": "사망 후 역재생"
+      }
     },
     {
       "title": "전투 확장 · 화면 연출",
       "what": "수업 전투 코드에 구르기 무적 · 팀킬 방지 · 총알 반사를 붙이고, 타격 연출을 한 곳에서 호출합니다.",
       "how": "`ScreenEffectManager.PlayAttackHitEffect` 하나로 슬래시 · 히트스탑 · 쉐이크를 내고, 재생 · 역재생 중에는 여기서 새 연출을 막습니다.",
       "why": "호출부마다 연출을 처리하면 재생 중 차단 조건을 모든 곳에 넣어야 해서, 정적 API로 모아 공통 규칙을 한 곳에서 처리했습니다.",
-      "section": "6.3 핵심 기능",
-      "image": null
+      "section": "6.1 개요",
+      "image": {
+        "src": "images/kill_slash.gif",
+        "w": 800,
+        "h": 450,
+        "caption": "적 처치 시 슬래시 · 히트스탑 · 쉐이크"
+      }
     }
   ],
   "troubleshooting": [
@@ -116,22 +131,28 @@
   ],
   "screenshots": [
     {
+      "src": "images/replay.gif",
+      "caption": "클리어 후 CCTV 리플레이 (정방향 재생)",
+      "w": 800,
+      "h": 450
+    },
+    {
+      "src": "images/parry.gif",
+      "caption": "타이밍을 맞춰 총알 반사(패링)",
+      "w": 800,
+      "h": 450
+    },
+    {
+      "src": "images/wall_flip.gif",
+      "caption": "벽 붙기 → 공중제비",
+      "w": 800,
+      "h": 450
+    },
+    {
       "src": "images/dead.png",
       "caption": "Dead 상태: 피격 사망 후 재시작 안내",
       "w": 1281,
       "h": 723
-    },
-    {
-      "src": "images/timeout.png",
-      "caption": "Dead 상태: 시간 초과 사망 후 재시작 안내",
-      "w": 1276,
-      "h": 723
-    },
-    {
-      "src": "images/chronos_gauge.png",
-      "caption": "크로노스 게이지와 lShift 키 UI",
-      "w": 1390,
-      "h": 300
     }
   ],
   "retro": {
@@ -335,28 +356,33 @@
         ]
       },
       {
-        "key": "time-axis",
-        "chapter": "base",
-        "layout": "full",
-        "tab": "구조",
+        "key": "move-intro",
+        "chapter": "move",
+        "layout": "visual",
+        "tab": "개요",
         "title": {
-          "text": "2.2 원칙: \"게임 세계는 scaled, 시간을 다루는 시스템은 unscaled\"",
+          "text": "3.1 개요",
           "verbatim": true
         },
         "lead": {
-          "text": "어떤 코드가 어떤 시간을 쓰는지를 먼저 정했습니다.",
+          "text": "벽에 붙어 있다가 w로 반대 방향 공중제비를 할 수 있고, 계단은 대각선으로 자연스럽게 오르내립니다.",
           "verbatim": true
         },
         "sectionPath": [
-          "2. 공통 기반 — 게임 흐름과 시간축 분리",
-          "2.2 원칙: \"게임 세계는 scaled, 시간을 다루는 시스템은 unscaled\""
+          "3. 기능 A — 플레이어 이동",
+          "3.1 개요"
         ],
         "points": [],
         "visuals": [
           {
-            "kind": "table",
-            "n": 1,
-            "fp": "대상|사용하는 시간|이유"
+            "kind": "image",
+            "src": "images/stairs.gif",
+            "w": 800,
+            "h": 450,
+            "caption": {
+              "text": "계단 대각선 이동 (Step 높이 보정)",
+              "verbatim": true
+            }
           }
         ]
       },
@@ -387,35 +413,6 @@
         ]
       },
       {
-        "key": "move-choice",
-        "chapter": "move",
-        "layout": "full",
-        "tab": "선택",
-        "title": {
-          "text": "결정 2. 대각선(계단) 이동을 어떻게 처리할 것인가?",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "3. 기능 A — 플레이어 이동",
-          "3.4 고민과 선택"
-        ],
-        "points": [
-          {
-            "label": "",
-            "text": "채택 후 기본 이동은 정상이었지만, 공격 대시 · 구르기처럼 한 틱에 크게 움직이면 step이 실패했습니다.",
-            "verbatim": true
-          }
-        ],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 2,
-            "fp": "|대안 A: 충돌 normal 방향으로 이동|대안 B: step 방식 ✅"
-          }
-        ]
-      },
-      {
         "key": "chronos-intro",
         "chapter": "chronos",
         "layout": "visual",
@@ -442,11 +439,11 @@
         "visuals": [
           {
             "kind": "image",
-            "src": "images/chronos_gauge.png",
-            "w": 1390,
-            "h": 300,
+            "src": "images/chronos.gif",
+            "w": 800,
+            "h": 450,
             "caption": {
-              "text": "크로노스 게이지와 lShift 키 UI",
+              "text": "크로노스: lShift로 감속해 원거리 적의 총알에 대응",
               "verbatim": true
             }
           }
@@ -533,6 +530,37 @@
         ]
       },
       {
+        "key": "record-intro",
+        "chapter": "record",
+        "layout": "visual",
+        "tab": "개요",
+        "title": {
+          "text": "5.1 개요",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "플레이하는 동안 매 틱 플레이어 · 적 · 오브젝트(총알, 카메라) · 이펙트의 상태를 기록합니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "5. 기능 C — 녹화 · 재생 · 역재생",
+          "5.1 개요"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/rewind.gif",
+            "w": 800,
+            "h": 450,
+            "caption": {
+              "text": "사망 후 역재생",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
         "key": "record-struct",
         "chapter": "record",
         "layout": "visual",
@@ -608,6 +636,37 @@
         ]
       },
       {
+        "key": "combat-intro",
+        "chapter": "combat",
+        "layout": "visual",
+        "tab": "개요",
+        "title": {
+          "text": "6.1 개요",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "타격 연출(히트스탑 · 쉐이크 · 화면 슬래시 · 잔상)은 ScreenEffectManager 한 곳에서 호출합니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "6. 기능 D — 전투 확장 · 화면 연출",
+          "6.1 개요"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/kill_slash.gif",
+            "w": 800,
+            "h": 450,
+            "caption": {
+              "text": "적 처치 시 슬래시 · 히트스탑 · 쉐이크",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
         "key": "combat-effect",
         "chapter": "combat",
         "layout": "code",
@@ -630,29 +689,6 @@
             "kind": "code",
             "n": 3,
             "fp": "// ScreenEffectManager.cs — 외부는 이 함수 하나만 호출"
-          }
-        ]
-      },
-      {
-        "key": "combat-choice",
-        "chapter": "combat",
-        "layout": "full",
-        "tab": "선택",
-        "title": {
-          "text": "결정 1. 연출 호출을 어디에 둘 것인가?",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "6. 기능 D — 전투 확장 · 화면 연출",
-          "6.4 고민과 선택"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 1,
-            "fp": "|대안 A: 연출마다 호출하는 쪽에서 직접 처리|대안 B: ScreenEffectManager 정적 API로 통합 ✅"
           }
         ]
       },

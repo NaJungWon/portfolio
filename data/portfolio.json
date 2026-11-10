@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-10",
+  "generatedAt": "2026-11-11",
   "profile": {
     "name": "나정원",
     "nameEn": "NA JUNG WON",
@@ -26,12 +26,12 @@
           "project": "02-katana-zero"
         },
         {
-          "text": "GridLayout 칸과 별도 레이어의 타일을 나눠, 판정은 board[,] 데이터로 하고 화면은 따라가게 구성",
-          "project": "05-meow2048"
-        },
-        {
           "text": "GridLayoutGroup UI 가방의 칸 상태를 2차원 배열 원본으로 관리하고 화면은 그 결과만 표시",
           "project": "04-inventory-player"
+        },
+        {
+          "text": "GridLayout 칸과 별도 레이어의 타일을 나눠, 판정은 board[,] 데이터로 하고 화면은 따라가게 구성",
+          "project": "05-meow2048"
         },
         {
           "text": "공격 레이어 + 아바타 마스크로 상체 공격 · 하체 이동을 나누고 발걸음은 공격 방향 기준으로 블렌드 트리에",
@@ -51,12 +51,12 @@
           "project": "02-katana-zero"
         },
         {
-          "text": "코루틴 병렬 이동 + 완료 카운트로 \"모든 타일 도착\" 시점을 확정",
-          "project": "05-meow2048"
-        },
-        {
           "text": "Firebase async Task 결과를 플래그로 넘겨 코루틴(메인 스레드)에서 UI 갱신",
           "project": "04-inventory-player"
+        },
+        {
+          "text": "코루틴 병렬 이동 + 완료 카운트로 \"모든 타일 도착\" 시점을 확정",
+          "project": "05-meow2048"
         },
         {
           "text": "생성/파괴 → List → Queue로 바꿔 몬스터 타입 · 종류별 오브젝트 풀",
@@ -76,12 +76,12 @@
           "project": "02-katana-zero"
         },
         {
-          "text": "타일 SFX가 OnEnable / OnDisable에서 볼륨 매니저에 스스로 등록 · 해제",
-          "project": "05-meow2048"
-        },
-        {
           "text": "스폰 데이터를 웨이브 · 시간 순으로 정렬한 Queue로 한 번씩 꺼내 처리",
           "project": "04-inventory-player"
+        },
+        {
+          "text": "타일 SFX가 OnEnable / OnDisable에서 볼륨 매니저에 스스로 등록 · 해제",
+          "project": "05-meow2048"
         },
         {
           "text": "투사체는 피격 위치만 이벤트로 알리고 이펙트 풀은 무기 본체가 관리",
