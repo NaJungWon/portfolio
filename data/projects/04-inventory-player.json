@@ -90,10 +90,10 @@
       "why": "\"정비 턴에 가방을 정리하고, 전투 턴에는 그 결과로 싸운다\"는 흐름을 위해 가방(UI)과 전투(월드)를 나눴습니다.",
       "section": "5.3 핵심 기능 ②: 장착 기록에서 전투 슬롯으로",
       "image": {
-        "src": "images/fight.jpg",
-        "w": 540,
-        "h": 960,
-        "caption": "전투(Fight) 화면 — 아래 전투 슬롯의 아이템이 자동으로 공격"
+        "src": "images/fight.gif",
+        "w": 360,
+        "h": 642,
+        "caption": "전투(Fight) — 아래 전투 슬롯의 아이템이 쿨타임마다 가장 가까운 몬스터에게 날아감"
       }
     },
     {
@@ -142,22 +142,34 @@
       "h": 960
     },
     {
-      "src": "images/rest.jpg",
-      "caption": "정비(Rest) 화면 — 가운데 3×3 가방과 아래 리롤 영역",
-      "w": 540,
-      "h": 960
+      "src": "images/drag.gif",
+      "w": 360,
+      "h": 642,
+      "caption": "아이템을 끌면 놓일 칸이 초록으로 미리 보이고, 놓으면 칸에 맞춰 붙음"
     },
     {
-      "src": "images/fight.jpg",
-      "caption": "전투(Fight) 화면 — 아래 전투 슬롯의 아이템이 자동으로 공격",
-      "w": 540,
-      "h": 960
+      "src": "images/bag_expand.gif",
+      "w": 360,
+      "h": 642,
+      "caption": "슬롯 아이템을 끌면 가방이 5×7로 펼쳐지고, 놓으면 열린 칸에 맞춰 다시 줄어듦"
     },
     {
-      "src": "images/launcher_gradle.png",
-      "caption": "launcherTemplate.gradle에 google-services 플러그인을 추가한 부분",
-      "w": 508,
-      "h": 221
+      "src": "images/merge.gif",
+      "w": 360,
+      "h": 642,
+      "caption": "같은 아이템을 겹치면 레벨이 오르며 아이콘이 바뀜 (합칠 수 없는 자리는 빨강)"
+    },
+    {
+      "src": "images/fight.gif",
+      "w": 360,
+      "h": 642,
+      "caption": "전투(Fight) — 아래 전투 슬롯의 아이템이 쿨타임마다 가장 가까운 몬스터에게 날아감"
+    },
+    {
+      "src": "images/wave_end.gif",
+      "w": 360,
+      "h": 642,
+      "caption": "웨이브의 마지막 몬스터를 처치하면 정비 화면으로 바뀌고 다음 웨이브 준비"
     }
   ],
   "retro": {
@@ -488,6 +500,16 @@
             "kind": "code",
             "n": 2,
             "fp": "// Item_System.cs:187"
+          },
+          {
+            "kind": "image",
+            "src": "images/drag.gif",
+            "w": 360,
+            "h": 642,
+            "caption": {
+              "text": "아이템을 끌면 놓일 칸이 초록으로 미리 보이고, 놓으면 칸에 맞춰 붙음",
+              "verbatim": true
+            }
           }
         ]
       },
@@ -548,6 +570,16 @@
               8,
               22
             ]
+          },
+          {
+            "kind": "image",
+            "src": "images/bag_expand.gif",
+            "w": 360,
+            "h": 642,
+            "caption": {
+              "text": "슬롯 아이템을 끌면 가방이 5×7로 펼쳐지고, 놓으면 열린 칸에 맞춰 다시 줄어듦",
+              "verbatim": true
+            }
           }
         ]
       },
@@ -627,6 +659,16 @@
               13,
               29
             ]
+          },
+          {
+            "kind": "image",
+            "src": "images/merge.gif",
+            "w": 360,
+            "h": 642,
+            "caption": {
+              "text": "같은 아이템을 겹치면 레벨이 오르며 아이콘이 바뀜 (합칠 수 없는 자리는 빨강)",
+              "verbatim": true
+            }
           }
         ]
       },
@@ -651,11 +693,11 @@
         "visuals": [
           {
             "kind": "image",
-            "src": "images/fight.jpg",
-            "w": 540,
-            "h": 960,
+            "src": "images/fight.gif",
+            "w": 360,
+            "h": 642,
             "caption": {
-              "text": "전투(Fight) 화면 — 아래 전투 슬롯의 아이템이 자동으로 공격",
+              "text": "전투(Fight) — 아래 전투 슬롯의 아이템이 쿨타임마다 가장 가까운 몬스터에게 날아감",
               "verbatim": true
             }
           }
