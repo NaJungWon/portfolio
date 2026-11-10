@@ -835,6 +835,48 @@
         ]
       },
       {
+        "key": "hit-effect",
+        "chapter": "weapon",
+        "layout": "visual",
+        "tab": "구현",
+        "title": {
+          "text": "④ 피격 이펙트 — 위치만 받아 한 곳에서 재생, 같은 자리 중첩은 거르기",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "처음 만든 프로토타입 무기 증강들에는 피격 이펙트를 만드는 부분이 없었습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "6. 기능 D — 무기 증강 · 진화",
+          "6.3 핵심 기능"
+        ],
+        "points": [
+          {
+            "label": "구조",
+            "text": "투사체는 \"어디에 맞았는지\"만 알리고, 이펙트를 풀에서 꺼내 재생하는 일은 무기 본체가 맡습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "문제",
+            "text": "한 몬스터에게 피격 이펙트가 여러 번 터지면서 같은 자리에 이펙트가 수십 개 생기는 문제가 있었습니다",
+            "verbatim": true
+          },
+          {
+            "label": "해결",
+            "text": "같은 자리에서 짧은 시간 안에 또 터지면 무시하도록 했습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 2,
+            "fp": "flowchart LR"
+          }
+        ]
+      },
+      {
         "key": "evo-scope",
         "chapter": "weapon",
         "layout": "full",
