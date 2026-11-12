@@ -750,6 +750,43 @@
         ]
       },
       {
+        "key": "measure",
+        "chapter": "result",
+        "layout": "full",
+        "tab": "결과",
+        "title": {
+          "text": "측정 — 녹화 데이터의 메모리 비용과 fps",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "녹화 · 역재생 · 리플레이 모두 180 fps에서 떨어지지 않았습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "7. 결과 및 배운 점",
+          "7.1 결과"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "180은 수직 동기화(Standalone 기본 품질 Ultra · VSync On)로 모니터 주사율에 묶인 상한",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "100초(5,000틱) 녹화로 Mono 힙이 약 8.5 MB 늘었습니다 → 틱 하나에 약 1.7 KB, 1분에 약 5 MB.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 2,
+            "fp": "상황|시간|기록된 틱|Mono 메모리|평균 / 최저 fps"
+          }
+        ]
+      },
+      {
         "key": "troubleshoot",
         "chapter": "result",
         "layout": "full",
