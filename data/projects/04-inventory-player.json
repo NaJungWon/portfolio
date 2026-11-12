@@ -3,7 +3,7 @@
   "id": "04-inventory-player",
   "doc": "기술문서.md",
   "title": "인벤토리 플레이어",
-  "tagline": "가방 정리가 곧 전투력인 모바일 2D 캐주얼 웨이브 방어 게임",
+  "tagline": "가방 정리가 곧 전투력인 모바일 2D 전략 퍼즐 게임",
   "cover": "images/title.jpg",
   "team": {
     "type": "solo",
@@ -13,11 +13,11 @@
   "meta": [
     {
       "label": "장르",
-      "value": "모바일 2D 캐주얼 웨이브 방어"
+      "value": "모바일 2D 전략 퍼즐"
     },
     {
       "label": "기간",
-      "value": "2025.09 ~ 2025.12 (약 15주)"
+      "value": "2025.09 ~ 2025.12 (대학교 한 학기, 약 15주)"
     },
     {
       "label": "인원",
@@ -25,7 +25,7 @@
     },
     {
       "label": "환경",
-      "value": "Unity 2022.3.62f3 (2D) · Android (세로 540×960), C#, Firebase Realtime Database, NavMeshPlus"
+      "value": "Unity 2022.3.62f3 (2D) · Android (화면 자동 회전), C#, Firebase Realtime Database, NavMeshPlus"
     }
   ],
   "tags": [
@@ -74,7 +74,7 @@
       "title": "Firebase 계정 데이터 · 모바일 빌드",
       "what": "게스트 로그인 버튼 한 번으로 기기별 계정을 만들고, 다시 접속하면 같은 UID로 이어서 플레이합니다.",
       "how": "`device_mapping/{기기 ID}`로 기존 UID를 찾고, 없으면 `uid_counter`로 새 UID를 발급합니다. Android 빌드는 빌드 전처리 스크립트로 `google-services.json`을 Gradle 경로에 미리 복사해 해결했습니다.",
-      "why": "서버를 직접 만들지 않고도 데이터를 유지하는 방법을 실제 모바일 프로젝트에 적용하는 것이 개발 조건이었습니다.",
+      "why": "수업에서 배운 Firebase로, 서버를 직접 만들지 않고도 데이터를 유지하는 방법을 실제 모바일 프로젝트에 적용하는 것을 개발 조건으로 스스로 정했습니다.",
       "section": "3.1 개요",
       "image": {
         "src": "images/lobby.jpg",
@@ -87,7 +87,7 @@
       "title": "머지 · 장착 → 전투",
       "what": "같은 아이템 · 같은 레벨을 겹치면 레벨이 오르고, 웨이브가 시작되면 장착한 아이템마다 전투 슬롯이 생겨 자동으로 공격합니다.",
       "how": "가방은 장착 기록(`OccupiedItemDatas`)만 남기고, `InGame_System`이 그 기록마다 전투 슬롯(`Item_Function`)을 생성합니다.",
-      "why": "\"정비 턴에 가방을 정리하고, 전투 턴에는 그 결과로 싸운다\"는 흐름을 위해 가방(UI)과 전투(월드)를 나눴습니다.",
+      "why": "모바일에서 손가락으로 끌어 정리하는 가방은 화면에 붙은 UI에 가깝다고 보고, 가방(UI)과 전투(게임 오브젝트)를 나눴습니다.",
       "section": "5.3 핵심 기능 ②: 장착 기록에서 전투 슬롯으로",
       "image": {
         "src": "images/fight.gif",
@@ -108,7 +108,7 @@
   "troubleshooting": [
     {
       "title": "Android 빌드에서 Firebase 연동 실패",
-      "problem": "에디터에서는 로그인이 되는데, Android로 빌드해 기기에서 실행하면 Firebase 연동이 계속 실패",
+      "problem": "에디터에서는 로그인이 되는데, Android 기기에서는 Firebase 연동 자체가 되지 않아 시작 버튼을 눌러도 로비로 넘어가지 못함",
       "cause": "Android 빌드 설정이 맞지 않았고, `google-services.json`이 Gradle 빌드 폴더에 복사되기 전에 Gradle이 실행됨",
       "solution": "빌드 직전에 가장 먼저 실행되는 에디터 스크립트로 `google-services.json`을 미리 복사하고, `launcherTemplate.gradle`에 Google Services 플러그인 추가",
       "result": "Android 기기에서 게스트 로그인과 데이터 저장이 동작했습니다.",
@@ -120,7 +120,7 @@
       "problem": "잠긴 칸을 숨기거나 가방이 커지면 칸 배치가 일그러짐",
       "cause": "GridLayout은 켜진 칸만 순서대로 채움. 칸을 끄면 뒤 칸이 당겨지고, 가방 너비가 바뀌면 한 줄 칸 수가 바뀜",
       "solution": "열린 영역 사각형 안의 잠긴 칸은 투명하게 켜 두고, 가방 크기를 사각형에 맞춰 한 줄 칸 수를 고정",
-      "result": "",
+      "result": "슬롯 아이템으로 가방을 넓혀도 열린 칸의 모양이 그대로 유지됨",
       "lesson": "",
       "section": "4.8 트러블슈팅"
     },
@@ -129,7 +129,7 @@
       "problem": "슬롯 아이템으로 가방이 넓어진 뒤, 이미 놓인 아이템이 칸과 어긋난 위치에 남음",
       "cause": "가방 크기가 바뀌면 GridLayout이 다음 프레임에 칸을 다시 배치함. 아이템은 이전 좌표에 그대로 있음",
       "solution": "한 프레임 기다린 뒤 각 아이템이 점유한 칸들의 중심으로 다시 이동",
-      "result": "",
+      "result": "가방이 넓어진 뒤에도 장착 아이템이 자기 칸 위로 다시 붙음",
       "lesson": "아이템의 위치를 좌표로 기억하지 말고 \"어느 칸을 차지하는가\"로 기억해야 한다",
       "section": "4.8 트러블슈팅"
     }
@@ -254,7 +254,7 @@
           "verbatim": true
         },
         "lead": {
-          "text": "테트리스처럼 모양이 다른 아이템을 가방 칸에 배치하고, 같은 아이템끼리 합쳐 강화하면, 다음 웨이브에서 장착한 아이템이 자동으로 싸우는 모바일 2D 캐주얼 웨이브 방어 게임입니다.",
+          "text": "테트리스처럼 모양이 다른 아이템을 가방 칸에 배치하고, 같은 아이템끼리 합쳐 강화하면, 다음 웨이브에서 장착한 아이템이 자동으로 싸우는 모바일 2D 전략 퍼즐 게임입니다.",
           "verbatim": true
         },
         "sectionPath": [
@@ -346,7 +346,7 @@
           {
             "kind": "table",
             "n": 1,
-            "fp": "|[A] 가방 아이템이 직접 공격|[B] 가방(UI) · 전투(인게임) 분리 ✓"
+            "fp": "|[A] 가방까지 게임 오브젝트로|[B] 가방(UI) · 전투(게임 오브젝트) 분리 ✓"
           }
         ]
       },
@@ -625,7 +625,7 @@
           {
             "kind": "table",
             "n": 1,
-            "fp": "문제|증상|원인|해결"
+            "fp": "문제|증상|원인|해결|결과"
           }
         ]
       },
@@ -700,6 +700,32 @@
               "text": "전투(Fight) — 아래 전투 슬롯의 아이템이 쿨타임마다 가장 가까운 몬스터에게 날아감",
               "verbatim": true
             }
+          }
+        ]
+      },
+      {
+        "key": "merge-order",
+        "chapter": "merge",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "5.4 고민과 선택: 머지를 먼저 볼 것인가, 배치를 먼저 볼 것인가",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "먼저 놓아 보고, 놓을 수 없으면 같은 아이템 위인지 확인해 합친다",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "5. 시스템 ③ 머지 · 장착 → 전투",
+          "5.4 고민과 선택: 머지를 먼저 볼 것인가, 배치를 먼저 볼 것인가"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|[A] 배치 우선 ✓|[B] 머지 우선"
           }
         ]
       },
