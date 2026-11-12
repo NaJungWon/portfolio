@@ -81,9 +81,9 @@
       "section": "5.1 개요",
       "image": {
         "src": "images/rewind.gif",
-        "w": 800,
-        "h": 450,
-        "caption": "사망 후 역재생"
+        "w": 640,
+        "h": 364,
+        "caption": "사망 후 역재생 — 공격 · 점프가 9배속으로 거꾸로 감긴 뒤 같은 스테이지 처음으로"
       }
     },
     {
@@ -155,10 +155,10 @@
       "h": 450
     },
     {
-      "src": "images/timeout_dead.gif",
-      "caption": "Dead 상태: 시간 제한이 끝나면 사망 → 재시작 안내 (시연 1:48)",
-      "w": 640,
-      "h": 364
+      "src": "images/platform.gif",
+      "caption": "플랫폼 통과: 점프 · 계단 위에서 LayerMask의 Platform 제외 (씬 뷰)",
+      "w": 800,
+      "h": 450
     },
     {
       "src": "images/camera_bounds.png",
@@ -172,6 +172,7 @@
       "계단 대각선 이동 · 플랫폼 통과 · 벽 붙기 · 공중제비 · 구르기 구현 (CharacterController2D 166줄 → 1,014줄)",
       "크로노스 · 히트스탑 · 일시정지가 겹쳐도 timeScale이 꼬이지 않음",
       "역재생 9배속, 정방향 1배속 리플레이 · 틱 사이 보간",
+      "100초(5,000틱) 녹화에 Mono 메모리 약 +8.5 MB, 녹화 · 역재생 · 리플레이 중 180 fps(VSync 상한) 유지 (빌드 측정)",
       "타이틀 + 스테이지 8개, Windows 빌드 (13일, 1인)"
     ],
     "regrets": [
@@ -426,7 +427,7 @@
           {
             "kind": "mermaid",
             "n": 1,
-            "fp": "flowchart LR"
+            "fp": "flowchart TB"
           }
         ]
       },
@@ -540,11 +541,6 @@
         "visuals": [
           {
             "kind": "code",
-            "n": 2,
-            "fp": "// ChronosSystem.cs:196"
-          },
-          {
-            "kind": "code",
             "n": 3,
             "fp": "// ScreenEffectManager.cs:248"
           }
@@ -606,10 +602,10 @@
           {
             "kind": "image",
             "src": "images/rewind.gif",
-            "w": 800,
-            "h": 450,
+            "w": 640,
+            "h": 364,
             "caption": {
-              "text": "사망 후 역재생",
+              "text": "사망 후 역재생 — 공격 · 점프가 9배속으로 거꾸로 감긴 뒤 같은 스테이지 처음으로",
               "verbatim": true
             }
           }
