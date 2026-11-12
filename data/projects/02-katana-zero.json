@@ -43,14 +43,14 @@
     "extra": []
   },
   "intent": {
-    "text": "원작의 이동·시간 감속·되감기를 기본 물리와 씬 리로드로는 만들 수 없어, 이동은 Kinematic + BoxCast로 직접 계산하고, 감속은 Time.timeScale 하나로 처리하며, 매 틱 상태를 기록해 정방향·역방향으로 다시 적용했습니다.",
+    "text": "원작의 이동은 기본 물리로는 원하는 느낌이 안 나고 되감기는 씬 리로드만으로 만들 수 없어, 이동은 Kinematic + BoxCast로 직접 계산하고, 감속은 Time.timeScale 하나로 처리하며, 매 틱 상태를 기록해 정방향 / 역방향으로 다시 적용했습니다.",
     "verbatim": false
   },
   "highlights": [
     {
       "title": "플레이어 이동 (Kinematic + BoxCast)",
       "what": "계단 대각선 이동, 플랫폼 통과, 벽 붙기 · 공중제비, 구르기를 직접 계산하는 2D 이동입니다.",
-      "how": "`PlayerController`는 요청만 보내고 `CharacterController2D`가 x축 → y축 순서로 BoxCast하며, 계단은 `maxStepHeight`를 4번 나눠 올려 보는 step 방식으로 처리합니다.",
+      "how": "`PlayerController`는 요청만 보내고 `CharacterController2D`가 x축 → y축 순서로 BoxCast하며, 계단은 `maxStepHeight`(0.1)를 10번 나눠 올려 보는 step 방식으로 처리합니다.",
       "why": "기본 물리로는 원작 같은 \"딱 떨어지는\" 조작감을 만들려면 보정이 많아, 수업의 Kinematic 컨트롤러를 기반으로 계단 · 플랫폼 · 벽 · 구르기를 추가했습니다.",
       "section": "3.1 개요",
       "image": {
@@ -62,20 +62,20 @@
     },
     {
       "title": "크로노스 · 히트스탑",
-      "what": "lShift를 누르는 동안 시간이 0.25배로 느려지고, 공격이 맞으면 0.1초 히트스탑이 나옵니다.",
+      "what": "lShift를 누르는 동안 시간이 0.25배로 느려지고, 공격이 맞으면 0.08초 히트스탑이 나옵니다.",
       "how": "`Time.timeScale` 하나로 감속하고, 히트스탑은 끝날 때 저장 값이 아니라 `ChronosSystem.GetTargetTimeScale()`로 복귀합니다.",
       "why": "대상마다 속도 배율을 주면 바꿀 곳이 너무 많아 timeScale을 택했고, 히트스탑과 겹쳐도 감속 상태가 풀리거나 굳지 않도록 복귀 값을 다시 계산합니다.",
       "section": "4.1 개요",
       "image": {
-        "src": "images/chronos.gif",
-        "w": 800,
-        "h": 450,
-        "caption": "크로노스: lShift로 감속해 원거리 적의 총알에 대응"
+        "src": "images/chronos_hitstop_combo.gif",
+        "w": 640,
+        "h": 364,
+        "caption": "크로노스: lShift로 ×0.25 감속 → 총알을 피해 공격 → 적중 시 히트스탑 · 카메라 쉐이크 (시연 4:36)"
       }
     },
     {
       "title": "녹화 · 재생 · 역재생",
-      "what": "사망하면 기록을 되감은 뒤 재시작하고, 클리어하면 정방향 리플레이를 보여 줍니다.",
+      "what": "사망하면 기록을 9배속으로 되감은 뒤 재시작하고, 클리어하면 정방향 리플레이를 보여 줍니다.",
       "how": "매 틱 `TimelineFrame`(플레이어 · 적 · 오브젝트 · 이펙트 상태)을 기록하고, 재생은 `float` 틱 위치로 두 프레임 사이를 보간하며 `unscaledDeltaTime`으로 진행합니다.",
       "why": "입력만 기록하면 크로노스 · 적 AI 때문에 결과가 달라지고 역방향 시뮬레이션이 불가능해, 되돌릴 수 있는 상태 스냅샷을 택했습니다.",
       "section": "5.1 개요",
@@ -106,7 +106,7 @@
       "problem": "구르기 · 공격 대시로 계단을 지나면 허공으로 날아가거나 순간이동",
       "cause": "한 틱 이동량이 계단 높이보다 커서 step 실패, `while` 반복은 무한 루프 · 제자리 이동",
       "solution": "구르기만 `maxStepHeight` 단위로 분할 + 내려가는 step 추가",
-      "result": "",
+      "result": "구르기 · 대시로 계단을 지나도 바닥에 붙어 이동",
       "lesson": "",
       "section": "7.2 문제 해결 경험 (Troubleshooting)"
     },
@@ -115,7 +115,7 @@
       "problem": "재생 중 일시정지해도 애니메이션이 계속 재생",
       "cause": "재생 중 Animator를 `UnscaledTime` 모드로 바꿨더니, 일시정지(timeScale = 0)도 무시함",
       "solution": "일시정지할 때 Animator 모드를 원래대로 되돌리고, 재개할 때 다시 Unscaled로 설정",
-      "result": "",
+      "result": "재생 중 ESC로 화면 전체가 멈추고, 재개하면 멈춘 지점부터 이어짐",
       "lesson": "시간을 쓰는 코드는 먼저 시간축을 정해야 한다.",
       "section": "7.2 문제 해결 경험 (Troubleshooting)"
     },
@@ -124,12 +124,24 @@
       "problem": "리플레이에서 단발 애니메이션(공격 · 사망)이 반복",
       "cause": "`normalizedTime`을 `Mathf.Repeat`로 0~1에 잘라 기록 → 루프인지 단발인지 구분이 사라짐",
       "solution": "원래 값을 그대로 기록하고 루프 판단은 Animator State의 Loop Time 설정에 맡김",
-      "result": "",
+      "result": "공격 · 사망 모션이 한 번만 재생되고, 걷기 같은 루프 모션은 계속 순환",
       "lesson": "값을 추측하지 말고 그 값을 아는 쪽에 맡긴다.",
       "section": "7.2 문제 해결 경험 (Troubleshooting)"
     }
   ],
   "screenshots": [
+    {
+      "src": "images/wall_flip.gif",
+      "caption": "벽 붙기 → 공중제비",
+      "w": 800,
+      "h": 450
+    },
+    {
+      "src": "images/chronos_gauge.png",
+      "caption": "크로노스 게이지와 lShift 키 UI",
+      "w": 1390,
+      "h": 300
+    },
     {
       "src": "images/replay.gif",
       "caption": "클리어 후 CCTV 리플레이 (정방향 재생)",
@@ -143,16 +155,16 @@
       "h": 450
     },
     {
-      "src": "images/wall_flip.gif",
-      "caption": "벽 붙기 → 공중제비",
-      "w": 800,
-      "h": 450
+      "src": "images/timeout_dead.gif",
+      "caption": "Dead 상태: 시간 제한이 끝나면 사망 → 재시작 안내 (시연 1:48)",
+      "w": 640,
+      "h": 364
     },
     {
-      "src": "images/dead.png",
-      "caption": "Dead 상태: 피격 사망 후 재시작 안내",
-      "w": 1281,
-      "h": 723
+      "src": "images/camera_bounds.png",
+      "caption": "씬 뷰의 맵 경계 콜라이더(초록 선)와 인스펙터 — CameraController의 Dead Zone Size 3×2 · Map Bounds = IntGrid(Tilemap Collider 2D + Composite Collider 2D)",
+      "w": 1172,
+      "h": 427
     }
   ],
   "retro": {
@@ -246,7 +258,13 @@
           "1. 프로젝트 개요",
           "1.1 What — 무엇을 만들었나"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "",
+            "text": "스테이지의 모든 적을 처치하면 방금 플레이를 CCTV 리플레이처럼 정방향 재생한 뒤 다음 스테이지로 넘어갑니다.",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "image",
@@ -387,6 +405,32 @@
         ]
       },
       {
+        "key": "move-struct",
+        "chapter": "move",
+        "layout": "visual",
+        "tab": "구조",
+        "title": {
+          "text": "3.2 시스템 구조",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "PlayerController는 요청만 보내고, 실제 이동 · 충돌은 CharacterController2D가 FixedUpdate에서 한 번에 처리합니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "3. 기능 A — 플레이어 이동",
+          "3.2 시스템 구조"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "flowchart LR"
+          }
+        ]
+      },
+      {
         "key": "stair-step",
         "chapter": "move",
         "layout": "code",
@@ -396,7 +440,7 @@
           "verbatim": true
         },
         "lead": {
-          "text": "정면이 계단이면 maxStepHeight(0.3)를 4번 나눠 올려 보고, 올린 위치에서 앞으로 갈 수 있으면 그 높이로 이동합니다.",
+          "text": "정면이 계단이면 maxStepHeight(0.1)를 10번 나눠 올려 보고, 올린 위치에서 앞으로 갈 수 있으면 그 높이로 이동합니다.",
           "verbatim": true
         },
         "sectionPath": [
@@ -432,18 +476,18 @@
         "points": [
           {
             "label": "",
-            "text": "공격이 맞으면 히트스탑(0.1초 정지) + 화면 흔들림 + 슬래시가 같이 나옵니다.",
+            "text": "공격이 맞으면 히트스탑(0.08초 정지) + 화면 흔들림 + 슬래시가 같이 나옵니다.",
             "verbatim": true
           }
         ],
         "visuals": [
           {
             "kind": "image",
-            "src": "images/chronos.gif",
-            "w": 800,
-            "h": 450,
+            "src": "images/chronos_hitstop_combo.gif",
+            "w": 640,
+            "h": 364,
             "caption": {
-              "text": "크로노스: lShift로 감속해 원거리 적의 총알에 대응",
+              "text": "크로노스: lShift로 ×0.25 감속 → 총알을 피해 공격 → 적중 시 히트스탑 · 카메라 쉐이크 (시연 4:36)",
               "verbatim": true
             }
           }
@@ -546,7 +590,18 @@
           "5. 기능 C — 녹화 · 재생 · 역재생",
           "5.1 개요"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "",
+            "text": "사망 / 시간 초과 → 기록을 9배속 역방향으로 되감은 뒤 재시작",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "클리어 → 기록을 정방향으로 재생(CCTV 리플레이)한 뒤 다음 스테이지",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "image",
@@ -603,12 +658,18 @@
           "5. 기능 C — 녹화 · 재생 · 역재생",
           "5.3 핵심 기능"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "",
+            "text": "위치는 Lerp, 방향 · 활성 여부처럼 섞을 수 없는 값은 t < 0.5 기준으로 고릅니다.",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "code",
             "n": 2,
-            "fp": "// TimeLineRecorder.cs:660"
+            "fp": "// TimeLineRecorder.cs:669"
           }
         ]
       },
@@ -711,7 +772,7 @@
           {
             "kind": "table",
             "n": 1,
-            "fp": "#|문제|원인|해결 / 개선|상태"
+            "fp": "#|문제|원인|해결 / 개선|결과"
           }
         ]
       }
