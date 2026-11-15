@@ -3,7 +3,7 @@
   "id": "06-project3d",
   "doc": "기술문서.md",
   "title": "PROJECT3D",
-  "tagline": "몹 1000마리를 위한 3D 뱀서라이크 구조 재설계",
+  "tagline": "몹 1000마리를 기준으로, AI와 구조를 비교하며 다시 설계한 3D 뱀서라이크",
   "cover": null,
   "team": {
     "type": "solo",
@@ -17,7 +17,7 @@
     },
     {
       "label": "기간",
-      "value": "2026.10.15 ~ 제작 중"
+      "value": "2주 프로토타입 (제작 중) · 3주 더 진행 예정"
     },
     {
       "label": "인원",
@@ -100,13 +100,13 @@
       "section": "4.5 트러블슈팅: 몹 원거리 공격이 플레이어에게 안 맞음"
     },
     {
-      "title": "공속 단위 통일 후 무기 속도 폭주",
-      "problem": "레벨이 오를수록 무기가 느려지고, 상점 공속 +10%에 무기가 11배 빨라짐",
-      "cause": "공속 단위를 간격 → 초당 횟수로 바꾸면서 이름만 바꾸고 표 값은 그대로였고, 공속이 곱하기 스탯 목록에 빠짐",
-      "solution": "값을 1 ÷ 간격으로 변환, 곱하기 스탯에 공속 추가",
-      "result": "",
-      "lesson": "",
-      "section": "8.2 문제 해결 경험 (Troubleshooting)"
+      "title": "플레이어가 비탈 위에 있으면 몹이 멈춤",
+      "problem": "몹이 오를 수 없는 경사나 장애물 위에 플레이어가 있으면 땅의 몹이 제자리에 멈춤",
+      "cause": "흐름장에서 길이 없는 칸은 방향이 0인데, 가파른 Ground 칸은 걸을 수 있는 칸으로 분류돼 \"가장 가까운 걸을 수 있는 칸\"으로 목표가 옮겨지지 않았음",
+      "solution": "장애물 위에서 쓰던 \"근처로 모이기\"를 재사용 — 플레이어 주변 10칸 안에서 아직 길이 없는 칸 중 가장 가까운 칸을 보조 목표로 추가(AddUnreachedTargets)",
+      "result": "몹이 멈추지 않고, 오를 수 없는 비탈 아래 · 플레이어 근처로 모여듦",
+      "lesson": "예외 상황마다 새 규칙을 만들기보다, 이미 있는 규칙이 왜 이 경우를 못 잡는지를 먼저 보면 코드가 늘지 않습니다",
+      "section": "3.5 트러블슈팅: 플레이어가 비탈 위에 있으면 몹이 멈춤"
     }
   ],
   "screenshots": [],
@@ -384,7 +384,7 @@
           {
             "kind": "mermaid",
             "n": 1,
-            "fp": "flowchart TB"
+            "fp": "flowchart LR"
           }
         ]
       },
@@ -471,6 +471,44 @@
         ]
       },
       {
+        "key": "slope-stop",
+        "chapter": "map",
+        "layout": "problem",
+        "tab": "문제 해결",
+        "title": {
+          "text": "3.5 트러블슈팅: 플레이어가 비탈 위에 있으면 몹이 멈춤",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 기능 A — 맵 · 몹 이동: 격자를 굽고 흐름장을 공유",
+          "3.5 트러블슈팅: 플레이어가 비탈 위에 있으면 몹이 멈춤"
+        ],
+        "points": [
+          {
+            "label": "문제",
+            "text": "몹이 오를 수 없는 경사나 장애물 위에 플레이어가 있으면 땅의 몹이 제자리에 멈춤",
+            "verbatim": true
+          },
+          {
+            "label": "원인",
+            "text": "가파른 Ground 칸은 걸을 수 있는 칸으로 분류돼 목표가 옮겨지지 않았음",
+            "verbatim": true
+          },
+          {
+            "label": "해결",
+            "text": "플레이어 주변 10칸 안에서 아직 길이 없는 칸 중 가장 가까운 칸을 보조 목표로 추가",
+            "verbatim": true
+          },
+          {
+            "label": "결과",
+            "text": "몹이 멈추지 않고, 오를 수 없는 비탈 아래 · 플레이어 근처로 모여듦 (장애물 위에 있을 때와 같은 설계 동작)",
+            "verbatim": true
+          }
+        ],
+        "visuals": []
+      },
+      {
         "key": "combat-arch",
         "chapter": "combat",
         "layout": "visual",
@@ -480,7 +518,7 @@
           "verbatim": true
         },
         "lead": {
-          "text": "쏘는 방법은 합치고, 언제 · 왜 쏘는지는 나눈다.",
+          "text": "① 언제 · 누구에게 쏘는가 — UnitAttack 계열",
           "verbatim": true
         },
         "sectionPath": [
@@ -508,6 +546,32 @@
           {
             "kind": "mermaid",
             "n": 1,
+            "fp": "classDiagram"
+          }
+        ]
+      },
+      {
+        "key": "combat-hit",
+        "chapter": "combat",
+        "layout": "visual",
+        "tab": "구조",
+        "title": {
+          "text": "4.2 시스템 구조",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "② 어떻게 움직이고 맞히는가 — HitUnit 계열과 추가 효과",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "4. 기능 B — 전투 판정: 콜라이더 없이 수학으로",
+          "4.2 시스템 구조"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 2,
             "fp": "classDiagram"
           }
         ]
