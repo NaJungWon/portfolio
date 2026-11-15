@@ -801,6 +801,32 @@
         ]
       },
       {
+        "key": "measure",
+        "chapter": "result",
+        "layout": "full",
+        "tab": "결과",
+        "title": {
+          "text": "8.1 현재 상태 (2026.11.14)",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "몹이 늘수록 fps가 내려가지만, 몹이 가장 많은 150 ~ 183마리 구간에서도 최저 89fps였습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "8. 결과 및 배운 점",
+          "8.1 현재 상태 (2026.11.14)"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 2,
+            "fp": "살아 있는 몹|읽은 지점|fps 중앙값|최저|최고"
+          }
+        ]
+      },
+      {
         "key": "troubles",
         "chapter": "result",
         "layout": "full",
