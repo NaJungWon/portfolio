@@ -13,7 +13,7 @@
   "meta": [
     {
       "label": "장르",
-      "value": "PC 3인칭 3D 뱀서라이크"
+      "value": "PC 3인칭 3D 뱀서라이크 (높이가 있는 3D 지형)"
     },
     {
       "label": "기간",
@@ -213,7 +213,41 @@
             "kind": "mermaid",
             "n": 1,
             "fp": "flowchart LR"
+          }
+        ]
+      },
+      {
+        "key": "view-map",
+        "chapter": "overview",
+        "layout": "visual",
+        "tab": "개요",
+        "title": {
+          "text": "시점과 맵",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "1. 프로젝트 개요",
+          "1.1 What — 무엇을 만들었나"
+        ],
+        "points": [
+          {
+            "label": "시점",
+            "text": "메가봉크처럼 캐릭터 뒤에서 보는 3인칭 시점이고, 모든 공격 · 스킬은 화면 정중앙을 기준으로 조준합니다",
+            "verbatim": true
           },
+          {
+            "label": "맵",
+            "text": "맵은 평평한 바닥이 아니라 높이가 있는 3D 지형입니다.",
+            "verbatim": true
+          },
+          {
+            "label": "이유",
+            "text": "높이가 있는 맵에서 몹 1000마리를 움직여야 해서, 몹 이동 · 공격 판정 · 경험치 구 낙하까지 모두 높이를 다뤄야 했습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
           {
             "kind": "table",
             "n": 1,
