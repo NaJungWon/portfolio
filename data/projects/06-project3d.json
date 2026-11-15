@@ -4,7 +4,7 @@
   "doc": "기술문서.md",
   "title": "PROJECT3D",
   "tagline": "몹 1000마리를 기준으로, AI와 구조를 비교하며 다시 설계한 3D 뱀서라이크",
-  "cover": null,
+  "cover": "images/title.jpg",
   "team": {
     "type": "solo",
     "size": "1인",
@@ -53,7 +53,12 @@
       "how": "플레이어 칸에서 BFS로 거리를 채운 흐름장 하나를 0.2초마다 다시 계산해 모든 몹이 공유하고, 몹끼리 밀어내기는 2m 공간 격자(EnemyRegistry)의 주변 9칸만 봅니다.",
       "why": "DGS 빌드 측정에서 병목이 \"살아 있는 몹마다 드는 비용\"이었기 때문에, 몹 하나하나가 길을 찾지도, 물리로 주변을 감지하지도 않게 하는 쪽을 골랐습니다.",
       "section": "3.3 핵심 기능",
-      "image": null
+      "image": {
+        "src": "images/horde_chase.gif",
+        "w": 560,
+        "h": 316,
+        "caption": "몹 무리가 흐름장을 따라 플레이어를 쫓아옴"
+      }
     },
     {
       "title": "콜라이더 없는 전투 판정",
@@ -61,7 +66,12 @@
       "how": "후보는 공간 격자로 좁히고 정밀 판정만 수학으로 하며, 투사체 · 범위는 HitUnit 부모 하나와 직진 · 추적 · 소환 자식으로, 생성은 UnitAttack.FireHit 입구 하나로 모았습니다.",
       "why": "원통은 너비와 높이를 따로 정할 수 있고, 플레이어용 · 몹용 투사체를 합쳐 직진 · 추적 · 소환 동작을 한 벌만 관리합니다.",
       "section": "4.3 핵심 기능",
-      "image": null
+      "image": {
+        "src": "images/range_attack.gif",
+        "w": 560,
+        "h": 316,
+        "caption": "범위 공격 — 맞은 몹마다 이펙트"
+      }
     },
     {
       "title": "증강 · 스탯 재계산",
@@ -69,7 +79,12 @@
       "how": "증강을 적용한 뒤 캐릭터 기본 + 능력치 증강 + 스킬을 더하고, 수치형 스탯은 × (1 + 상점%) × (1 + 버프%)로 처음부터 다시 계산합니다.",
       "why": "버프를 줄 때 더하고 뺄 때 빼면 빼는 값이 어긋나거나 순서에 따라 결과가 달라질 수 있어, 목록으로 들고 있다가 바뀔 때마다 다시 계산하는 쪽으로 정했습니다.",
       "section": "5.3 핵심 기능",
-      "image": null
+      "image": {
+        "src": "images/stat_handler_inspector.png",
+        "w": 373,
+        "h": 671,
+        "caption": "스탯을 출처별로 따로 보관 (PlayerStatHandler)"
+      }
     },
     {
       "title": "부팅 순서와 게임 시계",
@@ -109,7 +124,44 @@
       "section": "3.5 트러블슈팅: 플레이어가 비탈 위에 있으면 몹이 멈춤"
     }
   ],
-  "screenshots": [],
+  "screenshots": [
+    {
+      "src": "images/horde_chase.gif",
+      "w": 560,
+      "h": 316,
+      "caption": "몹 무리 추적"
+    },
+    {
+      "src": "images/range_attack.gif",
+      "w": 560,
+      "h": 316,
+      "caption": "범위 공격"
+    },
+    {
+      "src": "images/air_mob.gif",
+      "w": 640,
+      "h": 360,
+      "caption": "공중 몹"
+    },
+    {
+      "src": "images/card_pick.gif",
+      "w": 640,
+      "h": 360,
+      "caption": "레벨업 증강 카드"
+    },
+    {
+      "src": "images/lobby_upgrade.gif",
+      "w": 640,
+      "h": 360,
+      "caption": "골드로 능력치 업그레이드"
+    },
+    {
+      "src": "images/flowfield_gizmo.png",
+      "w": 1051,
+      "h": 477,
+      "caption": "흐름장 기즈모"
+    }
+  ],
   "retro": {
     "achieved": [
       "흐름장 공유 · 공간 격자 · 구운 높이 · 공용 풀 · 콜라이더 없는 판정 적용 완료 (실제 동시 상한 300마리)",
