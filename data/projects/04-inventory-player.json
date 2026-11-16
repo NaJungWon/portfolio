@@ -216,7 +216,7 @@
       },
       {
         "key": "inventory",
-        "title": "시스템 ② 그리드 인벤토리 · 드래그 배치 ★",
+        "title": "시스템 ② 그리드 인벤토리 · 드래그 배치",
         "sectionPath": [
           "4. 시스템 ② 그리드 인벤토리 · 드래그 배치 ★"
         ]
@@ -236,6 +236,13 @@
         ]
       },
       {
+        "key": "ui",
+        "title": "시스템 ⑤ UI 연출",
+        "sectionPath": [
+          "7. 시스템 ⑤ UI 연출"
+        ]
+      },
+      {
         "key": "result",
         "title": "결과 · 회고",
         "sectionPath": [
@@ -244,6 +251,33 @@
       }
     ],
     "slides": [
+      {
+        "key": "summary",
+        "chapter": "overview",
+        "layout": "full",
+        "tab": "개요",
+        "title": {
+          "text": "1. 프로젝트 개요",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "1. 프로젝트 개요"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/summary.gif",
+            "w": 360,
+            "h": 642,
+            "caption": {
+              "text": "정비 → 배치 → 가방 확장 → 전투 → 다음 웨이브 정비 (2배속)",
+              "verbatim": true
+            }
+          }
+        ]
+      },
       {
         "key": "what",
         "chapter": "overview",
@@ -261,7 +295,13 @@
           "1. 프로젝트 개요",
           "1.1 무엇을 만들었나 (What)"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "",
+            "text": "백팩 히어로의 \"가방 정리가 곧 전투력\" 구조를 모티프로 한 개인 프로젝트입니다.",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "image",
@@ -318,7 +358,13 @@
           "2. 전체 구조",
           "2.1 아키텍처"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "",
+            "text": "정적 데이터(아이템·스테이지·몬스터 스탯)는 ScriptableObject로, 유저 데이터(계정·진행)는 Firebase로 관리합니다.",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "mermaid",
@@ -347,6 +393,45 @@
             "kind": "table",
             "n": 1,
             "fp": "|[A] 가방까지 게임 오브젝트로|[B] 가방(UI) · 전투(게임 오브젝트) 분리 ✓"
+          }
+        ]
+      },
+      {
+        "key": "split-code",
+        "chapter": "arch",
+        "layout": "code",
+        "tab": "선택",
+        "title": {
+          "text": "2.3 고민과 선택: 가방과 전투를 어떻게 나눌 것인가",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "2. 전체 구조",
+          "2.3 고민과 선택: 가방과 전투를 어떻게 나눌 것인가"
+        ],
+        "points": [
+          {
+            "label": "최종 결정",
+            "text": "가방은 UI(Canvas)로, 전투는 월드(게임 오브젝트)로 나눴습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "얻은 것",
+            "text": "가방 쪽은 OccupiedItemDatas(이름·레벨·수치·쿨타임 묶음)만 남기면 되고, 전투 쪽은 그 목록만 보고 무기를 만듭니다",
+            "verbatim": true
+          },
+          {
+            "label": "감수한 대가",
+            "text": "머지로 레벨이 오르거나 아이템을 빼면 UI 아이템과 장착 기록을 둘 다 고쳐야 합니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "// Item_Data.cs — 한 아이템이 두 개의 프리팹을 가짐"
           }
         ]
       },
@@ -388,55 +473,147 @@
         ]
       },
       {
-        "key": "login-branch",
+        "key": "data-tree",
         "chapter": "account",
-        "layout": "code",
-        "tab": "구현",
+        "layout": "full",
+        "tab": "구조",
         "title": {
-          "text": "신규·기존 플레이어 분기",
+          "text": "3.2 구조: 데이터 트리",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "실제로 플레이 중에 갱신되는 값은 스테이지(클리어 시 +1), 플레이 시간(60초마다), 접속 횟수·마지막 접속일(로그인 시)입니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "3. 시스템 ① 계정 데이터 · 모바일 빌드",
+          "3.2 구조: 데이터 트리"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/firebase_tree.png",
+            "w": 560,
+            "h": 423,
+            "caption": {
+              "text": "Firebase RTDB 데이터 트리 — device_mapping, players/1000002, uid_counter",
+              "verbatim": true
+            }
+          },
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "경로|내용"
+          }
+        ]
+      },
+      {
+        "key": "login-flow",
+        "chapter": "account",
+        "layout": "visual",
+        "tab": "흐름",
+        "title": {
+          "text": "3.2 구조: 데이터 트리",
           "verbatim": true
         },
         "lead": null,
         "sectionPath": [
           "3. 시스템 ① 계정 데이터 · 모바일 빌드",
-          "3.3 핵심 기능"
+          "3.2 구조: 데이터 트리"
         ],
         "points": [],
         "visuals": [
           {
-            "kind": "code",
-            "n": 2,
-            "fp": "// User_Data.cs:76"
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "sequenceDiagram"
           }
         ]
       },
       {
-        "key": "build-fix",
+        "key": "store-choice",
         "chapter": "account",
-        "layout": "code",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "3.4 고민과 선택: 진행 데이터를 어디에 저장할 것인가",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "서버를 직접 만들지 않고도 데이터를 유지하는 방법을 실제 모바일 프로젝트에 적용해 보는 것을 이 프로젝트의 개발 조건으로 스스로 정했습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "3. 시스템 ① 계정 데이터 · 모바일 빌드",
+          "3.4 고민과 선택: 진행 데이터를 어디에 저장할 것인가"
+        ],
+        "points": [
+          {
+            "label": "얻은 것",
+            "text": "콘솔에서 players/{uid}를 열면 각 플레이어의 진행 상태와 접속 횟수를 바로 볼 수 있어, 테스트 중 데이터 확인이 쉬웠습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "감수한 대가",
+            "text": "모든 데이터 접근이 비동기가 되어 초기화 가드와 코루틴 연결 코드가 필요해졌습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|[A] PlayerPrefs / 로컬 JSON|[B] Firebase Realtime Database ✓"
+          }
+        ]
+      },
+      {
+        "key": "build-issue",
+        "chapter": "account",
+        "layout": "problem",
         "tab": "문제 해결",
         "title": {
           "text": "3.5 트러블슈팅: Android 빌드에서 Firebase 연동 실패",
           "verbatim": true
         },
-        "lead": {
-          "text": "Firebase 설정 파일 google-services.json이 Gradle 빌드 폴더에 복사되기 전에 Gradle이 실행되어, Google Services 플러그인이 파일을 찾지 못했습니다.",
-          "verbatim": true
-        },
+        "lead": null,
         "sectionPath": [
           "3. 시스템 ① 계정 데이터 · 모바일 빌드",
           "3.5 트러블슈팅: Android 빌드에서 Firebase 연동 실패"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "문제",
+            "text": "Android로 빌드해 기기에서 실행하면 Firebase 연동 자체가 되지 않아, 게스트 로그인 후 시작 버튼을 눌러도 로비로 넘어가지 못했습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "원인",
+            "text": "프로젝트 설정이 PC 기준으로 되어 있어 Android 빌드 설정이 맞지 않았습니다",
+            "verbatim": true
+          },
+          {
+            "label": "해결",
+            "text": "launcherTemplate.gradle에 Google Services 플러그인(com.google.gms:google-services:4.3.15)을 추가하고",
+            "verbatim": true
+          },
+          {
+            "label": "결과",
+            "text": "Android 기기에서 게스트 로그인과 데이터 저장이 동작했습니다.",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
-            "kind": "code",
-            "n": 1,
-            "fp": "// Editor/CopyGoogleServicesJson.cs",
-            "lines": [
-              6,
-              23
-            ]
+            "kind": "image",
+            "src": "images/launcher_gradle.png",
+            "w": 508,
+            "h": 221,
+            "caption": {
+              "text": "launcherTemplate.gradle에 google-services 플러그인을 추가한 부분",
+              "verbatim": true
+            }
           }
         ]
       },
@@ -462,6 +639,11 @@
             "label": "",
             "text": "칸 상태의 원본은 2차원 배열 slots[x, y] 하나이고, 화면의 칸(Slot_State)은 그 배열을 비추는 거울이다.",
             "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "화면 좌표가 아니라 칸의 순번(sibling index)으로 배열 좌표를 계산하고, 가방 크기와 칸 활성화도 배열에서 다시 계산한다.",
+            "verbatim": true
           }
         ],
         "visuals": [
@@ -478,9 +660,130 @@
         ]
       },
       {
+        "key": "slot-state",
+        "chapter": "inventory",
+        "layout": "full",
+        "tab": "구조",
+        "title": {
+          "text": "4.2 구조: 칸 상태와 좌표 규칙",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "4. 시스템 ② 그리드 인벤토리 · 드래그 배치 ★",
+          "4.2 구조: 칸 상태와 좌표 규칙"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "상태|의미|화면 표시"
+          },
+          {
+            "kind": "image",
+            "src": "images/slot_hierarchy.png",
+            "w": 1305,
+            "h": 434,
+            "caption": {
+              "text": "하이어라키의 Bag › Inventory 아래 35칸과 Slot_State의 상태별 색상",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "slot-index",
+        "chapter": "inventory",
+        "layout": "full",
+        "tab": "구조",
+        "title": {
+          "text": "4.2 구조: 칸 상태와 좌표 규칙",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "4. 시스템 ② 그리드 인벤토리 · 드래그 배치 ★",
+          "4.2 구조: 칸 상태와 좌표 규칙"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 2,
+            "fp": "규칙|내용|위치"
+          }
+        ]
+      },
+      {
+        "key": "item-shape",
+        "chapter": "inventory",
+        "layout": "full",
+        "tab": "구조",
+        "title": {
+          "text": "아이템 모양 데이터",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "아이템마다 가로·세로 칸 수를 정하고(기본은 모든 칸 사용), 쓰지 않을 칸만 끄는 방식입니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "4. 시스템 ② 그리드 인벤토리 · 드래그 배치 ★",
+          "4.2 구조: 칸 상태와 좌표 규칙"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "칸을 쓰지 않으면 오프셋을 (-1, -1)로 표시해 검사에서 건너뜁니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 3,
+            "fp": "아이템|크기|모양"
+          },
+          {
+            "kind": "image",
+            "src": "images/item_system_inspector.png",
+            "w": 562,
+            "h": 883,
+            "caption": {
+              "text": "도끼 프리팹의 Item_System — Slot Width/Height 2×2, slotList에서 한 칸만 끔",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "drag-flow",
+        "chapter": "inventory",
+        "layout": "full",
+        "tab": "흐름",
+        "title": {
+          "text": "4.3 핵심 기능 ①: 드래그 3단계",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "4. 시스템 ② 그리드 인벤토리 · 드래그 배치 ★",
+          "4.3 핵심 기능 ①: 드래그 3단계"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "flowchart TD"
+          }
+        ]
+      },
+      {
         "key": "drag-preview",
         "chapter": "inventory",
-        "layout": "code",
+        "layout": "visual",
         "tab": "구현",
         "title": {
           "text": "② 드래그 중 — 자석 스냅과 미리보기.",
@@ -494,13 +797,14 @@
           "4. 시스템 ② 그리드 인벤토리 · 드래그 배치 ★",
           "4.3 핵심 기능 ①: 드래그 3단계"
         ],
-        "points": [],
-        "visuals": [
+        "points": [
           {
-            "kind": "code",
-            "n": 2,
-            "fp": "// Item_System.cs:187"
-          },
+            "label": "",
+            "text": "손가락 위치에서 100px 안에 있는 가장 가까운 칸을 기준점으로 잡고, 그 위치가 바뀔 때만 미리보기를 다시 그립니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
           {
             "kind": "image",
             "src": "images/drag.gif",
@@ -514,63 +818,74 @@
         ]
       },
       {
-        "key": "place-check",
+        "key": "slot-place",
         "chapter": "inventory",
-        "layout": "code",
+        "layout": "full",
         "tab": "구현",
         "title": {
           "text": "4.4 핵심 기능 ②: 배치 검증",
           "verbatim": true
         },
         "lead": {
-          "text": "배치 가능 여부는 배열만 읽어서 판단합니다.",
+          "text": "슬롯 아이템은 반대로 잠긴 칸(Locked)에만 놓을 수 있습니다",
           "verbatim": true
         },
         "sectionPath": [
           "4. 시스템 ② 그리드 인벤토리 · 드래그 배치 ★",
           "4.4 핵심 기능 ②: 배치 검증"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "",
+            "text": "배치 가능 여부는 배열만 읽어서 판단합니다.",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
-            "kind": "code",
+            "kind": "table",
             "n": 1,
-            "fp": "// Item_System.cs:412",
-            "lines": [
-              4,
-              21
-            ]
+            "fp": "아이템 종류|놓을 수 있는 칸|놓으면"
           }
         ]
       },
       {
-        "key": "bag-size",
+        "key": "bag-expand",
         "chapter": "inventory",
-        "layout": "code",
-        "tab": "구현",
+        "layout": "visual",
+        "tab": "결과",
         "title": {
           "text": "4.5 핵심 기능 ③: 가방 크기와 칸 활성화",
           "verbatim": true
         },
-        "lead": {
-          "text": "사각형 안의 칸은 잠겨 있어도 끄지 않고 투명하게 둡니다.",
-          "verbatim": true
-        },
+        "lead": null,
         "sectionPath": [
           "4. 시스템 ② 그리드 인벤토리 · 드래그 배치 ★",
           "4.5 핵심 기능 ③: 가방 크기와 칸 활성화"
         ],
-        "points": [],
-        "visuals": [
+        "points": [
           {
-            "kind": "code",
-            "n": 1,
-            "fp": "// Inventory_System.cs:331 — 슬롯 아이템 장착 후",
-            "lines": [
-              8,
-              22
-            ]
+            "label": "",
+            "text": "슬롯 아이템을 드래그하는 동안에는 35칸을 모두 켜고 가방을 최대 크기(600×800)로 키웠다가, 놓으면 다시 계산합니다.",
+            "verbatim": false
           },
+          {
+            "label": "",
+            "text": "배열에서 열린 칸(Empty·Occupied)을 모두 감싸는 최소 사각형을 구합니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "가방 크기를 (사각형 가로 + 1) × 100, (세로 + 1) × 100으로 맞춥니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "사각형 안의 칸은 잠겨 있어도 끄지 않고 투명하게 둡니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
           {
             "kind": "image",
             "src": "images/bag_expand.gif",
@@ -592,17 +907,63 @@
           "text": "4.6 고민과 선택: 칸 상태를 어디에 둘 것인가",
           "verbatim": true
         },
-        "lead": null,
+        "lead": {
+          "text": "흔들리지 않는 배열을 기준으로 삼고 화면은 그 결과만 보여 주게 했습니다.",
+          "verbatim": true
+        },
         "sectionPath": [
           "4. 시스템 ② 그리드 인벤토리 · 드래그 배치 ★",
           "4.6 고민과 선택: 칸 상태를 어디에 둘 것인가"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "얻은 것",
+            "text": "배치 검사, 슬롯 해금, 가방 크기 계산이 모두 같은 배열을 봅니다.",
+            "verbatim": true
+          },
+          {
+            "label": "감수한 대가",
+            "text": "[A]에서 쓰던 칸의 상태 필드(Slot_State.slotState)가 지금도 남아 있어, 원본이 아닌 상태 사본이 두 곳에 있습니다.",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "table",
             "n": 1,
             "fp": "|[A] 칸 오브젝트마다 상태 보관|[B] 2차원 배열 원본 + 화면은 거울 ✓"
+          }
+        ]
+      },
+      {
+        "key": "snap-choice",
+        "chapter": "inventory",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "4.7 고민과 선택: 놓을 때 판정할 것인가, 놓기 전에 보여 줄 것인가",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "미리보기는 색만 바꾸고 배열은 건드리지 않기 때문에, 배치 규칙에 버그를 만들지 않고 조작감만 개선할 수 있었습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "4. 시스템 ② 그리드 인벤토리 · 드래그 배치 ★",
+          "4.7 고민과 선택: 놓을 때 판정할 것인가, 놓기 전에 보여 줄 것인가"
+        ],
+        "points": [
+          {
+            "label": "감수한 대가",
+            "text": "드래그 이벤트가 올 때마다 35칸과 거리를 비교하지만, 칸 수가 적어 문제가 되지 않았습니다(측정하지는 않음).",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|[A] 놓은 위치에서 바로 판정|[B] 자석 스냅 + 미리보기 ✓"
           }
         ]
       },
@@ -620,7 +981,13 @@
           "4. 시스템 ② 그리드 인벤토리 · 드래그 배치 ★",
           "4.8 트러블슈팅"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "배운 점",
+            "text": "아이템의 위치를 좌표로 기억하지 말고 \"어느 칸을 차지하는가\"로 기억해야, 칸이 움직여도 아이템이 따라갈 수 있습니다.",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "table",
@@ -630,9 +997,41 @@
         ]
       },
       {
+        "key": "merge-intro",
+        "chapter": "merge",
+        "layout": "full",
+        "tab": "개요",
+        "title": {
+          "text": "5.1 개요",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "같은 아이템·같은 레벨 두 개를 겹치면 하나로 합쳐져 레벨이 오릅니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "5. 시스템 ③ 머지 · 장착 → 전투",
+          "5.1 개요"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "가방에 장착한 아이템은 장착 기록으로 남고, 웨이브가 시작되면 그 기록마다 전투 슬롯이 생겨 자동으로 공격합니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "아이템|기본 수치|기본 쿨타임|타입"
+          }
+        ]
+      },
+      {
         "key": "merge-code",
         "chapter": "merge",
-        "layout": "code",
+        "layout": "visual",
         "tab": "구현",
         "title": {
           "text": "5.2 핵심 기능 ①: 머지",
@@ -652,15 +1051,6 @@
         ],
         "visuals": [
           {
-            "kind": "code",
-            "n": 1,
-            "fp": "// Item_System.cs:651",
-            "lines": [
-              13,
-              29
-            ]
-          },
-          {
             "kind": "image",
             "src": "images/merge.gif",
             "w": 360,
@@ -669,6 +1059,71 @@
               "text": "같은 아이템을 겹치면 레벨이 오르며 아이콘이 바뀜 (합칠 수 없는 자리는 빨강)",
               "verbatim": true
             }
+          }
+        ]
+      },
+      {
+        "key": "merge-level",
+        "chapter": "merge",
+        "layout": "full",
+        "tab": "구현",
+        "title": {
+          "text": "5.2 핵심 기능 ①: 머지",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "수치는 플레이로 정한 레벨 디자인 값이고, 최대 레벨은 아이템마다 준비한 아이콘 5장에 맞춰 5로 잡았습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "5. 시스템 ③ 머지 · 장착 → 전투",
+          "5.2 핵심 기능 ①: 머지"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "레벨|1|2|3|4|5"
+          },
+          {
+            "kind": "image",
+            "src": "images/item_data_inspector.png",
+            "w": 561,
+            "h": 363,
+            "caption": {
+              "text": "Item_Axe_Data_1 — 레벨별 아이콘 5장(Item Images)과 기본 공격력·쿨타임",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "equip-flow",
+        "chapter": "merge",
+        "layout": "visual",
+        "tab": "흐름",
+        "title": {
+          "text": "5.3 핵심 기능 ②: 장착 기록에서 전투 슬롯으로",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "5. 시스템 ③ 머지 · 장착 → 전투",
+          "5.3 핵심 기능 ②: 장착 기록에서 전투 슬롯으로"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "전투 슬롯은 시작할 때 수치를 기본값 × 레벨로 한 번 더 계산합니다(장착 기록의 수치와 같은 식이라 결과는 같음).",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "sequenceDiagram"
           }
         ]
       },
@@ -720,7 +1175,18 @@
           "5. 시스템 ③ 머지 · 장착 → 전투",
           "5.4 고민과 선택: 머지를 먼저 볼 것인가, 배치를 먼저 볼 것인가"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "얻은 것",
+            "text": "놓기 전에 본 미리보기와 놓은 뒤의 결과가 어긋나지 않습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "감수한 대가",
+            "text": "판정 단계가 여섯 개로 늘어 OnEndDrag 하나가 150줄이 됐습니다.",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "table",
@@ -730,30 +1196,157 @@
         ]
       },
       {
-        "key": "wave-queue",
+        "key": "wave-data",
         "chapter": "wave",
         "layout": "code",
-        "tab": "구현",
+        "tab": "구조",
         "title": {
-          "text": "6.3 핵심 기능: 정렬 큐로 스폰하기",
+          "text": "6.1 개요: 데이터로 정의한 웨이브",
           "verbatim": true
         },
         "lead": {
-          "text": "이후 매 프레임에는 큐의 맨 앞 하나만 확인합니다.",
+          "text": "스테이지는 ScriptableObject 하나입니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "6. 시스템 ④ 웨이브 · 몬스터",
+          "6.1 개요: 데이터로 정의한 웨이브"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "\"몇 번째 웨이브의, 몇 초에, 어떤 몬스터가, 몇 마리\" 를 목록으로 적어 두면, 코드를 고치지 않고 스테이지를 만들 수 있습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "// Stage_Wave_Info.cs"
+          }
+        ]
+      },
+      {
+        "key": "wave-assets",
+        "chapter": "wave",
+        "layout": "screens",
+        "tab": "구조",
+        "title": {
+          "text": "6.1 개요: 데이터로 정의한 웨이브",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "현재 스테이지 2개(각 7웨이브), 몬스터 11종(1스테이지 고블린 5종 · 2스테이지 스켈레톤 4종과 좀비 2종)이 있고, 보스는 마지막 웨이브에만 나옵니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "6. 시스템 ④ 웨이브 · 몬스터",
+          "6.1 개요: 데이터로 정의한 웨이브"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/stage_data.png",
+            "w": 559,
+            "h": 529,
+            "caption": {
+              "text": "1_Stage 에셋 — Max Wave 7, spawnDataList의 웨이브·시각·몬스터·마리 수",
+              "verbatim": true
+            }
+          },
+          {
+            "kind": "image",
+            "src": "images/monster_data.png",
+            "w": 559,
+            "h": 247,
+            "caption": {
+              "text": "Goblin_1 몬스터 데이터 — 체력·공격력·이동 속도",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "wave-state",
+        "chapter": "wave",
+        "layout": "visual",
+        "tab": "흐름",
+        "title": {
+          "text": "6.2 구조: 상태 흐름",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "6. 시스템 ④ 웨이브 · 몬스터",
+          "6.2 구조: 상태 흐름"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "Rest에는 시간 제한이 없고, 플레이어가 웨이브 시작 버튼을 누를 때까지 가방을 정리할 수 있습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "stateDiagram-v2"
+          },
+          {
+            "kind": "image",
+            "src": "images/wave_end.gif",
+            "w": 360,
+            "h": 642,
+            "caption": {
+              "text": "웨이브의 마지막 몬스터를 처치하면 정비 화면으로 바뀌고 다음 웨이브 준비",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "wave-scale",
+        "chapter": "wave",
+        "layout": "overview",
+        "tab": "구현",
+        "title": {
+          "text": "웨이브 스케일링",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "같은 몬스터라도 웨이브가 오를수록 강해집니다.",
           "verbatim": true
         },
         "sectionPath": [
           "6. 시스템 ④ 웨이브 · 몬스터",
           "6.3 핵심 기능: 정렬 큐로 스폰하기"
         ],
-        "points": [],
-        "visuals": [
+        "points": [
           {
-            "kind": "code",
-            "n": 2,
-            "fp": "// InGame_System.cs:143 — Fight 상태에서 매 프레임"
+            "label": "",
+            "text": "기본값 + 기본값 × 10% × (웨이브 − 1)로, 7웨이브에서는 기본값의 1.6배가 됩니다.",
+            "verbatim": true
+          },
+          {
+            "label": "몬스터 이동",
+            "text": "몬스터는 NavMeshPlus(2D용 NavMesh)로 플레이어를 추적하고, stoppingDistance(공격 사거리) 안에 들어오면 공격 애니메이션을 재생하면서 바로 데미지를 줍니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "이후 매 프레임에는 큐의 맨 앞 하나만 확인합니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "스테이지가 시작되면 스폰 목록을 웨이브 번호 → 시간 순으로 한 번 정렬해 큐에 넣습니다.",
+            "verbatim": true
           }
-        ]
+        ],
+        "visuals": []
       },
       {
         "key": "queue-choice",
@@ -785,6 +1378,68 @@
         ]
       },
       {
+        "key": "nav-choice",
+        "chapter": "wave",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "6.5 고민과 선택: 몬스터를 어떻게 움직일 것인가",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "맵에 장애물이 있어 직선 이동으로는 몬스터가 장애물에 걸렸습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "6. 시스템 ④ 웨이브 · 몬스터",
+          "6.5 고민과 선택: 몬스터를 어떻게 움직일 것인가"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|[A] 플레이어 방향으로 직선 이동|[B] NavMeshPlus 경로 탐색 ✓"
+          }
+        ]
+      },
+      {
+        "key": "ui-ease",
+        "chapter": "ui",
+        "layout": "full",
+        "tab": "개요",
+        "title": {
+          "text": "7.1 개요",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "DOTween을 쓰지 않고 코루틴과 이징 함수를 직접 구현했습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "7. 시스템 ⑤ UI 연출",
+          "7.1 개요"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/pause_settings.gif",
+            "w": 360,
+            "h": 642,
+            "caption": {
+              "text": "일시정지 메뉴 → 설정 팝업이 크기 0에서 튀어나옴 (EaseOutBack)",
+              "verbatim": true
+            }
+          },
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "연출|대상|이징|시간"
+          }
+        ]
+      },
+      {
         "key": "measure",
         "chapter": "result",
         "layout": "full",
@@ -801,61 +1456,23 @@
           "8. 결과 · 회고",
           "8.1 결과"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "",
+            "text": "두 측정은 앱을 따로 실행해 Mono 시작 값이 다르므로, 스테이지 안에서 늘어난 양(둘 다 약 4MB)만 비교합니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "실제 모바일 기기에서 Android 빌드로 1 · 2스테이지를 끝까지 플레이하며 측정했습니다.",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "table",
             "n": 2,
             "fp": "항목|1스테이지|2스테이지"
-          }
-        ]
-      },
-      {
-        "key": "bug-fix",
-        "chapter": "result",
-        "layout": "full",
-        "tab": "회고",
-        "title": {
-          "text": "문서를 쓰며 발견해 수정한 것",
-          "verbatim": true
-        },
-        "lead": {
-          "text": "이 문서를 쓰면서 코드를 다시 읽다가, 플레이 중에 실제로 문제가 될 수 있는 오류 다섯 개를 발견해 빌드 전에 고쳤습니다.",
-          "verbatim": true
-        },
-        "sectionPath": [
-          "8. 결과 · 회고",
-          "8.2 아쉬운 점과 개선 계획"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 2,
-            "fp": "문제|증상|원인|수정"
-          }
-        ]
-      },
-      {
-        "key": "debt",
-        "chapter": "result",
-        "layout": "full",
-        "tab": "회고",
-        "title": {
-          "text": "남은 기술 부채",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "8. 결과 · 회고",
-          "8.2 아쉬운 점과 개선 계획"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 3,
-            "fp": "문제|원인·당시 판단|개선 계획"
           }
         ]
       }

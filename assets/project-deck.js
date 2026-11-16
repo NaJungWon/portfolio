@@ -379,17 +379,19 @@
   const ROOMY_MAX = 4;
   function chapterScene(c, ci, chId, slides, foot, auto, ptitle) {
     const make = (mode) => {
-      const s = PF.scene({ id: chId, tpl: 'CH', kind: 'bare', cls: mode === 'compact' ? 'compact' : '', foot, sec: c.title, group: c.title, stitle: c.title });
+      const tight = mode === 'compact' || mode.startsWith('cols');
+      const s = PF.scene({ id: chId, tpl: 'CH', kind: 'bare', cls: tight ? 'compact' : '', foot, sec: c.title, group: c.title, stitle: c.title });
       const roomy = mode === 'roomy';
       const list = slides.map((x, i) => item(String(i + 1), txt(x.sl.title) || c.title, PF.tab(x.sl.tab), x.scenes[0].id, roomy ? txt(x.sl.lead) : '')).join('');
       PF.body(s).innerHTML = `<div class="toprow"><span class="pf-eyebrow long">${esc(ptitle)}</span><span class="rl">${esc(PF.t('deck.ch-count', { n: slides.length }))}</span></div>
         <div class="ch-mid"><div><p class="ch-no">${esc(PF.t('en.chapter'))} ${String(ci + 1).padStart(2, '0')}</p><h2 class="ch-t">${esc(c.title)}</h2>${DOT}</div>
-        <div class="ch-list t-P2${mode === 'normal' ? '' : ' ' + mode}"><ol class="toc-list${roomy ? '' : ' sub'}">${list}</ol></div></div>`;
+        <div class="ch-list t-P2${mode === 'normal' ? '' : mode.startsWith('cols') ? ' compact ' + mode : ' ' + mode}"><ol class="toc-list${roomy ? '' : ' sub'}" style="--rows2:${Math.ceil(slides.length / 2)};--rows3:${Math.ceil(slides.length / 3)}">${list}</ol></div></div>`;
       return band(s, auto);
     };
-    const modes = slides.length <= ROOMY_MAX ? ['roomy', 'normal', 'compact'] : ['normal', 'compact'];
+    // 장면이 많은 장(장면 수 상한 해제 뒤)은 목록을 2단 → 3단으로 나눠 한 장에 담음
+    const modes = slides.length <= ROOMY_MAX ? ['roomy', 'normal', 'compact'] : ['normal', 'compact', 'cols2', 'cols3'];
     for (const m of modes) { const s = make(m); if (PF.fitsM(s)) return s; }
-    return PF.shrinkOrClip(make('compact'), PFScene.refUrl(chId), info.overflow);
+    return PF.shrinkOrClip(make(modes[modes.length - 1]), PFScene.refUrl(chId), info.overflow);
   }
 
   function tocScene(p, foot, items, retro, auto) {

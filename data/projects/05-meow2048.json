@@ -259,6 +259,52 @@
         ]
       },
       {
+        "key": "rules",
+        "chapter": "overview",
+        "layout": "full",
+        "tab": "개요",
+        "title": {
+          "text": "1.3 게임 규칙 요약",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "1. 프로젝트 개요",
+          "1.3 게임 규칙 요약"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "구분|규칙"
+          }
+        ]
+      },
+      {
+        "key": "env",
+        "chapter": "overview",
+        "layout": "full",
+        "tab": "개요",
+        "title": {
+          "text": "1.4 개발 환경",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "1. 프로젝트 개요",
+          "1.4 개발 환경"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "항목|내용"
+          }
+        ]
+      },
+      {
         "key": "arch",
         "chapter": "arch",
         "layout": "visual",
@@ -275,7 +321,18 @@
           "2. 전체 구조",
           "2.1 아키텍처"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "칸(프레임)",
+            "text": "GridLayoutGroup 아래에 깔린 배경 칸. 각 칸의 Slot_Status(Empty / Occupied)를 board[x, y] 배열로 들고 있습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "타일(숫자)",
+            "text": "별도의 부모(moveSlotGroup) 아래에 있는 Move_Slot. 값(slotNumber)과 그리드 좌표(gridX, gridY)를 들고, 화면 위치는 해당 칸의 위치를 복사해 씁니다.",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "mermaid",
@@ -285,10 +342,42 @@
         ]
       },
       {
-        "key": "play",
+        "key": "state",
         "chapter": "arch",
         "layout": "visual",
-        "tab": "화면",
+        "tab": "흐름",
+        "title": {
+          "text": "2.2 상태 흐름",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "상태 값은 보드가 준비됐는지를 기준으로 바뀝니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "2. 전체 구조",
+          "2.2 상태 흐름"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "시작 버튼은 상태를 바꾸지 않고 첫 타일을 만드는 역할이고, 리셋은 Main으로 잠깐 돌렸다가 같은 프레임에 다시 Game이 됩니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "stateDiagram-v2"
+          }
+        ]
+      },
+      {
+        "key": "play",
+        "chapter": "arch",
+        "layout": "screens",
+        "tab": "결과",
         "title": {
           "text": "2.2 상태 흐름",
           "verbatim": true
@@ -312,6 +401,42 @@
               "text": "4×4 플레이 화면 (최고 점수 · 현재 점수 · 보드 크기 버튼)",
               "verbatim": true
             }
+          },
+          {
+            "kind": "image",
+            "src": "images/gameover.jpg",
+            "w": 540,
+            "h": 960,
+            "caption": {
+              "text": "게임 오버 화면",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "roles",
+        "chapter": "arch",
+        "layout": "full",
+        "tab": "구조",
+        "title": {
+          "text": "2.3 클래스 역할",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "설계 규칙: 판정은 데이터만 읽는다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "2. 전체 구조",
+          "2.3 클래스 역할"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "클래스|하는 일|하지 않는 일"
           }
         ]
       },
@@ -335,6 +460,68 @@
             "kind": "table",
             "n": 1,
             "fp": "|[A] 타일을 칸의 자식으로|[B] 칸(프레임)과 타일 레이어 분리 ✓"
+          }
+        ]
+      },
+      {
+        "key": "layer-code",
+        "chapter": "arch",
+        "layout": "overview",
+        "tab": "구현",
+        "title": {
+          "text": "2.4 고민과 선택: 타일을 칸 안에 넣을 것인가, 따로 둘 것인가",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "[B]를 선택했습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "2. 전체 구조",
+          "2.4 고민과 선택: 타일을 칸 안에 넣을 것인가, 따로 둘 것인가"
+        ],
+        "points": [
+          {
+            "label": "최종 결정",
+            "text": "타일이 GridLayout 밖에 있으니 2048의 재미인 미끄러지는 연출도 자유롭게 만들 수 있었습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "감수한 대가",
+            "text": "타일이 움직일 때마다 원래 칸은 Empty, 새 칸은 Occupied로 직접 바꿔야 합니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "이 일을 MoveSlotToImmediate 한 곳에서만 하도록 모았습니다(3.3).",
+            "verbatim": true
+          }
+        ],
+        "visuals": []
+      },
+      {
+        "key": "board-size",
+        "chapter": "arch",
+        "layout": "full",
+        "tab": "구조",
+        "title": {
+          "text": "2.5 보드 크기: 4×4 / 8×8",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "지원하는 크기가 두 개뿐이라 비율 계산 대신 크기별 값을 직접 정해 각각 보기 좋게 맞췄습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "2. 전체 구조",
+          "2.5 보드 크기: 4×4 / 8×8"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "값|4×4|8×8|위치"
           }
         ]
       },
@@ -365,32 +552,76 @@
         ]
       },
       {
-        "key": "move-step",
+        "key": "swipe-rules",
         "chapter": "turn",
-        "layout": "code",
+        "layout": "full",
+        "tab": "구현",
+        "title": {
+          "text": "3.2 핵심 기능 ①: 스와이프 입력",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "드래그를 스와이프로 바꾸는 규칙은 네 가지입니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "3. 시스템 ① 턴 처리: 이동·합치기 ★",
+          "3.2 핵심 기능 ①: 스와이프 입력"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "마우스 입력(GetMouseButton)으로 만들었고, 모바일에서는 Unity가 터치를 마우스 입력으로 함께 전달하므로 같은 코드로 동작합니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "값|수치|이유"
+          }
+        ]
+      },
+      {
+        "key": "move-rule",
+        "chapter": "turn",
+        "layout": "full",
         "tab": "구현",
         "title": {
           "text": "3.3 핵심 기능 ②: 이동 판정 — 한 칸씩 밀기를 반복",
           "verbatim": true
         },
         "lead": {
-          "text": "MoveSlotToImmediate는 원래 칸 Empty → 좌표 변경 → 새 칸 Occupied 세 가지만 하고, 화면 위치는 건드리지 않습니다",
+          "text": "한 칸 앞을 보고 내리는 판단은 세 가지입니다.",
           "verbatim": true
         },
         "sectionPath": [
           "3. 시스템 ① 턴 처리: 이동·합치기 ★",
           "3.3 핵심 기능 ②: 이동 판정 — 한 칸씩 밀기를 반복"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "",
+            "text": "스와이프 방향에 따라 줄(행 또는 열)마다 타일을 앞쪽부터 정렬하고, 각 타일을 한 칸만 앞으로 밀어 봅니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "한 바퀴 돌았을 때 하나라도 움직였으면 다시 처음부터 반복하고, 아무것도 안 움직이면 끝냅니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "MoveSlotToImmediate는 원래 칸 Empty → 좌표 변경 → 새 칸 Occupied 세 가지만 하고, 화면 위치는 건드리지 않습니다",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
-            "kind": "code",
-            "n": 2,
-            "fp": "// Game_System.cs:837 ProcessSlotsLineStepWithAnimation (발췌)",
-            "lines": [
-              4,
-              22
-            ]
+            "kind": "table",
+            "n": 1,
+            "fp": "앞 칸|처리"
           }
         ]
       },
@@ -411,7 +642,18 @@
           "3. 시스템 ① 턴 처리: 이동·합치기 ★",
           "3.4 핵심 기능 ③: 한 턴에 한 번만 합치기"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "",
+            "text": "판정 도중에는 합쳐질 타일의 값이 아직 2로 남아 있고, 이때 hasMergedThisTurn이 없으면 세 번째 타일이 같은 타일에 또 합쳐집니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "값은 연출이 끝난 뒤 ProcessMerges에서 바뀝니다.",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "mermaid",
@@ -419,6 +661,37 @@
             "fp": "flowchart LR"
           }
         ]
+      },
+      {
+        "key": "gameover",
+        "chapter": "turn",
+        "layout": "overview",
+        "tab": "구현",
+        "title": {
+          "text": "3.5 핵심 기능 ④: 게임 오버 판정",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "게임 오버는 두 조건이 모두 참일 때입니다. ① 빈칸이 없다. ② 네 방향 모두 움직이거나 합칠 수 없다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "3. 시스템 ① 턴 처리: 이동·합치기 ★",
+          "3.5 핵심 기능 ④: 게임 오버 판정"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "보드를 바꾸지 않는 질문용 함수로 따로 둔 덕분에, 판정하다가 보드가 바뀌는 일이 없습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "이 판정은 두 곳에서 실행됩니다. ① 새 타일을 만든 직후, ② 스와이프했는데 아무것도 움직이지 않았을 때입니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": []
       },
       {
         "key": "data-choice",
@@ -450,35 +723,118 @@
         ]
       },
       {
-        "key": "parallel",
+        "key": "step-choice",
+        "chapter": "turn",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "3.7 고민과 선택: 한 줄을 한 번에 계산할 것인가, 한 칸씩 밀 것인가",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 시스템 ① 턴 처리: 이동·합치기 ★",
+          "3.7 고민과 선택: 한 줄을 한 번에 계산할 것인가, 한 칸씩 밀 것인가"
+        ],
+        "points": [
+          {
+            "label": "최종 결정",
+            "text": "앞쪽 타일부터 처리하므로 뒤 타일은 항상 앞 타일이 자리를 잡은 뒤에 움직입니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|[A] 줄 단위 일괄 계산|[B] 한 칸씩 밀기 반복 ✓"
+          }
+        ]
+      },
+      {
+        "key": "spawn-cap",
+        "chapter": "turn",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "3.8 고민과 선택: 새 타일과 상한",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 시스템 ① 턴 처리: 이동·합치기 ★",
+          "3.8 고민과 선택: 새 타일과 상한"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "결정|선택|이유"
+          }
+        ]
+      },
+      {
+        "key": "fx-overview",
         "chapter": "fx",
-        "layout": "code",
+        "layout": "full",
+        "tab": "개요",
+        "title": {
+          "text": "4.1 개요",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "이동은 빠르게, 생성·합치기는 크게 튀게 나눴습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "4. 시스템 ② 연출: 병렬 이동·이징",
+          "4.1 개요"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "연출|방식|시간"
+          }
+        ]
+      },
+      {
+        "key": "single-move",
+        "chapter": "fx",
+        "layout": "overview",
         "tab": "구현",
         "title": {
           "text": "4.2 핵심 기능 ①: 병렬 이동과 완료 대기",
           "verbatim": true
         },
         "lead": {
-          "text": "턴 코루틴(OnSwipeCoroutine)은 이 대기가 끝난 뒤에 합치기를 확정하고 새 타일을 만듭니다.",
+          "text": "이동 시간은 모든 타일이 같은 moveDuration(씬 설정값 0.15초)입니다.",
           "verbatim": true
         },
         "sectionPath": [
           "4. 시스템 ② 연출: 병렬 이동·이징",
           "4.2 핵심 기능 ①: 병렬 이동과 완료 대기"
         ],
-        "points": [],
-        "visuals": [
+        "points": [
           {
-            "kind": "code",
-            "n": 1,
-            "fp": "// Game_System.cs:520 AnimateSlots — 모든 타일을 동시에 출발시키고 전부 도착할"
+            "label": "",
+            "text": "멀리 가는 타일은 빠르게, 가까운 타일은 느리게 움직여 모두 동시에 도착합니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "턴 코루틴(OnSwipeCoroutine)은 이 대기가 끝난 뒤에 합치기를 확정하고 새 타일을 만듭니다.",
+            "verbatim": true
           }
-        ]
+        ],
+        "visuals": []
       },
       {
-        "key": "elastic",
+        "key": "scale-anim",
         "chapter": "fx",
-        "layout": "code",
+        "layout": "overview",
         "tab": "구현",
         "title": {
           "text": "4.3 핵심 기능 ②: EaseOutElastic 직접 구현",
@@ -492,12 +848,77 @@
           "4. 시스템 ② 연출: 병렬 이동·이징",
           "4.3 핵심 기능 ②: EaseOutElastic 직접 구현"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "",
+            "text": "지수 감쇠 × 사인 진동 → 목표를 살짝 넘었다가 출렁이며 멈춤",
+            "verbatim": true
+          }
+        ],
+        "visuals": []
+      },
+      {
+        "key": "sfx",
+        "chapter": "fx",
+        "layout": "overview",
+        "tab": "구현",
+        "title": {
+          "text": "4.4 핵심 기능 ③: 사운드·볼륨",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "타일은 계속 생성·파괴되므로 볼륨 매니저에 미리 등록해 둘 수 없습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "4. 시스템 ② 연출: 병렬 이동·이징",
+          "4.4 핵심 기능 ③: 사운드·볼륨"
+        ],
+        "points": [
+          {
+            "label": "SFX 자동 등록",
+            "text": "타일의 SFX_Control이 활성화될 때 스스로 Setting_Manager에 등록하고, 비활성화될 때 해제합니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "새로 생긴 타일도 현재 SFX 볼륨을 바로 따릅니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": []
+      },
+      {
+        "key": "volume",
+        "chapter": "fx",
+        "layout": "visual",
+        "tab": "결과",
+        "title": {
+          "text": "4.4 핵심 기능 ③: 사운드·볼륨",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "4. 시스템 ② 연출: 병렬 이동·이징",
+          "4.4 핵심 기능 ③: 사운드·볼륨"
+        ],
+        "points": [
+          {
+            "label": "BGM",
+            "text": "상태별 3종(타이틀 / 인게임 / 게임 오버)을 Game_System.Update에서 상태에 맞게 전환합니다.",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
-            "kind": "code",
-            "n": 1,
-            "fp": "// Game_System.cs:593 EaseOutElastic"
+            "kind": "image",
+            "src": "images/settings.jpg",
+            "w": 540,
+            "h": 960,
+            "caption": {
+              "text": "설정 팝업 — Sound Fx / Music 볼륨 슬라이더",
+              "verbatim": true
+            }
           }
         ]
       },
@@ -515,7 +936,13 @@
           "4. 시스템 ② 연출: 병렬 이동·이징",
           "4.5 고민과 선택: 트윈 라이브러리를 쓸 것인가"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "최종 결정",
+            "text": "이 게임에 필요한 연출은 이동과 스케일 두 종류뿐이었습니다.",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "table",
@@ -525,9 +952,61 @@
         ]
       },
       {
+        "key": "db-tree",
+        "chapter": "save",
+        "layout": "visual",
+        "tab": "구조",
+        "title": {
+          "text": "5.1 개요",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "서버를 따로 만들지 않고, 기기 ID로 플레이어를 찾고, 처음 온 기기에는 순번 UID를 발급합니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "5. 시스템 ③ 기록 저장: Firebase",
+          "5.1 개요"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "flowchart TB"
+          }
+        ]
+      },
+      {
+        "key": "save-flow",
+        "chapter": "save",
+        "layout": "visual",
+        "tab": "흐름",
+        "title": {
+          "text": "5.1 개요",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "앱이 시작되면 Firebase 초기화 → 자동 게스트 로그인 → 최고 점수 표시까지 진행됩니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "5. 시스템 ③ 기록 저장: Firebase",
+          "5.1 개요"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 2,
+            "fp": "sequenceDiagram"
+          }
+        ]
+      },
+      {
         "key": "merge-save",
         "chapter": "save",
-        "layout": "code",
+        "layout": "overview",
         "tab": "구현",
         "title": {
           "text": "5.2 핵심 기능 ①: 필드별 병합 저장",
@@ -541,14 +1020,76 @@
           "5. 시스템 ③ 기록 저장: Firebase",
           "5.2 핵심 기능 ①: 필드별 병합 저장"
         ],
+        "points": [
+          {
+            "label": "",
+            "text": "60초 저장은 new PlayerData { playTime = 60f }만 넘기므로 high_score가 0이어도 최고 점수가 지워지지 않습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": []
+      },
+      {
+        "key": "save-timing",
+        "chapter": "save",
+        "layout": "full",
+        "tab": "구현",
+        "title": {
+          "text": "5.3 핵심 기능 ②: 최고 점수와 플레이 시간",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "앱이 비정상 종료되면 마지막 1분 이내의 시간만 잃습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "5. 시스템 ③ 기록 저장: Firebase",
+          "5.3 핵심 기능 ②: 최고 점수와 플레이 시간"
+        ],
         "points": [],
         "visuals": [
           {
-            "kind": "code",
+            "kind": "table",
             "n": 1,
-            "fp": "// User_Data.cs:371 UpdatePlayerData (발췌)"
+            "fp": "값|저장 시점|규칙|위치"
           }
         ]
+      },
+      {
+        "key": "save-where",
+        "chapter": "save",
+        "layout": "overview",
+        "tab": "선택",
+        "title": {
+          "text": "5.4 고민과 선택: 기록을 어디에, 어떻게 저장할 것인가",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "결정 대상 ①: 최고 점수를 기기 안(PlayerPrefs)에 둘 것인가, 클라우드(Firebase)에 둘 것인가?",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "5. 시스템 ③ 기록 저장: Firebase",
+          "5.4 고민과 선택: 기록을 어디에, 어떻게 저장할 것인가"
+        ],
+        "points": [
+          {
+            "label": "최종 결정",
+            "text": "Firebase Realtime Database를 선택했습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "이 프로젝트에서는 Firebase로 데이터를 저장하고 불러오는 것을 연습하고 싶었습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "같은 저장 구조(User_Data)를 두 프로젝트에서 그대로 썼습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": []
       },
       {
         "key": "save-choice",
@@ -580,32 +1121,6 @@
         ]
       },
       {
-        "key": "measure",
-        "chapter": "result",
-        "layout": "full",
-        "tab": "결과",
-        "title": {
-          "text": "6.2 결과",
-          "verbatim": true
-        },
-        "lead": {
-          "text": "보드가 가득 찰 때까지 30fps 상한에 붙어 유지됐습니다.",
-          "verbatim": true
-        },
-        "sectionPath": [
-          "6. 결과 · 회고",
-          "6.2 결과"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 2,
-            "fp": "항목|4×4 한 판"
-          }
-        ]
-      },
-      {
         "key": "troubleshoot",
         "chapter": "result",
         "layout": "full",
@@ -629,6 +1144,101 @@
         ]
       },
       {
+        "key": "destroyed-tile",
+        "chapter": "result",
+        "layout": "problem",
+        "tab": "문제 해결",
+        "title": {
+          "text": "자세히: 파괴된 타일과 코루틴",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "6. 결과 · 회고",
+          "6.1 문제 해결 (Troubleshooting)"
+        ],
+        "points": [
+          {
+            "label": "문제",
+            "text": "합쳐져 사라진 타일을 코루틴이 계속 움직임 (MissingReferenceException 위험)",
+            "verbatim": true
+          },
+          {
+            "label": "원인",
+            "text": "이동 연출과 파괴가 서로 다른 흐름에서 일어나기 때문에, 코루틴이 이미 사라진 타일의 transform을 건드릴 수 있었습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "해결",
+            "text": "이동 코루틴은 중간에 끝나더라도 완료 콜백을 반드시 호출합니다.",
+            "verbatim": true
+          },
+          {
+            "label": "배운 점",
+            "text": "코루틴은 자기가 다루는 오브젝트보다 오래 살 수 있습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": []
+      },
+      {
+        "key": "measure",
+        "chapter": "result",
+        "layout": "full",
+        "tab": "결과",
+        "title": {
+          "text": "6.2 결과",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "보드가 가득 찰 때까지 30fps 상한에 붙어 유지됐습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "6. 결과 · 회고",
+          "6.2 결과"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "측정 환경|"
+          },
+          {
+            "kind": "table",
+            "n": 2,
+            "fp": "항목|4×4 한 판"
+          }
+        ]
+      },
+      {
+        "key": "outcome",
+        "chapter": "result",
+        "layout": "full",
+        "tab": "결과",
+        "title": {
+          "text": "6.2 결과",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "결과를 기능 단위로 정리하면 다음과 같습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "6. 결과 · 회고",
+          "6.2 결과"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 3,
+            "fp": "집중한 것|결과"
+          }
+        ]
+      },
+      {
         "key": "doc-fixes",
         "chapter": "result",
         "layout": "full",
@@ -642,7 +1252,13 @@
           "6. 결과 · 회고",
           "6.3 아쉬운 점과 개선 계획"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "",
+            "text": "두 수정 모두 플레이로 확인했습니다 — 막히는 즉시 게임 오버 화면이 뜨고, 기록을 갱신해도 플레이 시간이 두 배가 되지 않습니다.",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "table",
@@ -652,38 +1268,10 @@
         ]
       },
       {
-        "key": "fix-code",
-        "chapter": "result",
-        "layout": "code",
-        "tab": "구현",
-        "title": {
-          "text": "6.3 아쉬운 점과 개선 계획",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "6. 결과 · 회고",
-          "6.3 아쉬운 점과 개선 계획"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "code",
-            "n": 1,
-            "fp": "// 최고 점수 저장 — 수정 전"
-          },
-          {
-            "kind": "code",
-            "n": 2,
-            "fp": "// OnSwipeCoroutine (Game_System.cs:495-498) — 새 타일 생성 직후에도 "
-          }
-        ]
-      },
-      {
         "key": "debt",
         "chapter": "result",
         "layout": "full",
-        "tab": "회고",
+        "tab": "결과",
         "title": {
           "text": "남은 기술 부채",
           "verbatim": true
@@ -701,6 +1289,67 @@
             "fp": "문제|원인·당시 판단|개선 계획"
           }
         ]
+      },
+      {
+        "key": "not-done",
+        "chapter": "result",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "일부러 하지 않은 것",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "6. 결과 · 회고",
+          "6.3 아쉬운 점과 개선 계획"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 3,
+            "fp": "항목|이유"
+          }
+        ]
+      },
+      {
+        "key": "lessons",
+        "chapter": "result",
+        "layout": "overview",
+        "tab": "결과",
+        "title": {
+          "text": "6.4 배운 점",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "6. 결과 · 회고",
+          "6.4 배운 점"
+        ],
+        "points": [
+          {
+            "label": "배운 점",
+            "text": "턴제 게임은 \"데이터 먼저, 화면은 나중\"이 기본입니다.",
+            "verbatim": true
+          },
+          {
+            "label": "배운 점",
+            "text": "규칙의 예외는 코드에 이름으로 남겨야 합니다.",
+            "verbatim": true
+          },
+          {
+            "label": "배운 점",
+            "text": "코루틴은 오브젝트보다 오래 살 수 있습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "배운 점",
+            "text": "함수 이름보다 호출하는 쪽의 약속이 중요합니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": []
       }
     ]
   }

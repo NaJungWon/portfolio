@@ -332,6 +332,29 @@
         ]
       },
       {
+        "key": "env",
+        "chapter": "overview",
+        "layout": "full",
+        "tab": "개요",
+        "title": {
+          "text": "1.4 개발 환경",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "1. 프로젝트 개요",
+          "1.4 개발 환경"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "항목|내용"
+          }
+        ]
+      },
+      {
         "key": "arch",
         "chapter": "overview",
         "layout": "full",
@@ -407,6 +430,69 @@
         ]
       },
       {
+        "key": "req-table",
+        "chapter": "base",
+        "layout": "full",
+        "tab": "구조",
+        "title": {
+          "text": "2.2 요청 → 응답 흐름",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "메시지 종류는 `Protocol.UserInteractionMessage` 하나로 통일되어 있고, `InteractionType`으로 구분합니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "2. 공통 기반 — 서버와 클라이언트의 역할 분담",
+          "2.2 요청 → 응답 흐름"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "요청 (클라 → 서버)|응답 (서버 → 전체)|서버 판정|클라이언트 처리"
+          }
+        ]
+      },
+      {
+        "key": "scene-state",
+        "chapter": "base",
+        "layout": "full",
+        "tab": "구조",
+        "title": {
+          "text": "2.3 씬 전환과 플레이어 상태",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "이를 씬 이름이 아니라 상태 문자열로 정의해, 같은 캐릭터 오브젝트를 재사용하면서 상태만 바꿉니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "2. 공통 기반 — 서버와 클라이언트의 역할 분담",
+          "2.3 씬 전환과 플레이어 상태"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "씬은 Additive로 먼저 올리고, 완전히 로드된 뒤에 전원을 재배치한다",
+            "verbatim": true
+          },
+          {
+            "label": "이유",
+            "text": "새 씬의 매니저가 Awake를 끝낸 뒤라야 스폰 포인트를 읽을 수 있다",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "상태|적용 시점|이동|애니메이션"
+          }
+        ]
+      },
+      {
         "key": "move-intro",
         "chapter": "move",
         "layout": "visual",
@@ -438,12 +524,69 @@
         ]
       },
       {
-        "key": "move-boxcast",
+        "key": "move-class",
+        "chapter": "move",
+        "layout": "full",
+        "tab": "구조",
+        "title": {
+          "text": "3.2 시스템 구조",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 기능 A — 캐릭터 이동 · 충돌 · 위치 동기화",
+          "3.2 시스템 구조"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "classDiagram"
+          }
+        ]
+      },
+      {
+        "key": "move-body",
         "chapter": "move",
         "layout": "code",
+        "tab": "구조",
+        "title": {
+          "text": "루트 / Body 분리",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 기능 A — 캐릭터 이동 · 충돌 · 위치 동기화",
+          "3.2 시스템 구조"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "이동은 루트, 바라보는 방향은 `Body`에만 적용합니다.",
+            "verbatim": true
+          },
+          {
+            "label": "이유",
+            "text": "애니메이션의 루트 모션이나 회전이 루트 좌표에 섞이지 않게 해서, 씬을 오갈 때 캐릭터 위치 · 방향이 틀어지는 문제를 막았습니다",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "Player (루트) ← 위치만 담당 (이동 · 서버 동기화 기준 좌표)"
+          }
+        ]
+      },
+      {
+        "key": "move-api",
+        "chapter": "move",
+        "layout": "full",
         "tab": "구현",
         "title": {
-          "text": "축을 나눠 검사하는 BoxCast 이동",
+          "text": "3.3 핵심 기능 및 사용법",
           "verbatim": true
         },
         "lead": null,
@@ -456,17 +599,60 @@
             "label": "",
             "text": "넉백도 ResolveAxisMovement를 거치기 때문에, 벽에 부딪히면 더 이상 밀리지 않습니다.",
             "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "벽까지 남은 거리에서 skinWidth만큼 덜 가서, 콜라이더가 벽에 파고들지 않게 한다",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "마지막 목표점에서 3m 이상 떨어진 좌표는 '순간이동'으로 보고 아예 버린다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "씬 전환 직후 1초간은 이전 씬에서 보낸 좌표가 섞여 들어오므로 무시",
+            "verbatim": true
           }
         ],
         "visuals": [
           {
-            "kind": "code",
+            "kind": "table",
             "n": 1,
-            "fp": "// CharacterController3D.cs",
-            "lines": [
-              1,
-              19
-            ]
+            "fp": "하고 싶은 일|호출할 API|비고"
+          }
+        ]
+      },
+      {
+        "key": "move-numbers",
+        "chapter": "move",
+        "layout": "full",
+        "tab": "구현",
+        "title": {
+          "text": "수치 근거",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "넉백으로 한 번에 3m 이상 밀리는 경우도 없습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "3. 기능 A — 캐릭터 이동 · 충돌 · 위치 동기화",
+          "3.3 핵심 기능 및 사용법"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "프레임 독립적인 지수 감쇠 보간 → FPS가 달라도 같은 속도로 따라간다",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 2,
+            "fp": "항목|값|근거"
           }
         ]
       },
@@ -490,6 +676,32 @@
             "kind": "table",
             "n": 1,
             "fp": "|대안 A: Dynamic Rigidbody (물리 엔진)|대안 B: Unity CharacterController|대안 C: Kinematic Rigidbody + BoxCast 직접 구현 ✅"
+          }
+        ]
+      },
+      {
+        "key": "move-sync-choice",
+        "chapter": "move",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "결정 2. 원격 캐릭터를 어떻게 따라가게 할 것인가?",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "이 차이 때문에 씬 이동으로 캐릭터를 재배치할 때마다 원격 캐릭터가 예전 좌표로 끌려가는 고무줄 현상이 계속 생겼습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "3. 기능 A — 캐릭터 이동 · 충돌 · 위치 동기화",
+          "3.4 고민과 선택"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 2,
+            "fp": "|대안 A: 받은 좌표로 즉시 이동 (스냅)|대안 B: 모든 좌표를 보간|대안 C: 보간 + 씬 전환 직후 무시 + 비정상 거리 버리기 ✅"
           }
         ]
       },
@@ -548,6 +760,42 @@
         ]
       },
       {
+        "key": "push-apply",
+        "chapter": "push",
+        "layout": "overview",
+        "tab": "구현",
+        "title": {
+          "text": "4.3 핵심 기능",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "맞은 사람이 '나'일 때만 실제로 밀려난다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "4. 기능 B — 플레이어 밀치기",
+          "4.3 핵심 기능"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "다른 클라이언트는 내 MoveMessage를 받아 원격 캐릭터를 움직이므로 따로 계산할 필요가 없다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "판정은 '미는 사람 본인' 클라이언트에서만 서버에 요청한다",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "원격 캐릭터의 트리거는 무시 → 요청이 4번 가지 않음",
+            "verbatim": true
+          }
+        ],
+        "visuals": []
+      },
+      {
         "key": "push-choice",
         "chapter": "push",
         "layout": "full",
@@ -564,7 +812,13 @@
           "4. 기능 B — 플레이어 밀치기",
           "4.4 고민과 선택 — 넉백을 누가 계산할 것인가?"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "서버 검증을 넣지 않은 이유",
+            "text": "거리 · 쿨다운 검증을 서버에 두면 서버가 캐릭터 좌표와 애니메이션 상태까지 알아야 해서",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "table",
@@ -622,31 +876,94 @@
         ]
       },
       {
-        "key": "item-resolve",
+        "key": "item-state",
         "chapter": "item",
-        "layout": "code",
-        "tab": "구현",
+        "layout": "full",
+        "tab": "구조",
         "title": {
-          "text": "F키 하나로 가방 / 원래 매대 판정",
+          "text": "5.2 시스템 구조",
           "verbatim": true
         },
         "lead": null,
         "sectionPath": [
           "5. 기능 C — 아이템 집기 · 운반 · 가방 · 교체",
-          "5.3 핵심 기능 및 사용법"
+          "5.2 시스템 구조"
         ],
         "points": [],
         "visuals": [
           {
-            "kind": "code",
-            "n": 2,
-            "fp": "// ItemPutDownResolver.cs",
-            "lines": [
-              6,
-              22
-            ]
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "stateDiagram-v2"
           }
         ]
+      },
+      {
+        "key": "item-roles",
+        "chapter": "item",
+        "layout": "full",
+        "tab": "구조",
+        "title": {
+          "text": "5.2 시스템 구조",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "매대에서 가장 가까운 아이템을 찾는 코드(`GetNearestActiveItemIndex`)와 아이템을 매대에 되돌려 놓는 코드를 더했습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "5. 기능 C — 아이템 집기 · 운반 · 가방 · 교체",
+          "5.2 시스템 구조"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "역할|클래스|하는 일|하지 않는 일"
+          }
+        ]
+      },
+      {
+        "key": "item-swap",
+        "chapter": "item",
+        "layout": "overview",
+        "tab": "구현",
+        "title": {
+          "text": "교체 시 기존 아이템을 원래 자리로",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "서버가 \"가방에서 빠진 아이템 ID\"만 알려주면, 그 ID로 원래 매대 슬롯을 찾아 다시 켠다",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "5. 기능 C — 아이템 집기 · 운반 · 가방 · 교체",
+          "5.3 핵심 기능 및 사용법"
+        ],
+        "points": [
+          {
+            "label": "서버",
+            "text": "빠진 아이템의 소유권(`itemOwnersDic`)을 풀어 다른 플레이어가 다시 집을 수 있게 합니다.",
+            "verbatim": true
+          },
+          {
+            "label": "라운드 전환 시 초기화",
+            "text": "모든 플레이어의 `SelectedItems`와 손에 든 아이템을 지워, 이전 라운드 아이템이 회의실이나 다음 마트에 남지 않게 했습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "한 매대에 3개가 놓이면서, 탐지점과 가장 가까운 '아직 남아있는' 아이템을 골라야 했다",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "여기서는 요청만 보낸다. 손에 붙이는 건 서버 응답(SuccessGetItem)에서",
+            "verbatim": true
+          }
+        ],
+        "visuals": []
       },
       {
         "key": "item-choice",
@@ -668,6 +985,32 @@
             "kind": "table",
             "n": 1,
             "fp": "|대안 A: 누르는 즉시 집고, 서버에는 알리기만|대안 B: 서버 응답을 받은 뒤에만 집기 ✅"
+          }
+        ]
+      },
+      {
+        "key": "item-fkey",
+        "chapter": "item",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "결정 2. 집기와 내려놓기를 같은 키(F)로 할 것인가?",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "가방이 추가되면서 \"플레이어 기준으로 가방과 매대를 찾는\" 판정이 별도로 필요해졌습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "5. 기능 C — 아이템 집기 · 운반 · 가방 · 교체",
+          "5.4 고민과 선택"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 2,
+            "fp": "|대안 A: 집기 / 가방 넣기 / 돌려놓기 키 분리|대안 B: F키 하나 + 위치로 판정 ✅"
           }
         ]
       },
@@ -710,9 +1053,58 @@
         ]
       },
       {
-        "key": "vote-click",
+        "key": "vote-state",
         "chapter": "vote",
-        "layout": "code",
+        "layout": "full",
+        "tab": "구조",
+        "title": {
+          "text": "6.2 시스템 구조",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "6. 기능 D — 회의실 지목 · 투표 입력",
+          "6.2 시스템 구조"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "stateDiagram-v2"
+          }
+        ]
+      },
+      {
+        "key": "vote-msg",
+        "chapter": "vote",
+        "layout": "full",
+        "tab": "구조",
+        "title": {
+          "text": "6.2 시스템 구조",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "본 문서에서는 입력 · 상태 처리와의 연결 지점만 다룹니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "6. 기능 D — 회의실 지목 · 투표 입력",
+          "6.2 시스템 구조"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "서버 메시지|Vote_System 상태|클라이언트 처리"
+          }
+        ]
+      },
+      {
+        "key": "vote-ballot",
+        "chapter": "vote",
+        "layout": "visual",
         "tab": "구현",
         "title": {
           "text": "6.3 핵심 기능",
@@ -723,16 +1115,65 @@
           "6. 기능 D — 회의실 지목 · 투표 입력",
           "6.3 핵심 기능"
         ],
+        "points": [
+          {
+            "label": "투표",
+            "text": "전송 즉시 UI를 닫아 한 번만 투표할 수 있습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "지목된 본인에게는 투표 UI를 열지 않습니다",
+            "verbatim": true
+          },
+          {
+            "label": "최종 사이클 스킵 버튼 비활성화",
+            "text": "최종 사이클에서는 서버가 스킵을 처리하지 않으므로, 클라이언트도 스킵 버튼을 띄우지 않아 상태가 잘못 전환되지 않게 했습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "서버가 중계한 Select를 모든 클라이언트가 같은 순서로 재생",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/vote_ui.png",
+            "w": 1280,
+            "h": 720,
+            "caption": {
+              "text": "투표 UI (3지선다 버튼)",
+              "verbatim": true
+            },
+            "sectionPath": [
+              "6. 기능 D — 회의실 지목 · 투표 입력",
+              "6.1 개요"
+            ]
+          }
+        ]
+      },
+      {
+        "key": "vote-input",
+        "chapter": "vote",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "결정 1. 지목 입력 방식",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "6. 기능 D — 회의실 지목 · 투표 입력",
+          "6.4 고민과 선택"
+        ],
         "points": [],
         "visuals": [
           {
-            "kind": "code",
+            "kind": "table",
             "n": 1,
-            "fp": "// Vote_System.cs — 지목 단계에서만 클릭을 받는다",
-            "lines": [
-              9,
-              28
-            ]
+            "fp": "|대안 A: 플레이어 목록 UI 버튼|대안 B: 3D 캐릭터 직접 클릭 ✅"
           }
         ]
       },
@@ -760,6 +1201,29 @@
         ]
       },
       {
+        "key": "outcome",
+        "chapter": "result",
+        "layout": "full",
+        "tab": "결과",
+        "title": {
+          "text": "7.1 결과",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "7. 결과 및 배운 점",
+          "7.1 결과"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "목표 (개요의 Why)|결과|근거"
+          }
+        ]
+      },
+      {
         "key": "troubleshoot",
         "chapter": "result",
         "layout": "full",
@@ -781,6 +1245,159 @@
             "fp": "#|문제|원인|해결 / 개선|상태"
           }
         ]
+      },
+      {
+        "key": "ts-rubber",
+        "chapter": "result",
+        "layout": "problem",
+        "tab": "문제 해결",
+        "title": {
+          "text": "1 · 2번 상세 — 시도했지만 효과가 없었던 방법",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "7. 결과 및 배운 점",
+          "7.2 문제 해결 경험 (Troubleshooting)"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "씬 이동 시작부터 캐릭터의 첫 좌표 배치까지를 전부 비동기(await)로 묶은 뒤 서버 좌표 연결을 시작하도록 바꿔 보았습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "원인",
+            "text": "원인이 \"배치 순서\"가 아니라 원격 보간이 이미 지나간 좌표를 계속 따라가는 것이라는 걸 알게 됐습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "해결",
+            "text": "좌표를 받는 쪽에서 걸러내는 방식(1초 무시 + 3m 기준)으로 바꿔 해결했습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": []
+      },
+      {
+        "key": "ts-color",
+        "chapter": "result",
+        "layout": "overview",
+        "tab": "문제 해결",
+        "title": {
+          "text": "6번 상세 — 색상 동기화",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "목표는 각 플레이어마다 하나의 색을, 모든 PC에서 똑같이 그리는 것이었습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "7. 결과 및 배운 점",
+          "7.2 문제 해결 경험 (Troubleshooting)"
+        ],
+        "points": [
+          {
+            "label": "결과",
+            "text": "색을 정렬된 입장 순서 하나로만 정하고 전원 색을 한 번에 다시 칠하게 바꾼 뒤, 각 플레이어가 모든 PC에서 같은 색으로 보이게 됐습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": []
+      },
+      {
+        "key": "regrets",
+        "chapter": "result",
+        "layout": "full",
+        "tab": "결과",
+        "title": {
+          "text": "7.3 아쉬운 점 및 향후 계획",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "7. 결과 및 배운 점",
+          "7.3 아쉬운 점 및 향후 계획"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "아쉬운 점|영향|향후 계획"
+          }
+        ]
+      },
+      {
+        "key": "anim-state",
+        "chapter": "result",
+        "layout": "overview",
+        "tab": "선택",
+        "title": {
+          "text": "설계상 뺀 것 — 캐릭터 애니메이션 상태 패턴",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "7. 결과 및 배운 점",
+          "7.3 아쉬운 점 및 향후 계획"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "처음에는 캐릭터 애니메이션을 상태 패턴(`PickState`, `PushState`, `PutDownState`)으로 관리하려고 클래스를 만들었습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "Animator 파라미터를 직접 제어하는 방식으로 정리하고 상태 클래스는 쓰지 않게 됐습니다",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "상태가 많아지거나(예: 아이템 떨어뜨리기, 기절) 전이 조건이 복잡해지면 그때 상태 패턴을 다시 도입할 계획입니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": []
+      },
+      {
+        "key": "lessons",
+        "chapter": "result",
+        "layout": "overview",
+        "tab": "결과",
+        "title": {
+          "text": "7.4 배운 점",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "7. 결과 및 배운 점",
+          "7.4 배운 점"
+        ],
+        "points": [
+          {
+            "label": "배운 점",
+            "text": "각 클라이언트는 자기 캐릭터만 계산한다.",
+            "verbatim": true
+          },
+          {
+            "label": "배운 점",
+            "text": "서버에 무엇을 맡길지 기준이 필요하다.",
+            "verbatim": true
+          },
+          {
+            "label": "배운 점",
+            "text": "원인을 잘못 짚으면 올바른 기술도 효과가 없다.",
+            "verbatim": true
+          },
+          {
+            "label": "배운 점",
+            "text": "협업 코드는 서로의 전제를 맞춰야 한다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": []
       }
     ]
   }

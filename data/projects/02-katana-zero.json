@@ -280,6 +280,29 @@
         ]
       },
       {
+        "key": "game-loop",
+        "chapter": "overview",
+        "layout": "code",
+        "tab": "흐름",
+        "title": {
+          "text": "1.1 What — 무엇을 만들었나",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "1. 프로젝트 개요",
+          "1.1 What — 무엇을 만들었나"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "타이틀 → 스테이지 준비(클릭 대기) → 플레이(녹화) ─┬─ 모든 적 처치 → 정방향 재생 → 다음 스테이"
+          }
+        ]
+      },
+      {
         "key": "role",
         "chapter": "overview",
         "layout": "full",
@@ -365,12 +388,50 @@
           "2. 공통 기반 — 게임 흐름과 시간축 분리",
           "2.1 게임 상태 흐름"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "",
+            "text": "ESC 일시정지는 그림의 Playing뿐 아니라 Ready · Fin을 뺀 모든 상태(Dead · Rewind · RePlay 포함) 에서 가능하고, 해제하면 일시정지 직전 상태로 돌아갑니다.",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "mermaid",
             "n": 1,
             "fp": "stateDiagram-v2"
+          }
+        ]
+      },
+      {
+        "key": "time-axis",
+        "chapter": "base",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "2.2 원칙: \"게임 세계는 scaled, 시간을 다루는 시스템은 unscaled\"",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "시간 감속 · 히트스탑 · 일시정지 · 재생이 모두 Time.timeScale을 건드리기 때문에, 어떤 코드가 어떤 시간을 쓰는지를 먼저 정했습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "2. 공통 기반 — 게임 흐름과 시간축 분리",
+          "2.2 원칙: \"게임 세계는 scaled, 시간을 다루는 시스템은 unscaled\""
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "재생은 항상 초당 50틱으로 돌기 때문에, 리플레이에서는 크로노스 구간이 정상 속도로 재생됩니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "대상|사용하는 시간|이유"
           }
         ]
       },
@@ -406,6 +467,44 @@
         ]
       },
       {
+        "key": "move-screens",
+        "chapter": "move",
+        "layout": "screens",
+        "tab": "결과",
+        "title": {
+          "text": "3.1 개요",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 기능 A — 플레이어 이동",
+          "3.1 개요"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/platform.gif",
+            "w": 800,
+            "h": 450,
+            "caption": {
+              "text": "플랫폼 통과: 점프 · 계단 위에서 LayerMask의 Platform 제외 (씬 뷰)",
+              "verbatim": true
+            }
+          },
+          {
+            "kind": "image",
+            "src": "images/wall_flip.gif",
+            "w": 800,
+            "h": 450,
+            "caption": {
+              "text": "벽 붙기 → 공중제비",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
         "key": "move-struct",
         "chapter": "move",
         "layout": "visual",
@@ -432,28 +531,140 @@
         ]
       },
       {
-        "key": "stair-step",
+        "key": "move-velocity",
         "chapter": "move",
-        "layout": "code",
-        "tab": "구현",
+        "layout": "full",
+        "tab": "구조",
         "title": {
-          "text": "② 계단 step",
+          "text": "3.2 시스템 구조",
           "verbatim": true
         },
-        "lead": {
-          "text": "정면이 계단이면 maxStepHeight(0.1)를 10번 나눠 올려 보고, 올린 위치에서 앞으로 갈 수 있으면 그 높이로 이동합니다.",
-          "verbatim": true
-        },
+        "lead": null,
         "sectionPath": [
           "3. 기능 A — 플레이어 이동",
-          "3.3 핵심 기능"
+          "3.2 시스템 구조"
         ],
         "points": [],
         "visuals": [
           {
-            "kind": "code",
+            "kind": "table",
+            "n": 1,
+            "fp": "속도 구성|용도|감쇠 방식"
+          }
+        ]
+      },
+      {
+        "key": "move-choice",
+        "chapter": "move",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "결정 1. 이동을 무엇으로 구현할 것인가?",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 기능 A — 플레이어 이동",
+          "3.4 고민과 선택"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|대안 A: Dynamic Rigidbody2D|대안 B: Kinematic + BoxCast 직접 구현 ✅"
+          }
+        ]
+      },
+      {
+        "key": "stair-choice",
+        "chapter": "move",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "결정 2. 대각선(계단) 이동을 어떻게 처리할 것인가?",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 기능 A — 플레이어 이동",
+          "3.4 고민과 선택"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "경사 계단을 step으로 처리한 것은 이해도에 맞춘 선택이라, normal 기준 경사 이동은 다시 공부해 볼 과제로 남았습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "이동을 기본 이동 / 계단 이동 / 구르기 계단 이동 3가지로 나누고 구르기만 CeilToInt로 분할했습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
             "n": 2,
-            "fp": "// CharacterController2D.cs:467 — 위로 조금씩 올려 보며 앞이 비는 높이를 찾음"
+            "fp": "|대안 A: 충돌 normal 방향으로 이동|대안 B: step 방식 ✅"
+          }
+        ]
+      },
+      {
+        "key": "platform-choice",
+        "chapter": "move",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "결정 3. 플랫폼 통과를 어떻게 할 것인가?",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 기능 A — 플레이어 이동",
+          "3.4 고민과 선택"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "대각선 이동 중 플랫폼을 통과하지 못하는 부작용은 계단 위 · 점프 상승 중에는 플랫폼 제외 레이어를 쓰는 규칙으로 해결했습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 3,
+            "fp": "|대안 A: 플랫폼 콜라이더를 잠깐 끄기|대안 B: 플레이어의 충돌 LayerMask 교체 ✅"
+          }
+        ]
+      },
+      {
+        "key": "boost-choice",
+        "chapter": "move",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "결정 4. 대시 · 넉백 이동값을 어떻게 줄 것인가?",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 기능 A — 플레이어 이동",
+          "3.4 고민과 선택"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "초기 버전은 구르기 · 대시를 rollDrag / dashDrag(감쇠)로 처리했는데, 구르기 거리가 매번 달라져 거리 / 시간 방식으로 바꿨습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 4,
+            "fp": "|대안 A: power + drag|대안 B: speed(거리) + duration"
           }
         ]
       },
@@ -495,6 +706,37 @@
         ]
       },
       {
+        "key": "chronos-gauge",
+        "chapter": "chronos",
+        "layout": "visual",
+        "tab": "개요",
+        "title": {
+          "text": "4.1 개요",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "게이지(최대 11초)를 쓰고, 다 쓰거나 키를 떼면 풀립니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "4. 기능 B — 크로노스 · 히트스탑",
+          "4.1 개요"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/chronos_gauge.png",
+            "w": 1390,
+            "h": 300,
+            "caption": {
+              "text": "크로노스 게이지와 lShift 키 UI",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
         "key": "chronos-flow",
         "chapter": "chronos",
         "layout": "visual",
@@ -518,35 +760,6 @@
         ]
       },
       {
-        "key": "hitstop",
-        "chapter": "chronos",
-        "layout": "code",
-        "tab": "구현",
-        "title": {
-          "text": "② 히트스탑과 겹칠 때의 규칙",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "4. 기능 B — 크로노스 · 히트스탑",
-          "4.3 핵심 기능"
-        ],
-        "points": [
-          {
-            "label": "",
-            "text": "저장해 둔 값으로 돌아가면, 히트스탑 도중 lShift를 떼거나 눌렀을 때 히트스탑 전 상태로 되돌아가는 문제가 생깁니다.",
-            "verbatim": true
-          }
-        ],
-        "visuals": [
-          {
-            "kind": "code",
-            "n": 3,
-            "fp": "// ScreenEffectManager.cs:248"
-          }
-        ]
-      },
-      {
         "key": "chronos-choice",
         "chapter": "chronos",
         "layout": "full",
@@ -560,7 +773,13 @@
           "4. 기능 B — 크로노스 · 히트스탑",
           "4.4 고민과 선택"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "",
+            "text": "원작처럼 플레이어 입력도 같이 느려지므로, \"감속은 공짜가 아니라 신중하게 써야 하는 자원\"이라는 설계 의도와도 맞습니다.",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "table",
@@ -594,7 +813,7 @@
           },
           {
             "label": "",
-            "text": "클리어 → 기록을 정방향으로 재생(CCTV 리플레이)한 뒤 다음 스테이지",
+            "text": "최대 5,000틱(초당 50틱 기준 100초)을 넘기면 시간 초과로 사망 처리",
             "verbatim": true
           }
         ],
@@ -606,6 +825,37 @@
             "h": 364,
             "caption": {
               "text": "사망 후 역재생 — 공격 · 점프가 9배속으로 거꾸로 감긴 뒤 같은 스테이지 처음으로",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "record-replay",
+        "chapter": "record",
+        "layout": "visual",
+        "tab": "결과",
+        "title": {
+          "text": "5.1 개요",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "클리어 → 기록을 정방향으로 재생(CCTV 리플레이)한 뒤 다음 스테이지",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "5. 기능 C — 녹화 · 재생 · 역재생",
+          "5.1 개요"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/replay.gif",
+            "w": 800,
+            "h": 450,
+            "caption": {
+              "text": "클리어 후 CCTV 리플레이 (정방향 재생)",
               "verbatim": true
             }
           }
@@ -638,34 +888,53 @@
         ]
       },
       {
-        "key": "record-sample",
+        "key": "record-inspector",
         "chapter": "record",
-        "layout": "code",
-        "tab": "구현",
+        "layout": "visual",
+        "tab": "구조",
         "title": {
-          "text": "② 재생 — 틱 사이 보간",
+          "text": "5.2 시스템 구조",
           "verbatim": true
         },
-        "lead": {
-          "text": "재생 위치를 정수 틱이 아니라 float로 들고, 앞뒤 두 프레임 사이를 t로 보간합니다.",
-          "verbatim": true
-        },
+        "lead": null,
         "sectionPath": [
           "5. 기능 C — 녹화 · 재생 · 역재생",
-          "5.3 핵심 기능"
+          "5.2 시스템 구조"
         ],
-        "points": [
-          {
-            "label": "",
-            "text": "위치는 Lerp, 방향 · 활성 여부처럼 섞을 수 없는 값은 t < 0.5 기준으로 고릅니다.",
-            "verbatim": true
-          }
-        ],
+        "points": [],
         "visuals": [
           {
-            "kind": "code",
-            "n": 2,
-            "fp": "// TimeLineRecorder.cs:669"
+            "kind": "image",
+            "src": "images/recorder_inspector.png",
+            "w": 1280,
+            "h": 720,
+            "caption": {
+              "text": "녹화 대상 TimelineTrackable과 TimeLineRecorder 인스펙터",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "record-modes",
+        "chapter": "record",
+        "layout": "full",
+        "tab": "구조",
+        "title": {
+          "text": "5.2 시스템 구조",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "5. 기능 C — 녹화 · 재생 · 역재생",
+          "5.2 시스템 구조"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "녹화 모드|동작|루프"
           }
         ]
       },
@@ -683,12 +952,44 @@
           "5. 기능 C — 녹화 · 재생 · 역재생",
           "5.4 고민과 선택"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "",
+            "text": "입력 플래그(moveX, jumpPressed 등)도 PlayerRecord에 남아 있지만, 재생에는 위치 · 애니메이션만 씁니다.",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "table",
             "n": 1,
             "fp": "|대안 A: 입력만 기록하고 재시뮬레이션|대안 B: 매 틱 상태(위치 · 방향 · 애니메이션) 스냅샷 ✅"
+          }
+        ]
+      },
+      {
+        "key": "tick-choice",
+        "chapter": "record",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "결정 2. 기록 단위와 재생 단위를 같게 할 것인가?",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "처음부터 B를 고른 것이 아니라, A로 만든 뒤 문제를 하나씩 만나며 B로 옮겨 온 시행착오의 결과입니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "5. 기능 C — 녹화 · 재생 · 역재생",
+          "5.4 고민과 선택"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 2,
+            "fp": "|대안 A: 기록 · 재생 모두 FixedUpdate 틱 단위|대안 B: 기록은 틱, 재생은 Update + 보간 ✅"
           }
         ]
       },
@@ -709,7 +1010,13 @@
           "6. 기능 D — 전투 확장 · 화면 연출",
           "6.1 개요"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "",
+            "text": "판정 · 데미지 라우팅(CombatSystem, HitBox → HurtBox)은 수업 코드를 그대로 쓰고, 원작 규칙에 필요한 부분만 붙였습니다.",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "image",
@@ -724,28 +1031,147 @@
         ]
       },
       {
-        "key": "combat-effect",
+        "key": "parry",
         "chapter": "combat",
-        "layout": "code",
+        "layout": "visual",
+        "tab": "결과",
+        "title": {
+          "text": "6.1 개요",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "6. 기능 D — 전투 확장 · 화면 연출",
+          "6.1 개요"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/parry.gif",
+            "w": 800,
+            "h": 450,
+            "caption": {
+              "text": "타이밍을 맞춰 총알 반사(패링)",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "combat-struct",
+        "chapter": "combat",
+        "layout": "full",
+        "tab": "구조",
+        "title": {
+          "text": "6.2 시스템 구조",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "6. 기능 D — 전투 확장 · 화면 연출",
+          "6.2 시스템 구조"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "클래스|출처|역할"
+          }
+        ]
+      },
+      {
+        "key": "deadzone",
+        "chapter": "combat",
+        "layout": "visual",
         "tab": "구현",
         "title": {
-          "text": "③ 연출 통합 호출 + 재생 중 차단",
+          "text": "④ 데드존 카메라",
           "verbatim": true
         },
         "lead": {
-          "text": "리플레이에서는 기록된 이펙트만 보여주고 새 연출은 만들지 않습니다.",
+          "text": "화면 중앙 3×2 영역 안에서는 카메라가 움직이지 않고, 벗어난 만큼만 따라갑니다.",
           "verbatim": true
         },
         "sectionPath": [
           "6. 기능 D — 전투 확장 · 화면 연출",
           "6.3 핵심 기능"
         ],
+        "points": [
+          {
+            "label": "",
+            "text": "목표점(anchor)을 매번 맵 경계로 즉시 클램프해서, 맵 끝에 오래 서 있다가 반대로 움직일 때 카메라가 튀지 않게 했습니다",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "맵이 화면보다 작으면 맵 중심에 고정합니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/camera_bounds.png",
+            "w": 1172,
+            "h": 427,
+            "caption": {
+              "text": "씬 뷰의 맵 경계 콜라이더(초록 선)와 인스펙터 — CameraController의 Dead Zone Size 3×2 · Map Bounds = IntGrid(Tilemap Collider 2D + Composite Collider 2D)",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "effect-choice",
+        "chapter": "combat",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "결정 1. 연출 호출을 어디에 둘 것인가?",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "6. 기능 D — 전투 확장 · 화면 연출",
+          "6.4 고민과 선택"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "총알 반사처럼 데미지 이벤트가 아닌 순간에도 같은 연출이 필요해서, 연출은 정적 API로 직접 호출했습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|대안 A: 연출마다 호출하는 쪽에서 직접 처리|대안 B: ScreenEffectManager 정적 API로 통합 ✅"
+          }
+        ]
+      },
+      {
+        "key": "camera-choice",
+        "chapter": "combat",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "결정 2. 카메라를 어떻게 따라가게 할 것인가?",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "6. 기능 D — 전투 확장 · 화면 연출",
+          "6.4 고민과 선택"
+        ],
         "points": [],
         "visuals": [
           {
-            "kind": "code",
-            "n": 3,
-            "fp": "// ScreenEffectManager.cs — 외부는 이 함수 하나만 호출"
+            "kind": "table",
+            "n": 2,
+            "fp": "|대안 A: 수업 코드 SimpleFollowCamera (단순 추적)|대안 B: 데드존 + 맵 경계 제한 CameraController 직접 작성 ✅"
           }
         ]
       },
