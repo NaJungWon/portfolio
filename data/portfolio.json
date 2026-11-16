@@ -18,6 +18,10 @@
       "name": "Unity",
       "evidence": [
         {
+          "text": "NavMeshAgent 대신 200×200 격자를 시작할 때 한 번 굽고, 흐름장(Flow Field) 하나를 모든 몹이 공유 — 몹은 자기 칸에 적힌 방향만 읽어 1000마리여도 경로 계산은 한 번",
+          "project": "06-project3d"
+        },
+        {
           "text": "Kinematic Rigidbody + X·Z 축별 BoxCast로 이동·충돌·넉백 처리",
           "project": "01-market-liar"
         },
@@ -43,6 +47,10 @@
       "name": "C#",
       "evidence": [
         {
+          "text": "몹에 물리 콜라이더 없이 피격 원통(반경 · 반높이)을 두고, 공격 모양(구 · 기둥 · 직육면체)과 크기만으로 IsHitBy 하나에서 수학 판정. 후보는 공간 격자로 좁힘",
+          "project": "06-project3d"
+        },
+        {
           "text": "UniTask로 씬을 Additive 로드한 뒤 전원을 재배치하는 비동기 흐름 작성",
           "project": "01-market-liar"
         },
@@ -67,6 +75,10 @@
     {
       "name": "디자인 패턴",
       "evidence": [
+        {
+          "text": "몹 · 투사체 · 이펙트 · 경험치 구 · 구조물을 프리팹 이름 키 하나의 ObjectPoolManager로 풀링하고, 스턴 같은 추가 효과는 인터페이스로 분리",
+          "project": "06-project3d"
+        },
         {
           "text": "밀치기 사운드 등 부가 처리를 옵저버(`observerList`)로 분리",
           "project": "01-market-liar"
