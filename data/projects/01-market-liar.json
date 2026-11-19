@@ -129,7 +129,7 @@
       "problem": "같은 플레이어가 PC마다 다른 색으로 보임",
       "cause": "`welcome` / `join` 처리 순서와 색상 적용 순서가 PC마다 달라 색 배정이 갈림",
       "solution": "입장 순서로 매겨진 ID를 오름차순 정렬한 `userOrder` 인덱스로 색을 고정하고, 전원 색을 한 번에 다시 칠하도록 순서를 변경",
-      "result": "",
+      "result": "각 플레이어가 모든 PC에서 같은 색으로 보이게 됐습니다.",
       "lesson": "협업 코드는 서로의 전제를 맞춰야 한다.",
       "section": "7.2 문제 해결 경험 (Troubleshooting)"
     }
@@ -180,11 +180,13 @@
     ],
     "regrets": [
       "밀치면 들고 있던 아이템이 떨어지는 기능을 넣지 못함",
+      "아이템을 교체하면 기존 아이템이 선택 목록(`SelectedItems`)에 남는 버그 — 아이템 ID를 매대 슬롯 번호와 비교한 실수",
       "`LiarClient`가 약 1,700줄로 비대함",
       "밀치기 · 위치를 서버가 검증하지 않음"
     ],
     "plans": [
       "`PushAnswer` 처리 시 들고 있던 아이템의 소유권 해제 + 바닥 드롭 상태 추가",
+      "비교 대상을 `itemId`로 고치고, `TryFindStandByItemId`의 결과를 확인한 뒤 매대를 켬",
       "회의 · 마트 · 상호작용 · 씬 배치를 기능별 핸들러로 분리하고, `LiarClient`는 수신 분기만 담당",
       "공개 서비스라면 서버에서 거리 · 쿨다운 · 이동 속도 상한 검증 추가"
     ],
@@ -233,13 +235,6 @@
         "sectionPath": [
           "6. 기능 D — 회의실 지목 · 투표 입력"
         ]
-      },
-      {
-        "key": "result",
-        "title": "결과 및 배운 점",
-        "sectionPath": [
-          "7. 결과 및 배운 점"
-        ]
       }
     ],
     "slides": [
@@ -286,98 +281,6 @@
         ]
       },
       {
-        "key": "role",
-        "chapter": "overview",
-        "layout": "full",
-        "tab": "개요",
-        "title": {
-          "text": "1.2 담당 범위",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "1. 프로젝트 개요",
-          "1.2 담당 범위"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 1,
-            "fp": "구분|내용"
-          }
-        ]
-      },
-      {
-        "key": "why",
-        "chapter": "overview",
-        "layout": "full",
-        "tab": "개요",
-        "title": {
-          "text": "1.3 Why — 왜 이렇게 만들었나",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "1. 프로젝트 개요",
-          "1.3 Why — 왜 이렇게 만들었나"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 1,
-            "fp": "문제 상황 (Before)|결과적으로 생기는 비용|해결 방향"
-          }
-        ]
-      },
-      {
-        "key": "env",
-        "chapter": "overview",
-        "layout": "full",
-        "tab": "개요",
-        "title": {
-          "text": "1.4 개발 환경",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "1. 프로젝트 개요",
-          "1.4 개발 환경"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 1,
-            "fp": "항목|내용"
-          }
-        ]
-      },
-      {
-        "key": "arch",
-        "chapter": "overview",
-        "layout": "full",
-        "tab": "구조",
-        "title": {
-          "text": "1.5 전체 구조 한눈에 보기",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "1. 프로젝트 개요",
-          "1.5 전체 구조 한눈에 보기"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "mermaid",
-            "n": 1,
-            "fp": "flowchart TB"
-          }
-        ]
-      },
-      {
         "key": "authority",
         "chapter": "base",
         "layout": "full",
@@ -387,7 +290,7 @@
           "verbatim": true
         },
         "lead": {
-          "text": "여러 명이 동시에 같은 자원을 다툴 수 있는 것만 서버가 판정",
+          "text": "서버가 모든 것을 계산하게 할 수도 있었지만, 그러면 서버의 책임이 지나치게 커진다고 판단했습니다.",
           "verbatim": true
         },
         "sectionPath": [
@@ -426,32 +329,6 @@
             "kind": "mermaid",
             "n": 1,
             "fp": "sequenceDiagram"
-          }
-        ]
-      },
-      {
-        "key": "req-table",
-        "chapter": "base",
-        "layout": "full",
-        "tab": "구조",
-        "title": {
-          "text": "2.2 요청 → 응답 흐름",
-          "verbatim": true
-        },
-        "lead": {
-          "text": "메시지 종류는 `Protocol.UserInteractionMessage` 하나로 통일되어 있고, `InteractionType`으로 구분합니다.",
-          "verbatim": true
-        },
-        "sectionPath": [
-          "2. 공통 기반 — 서버와 클라이언트의 역할 분담",
-          "2.2 요청 → 응답 흐름"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 1,
-            "fp": "요청 (클라 → 서버)|응답 (서버 → 전체)|서버 판정|클라이언트 처리"
           }
         ]
       },
@@ -547,116 +424,6 @@
         ]
       },
       {
-        "key": "move-body",
-        "chapter": "move",
-        "layout": "code",
-        "tab": "구조",
-        "title": {
-          "text": "루트 / Body 분리",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "3. 기능 A — 캐릭터 이동 · 충돌 · 위치 동기화",
-          "3.2 시스템 구조"
-        ],
-        "points": [
-          {
-            "label": "",
-            "text": "이동은 루트, 바라보는 방향은 `Body`에만 적용합니다.",
-            "verbatim": true
-          },
-          {
-            "label": "이유",
-            "text": "애니메이션의 루트 모션이나 회전이 루트 좌표에 섞이지 않게 해서, 씬을 오갈 때 캐릭터 위치 · 방향이 틀어지는 문제를 막았습니다",
-            "verbatim": true
-          }
-        ],
-        "visuals": [
-          {
-            "kind": "code",
-            "n": 1,
-            "fp": "Player (루트) ← 위치만 담당 (이동 · 서버 동기화 기준 좌표)"
-          }
-        ]
-      },
-      {
-        "key": "move-api",
-        "chapter": "move",
-        "layout": "full",
-        "tab": "구현",
-        "title": {
-          "text": "3.3 핵심 기능 및 사용법",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "3. 기능 A — 캐릭터 이동 · 충돌 · 위치 동기화",
-          "3.3 핵심 기능 및 사용법"
-        ],
-        "points": [
-          {
-            "label": "",
-            "text": "넉백도 ResolveAxisMovement를 거치기 때문에, 벽에 부딪히면 더 이상 밀리지 않습니다.",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "벽까지 남은 거리에서 skinWidth만큼 덜 가서, 콜라이더가 벽에 파고들지 않게 한다",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "마지막 목표점에서 3m 이상 떨어진 좌표는 '순간이동'으로 보고 아예 버린다.",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "씬 전환 직후 1초간은 이전 씬에서 보낸 좌표가 섞여 들어오므로 무시",
-            "verbatim": true
-          }
-        ],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 1,
-            "fp": "하고 싶은 일|호출할 API|비고"
-          }
-        ]
-      },
-      {
-        "key": "move-numbers",
-        "chapter": "move",
-        "layout": "full",
-        "tab": "구현",
-        "title": {
-          "text": "수치 근거",
-          "verbatim": true
-        },
-        "lead": {
-          "text": "넉백으로 한 번에 3m 이상 밀리는 경우도 없습니다.",
-          "verbatim": true
-        },
-        "sectionPath": [
-          "3. 기능 A — 캐릭터 이동 · 충돌 · 위치 동기화",
-          "3.3 핵심 기능 및 사용법"
-        ],
-        "points": [
-          {
-            "label": "",
-            "text": "프레임 독립적인 지수 감쇠 보간 → FPS가 달라도 같은 속도로 따라간다",
-            "verbatim": true
-          }
-        ],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 2,
-            "fp": "항목|값|근거"
-          }
-        ]
-      },
-      {
         "key": "move-choice",
         "chapter": "move",
         "layout": "full",
@@ -706,6 +473,44 @@
         ]
       },
       {
+        "key": "ts-rubber",
+        "chapter": "move",
+        "layout": "problem",
+        "tab": "문제 해결",
+        "title": {
+          "text": "1 · 2번 상세 — 시도했지만 효과가 없었던 방법",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "7. 결과 및 배운 점",
+          "7.2 문제 해결 경험 (Troubleshooting)"
+        ],
+        "points": [
+          {
+            "label": "문제",
+            "text": "원격 캐릭터가 씬 이동 후 고무줄처럼 끌려감",
+            "verbatim": true
+          },
+          {
+            "label": "",
+            "text": "처음에는 순서 문제라고 생각해, 씬 이동 시작부터 캐릭터의 첫 좌표 배치까지를 전부 비동기(await)로 묶은 뒤 서버 좌표 연결을 시작하도록 바꿔 보았습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "원인",
+            "text": "하지만 큰 차이가 없었고, 원인이 \"배치 순서\"가 아니라 원격 보간이 이미 지나간 좌표를 계속 따라가는 것이라는 걸 알게 됐습니다.",
+            "verbatim": true
+          },
+          {
+            "label": "해결",
+            "text": "그래서 좌표를 받는 쪽에서 걸러내는 방식(1초 무시 + 3m 기준)으로 바꿔 해결했습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": []
+      },
+      {
         "key": "push-intro",
         "chapter": "push",
         "layout": "visual",
@@ -715,7 +520,7 @@
           "verbatim": true
         },
         "lead": {
-          "text": "서버 승인을 받은 뒤 맞은 사람이 자기 화면에서만 넉백을 적용합니다.",
+          "text": "판정은 애니메이션 타이밍에 맞춰 켜지는 트리거로 하고, 서버 승인을 받은 뒤 맞은 사람이 자기 화면에서만 넉백을 적용합니다.",
           "verbatim": true
         },
         "sectionPath": [
@@ -778,7 +583,7 @@
         ],
         "points": [
           {
-            "label": "",
+            "label": "이유",
             "text": "다른 클라이언트는 내 MoveMessage를 받아 원격 캐릭터를 움직이므로 따로 계산할 필요가 없다.",
             "verbatim": true
           },
@@ -788,7 +593,7 @@
             "verbatim": true
           },
           {
-            "label": "",
+            "label": "이유",
             "text": "원격 캐릭터의 트리거는 무시 → 요청이 4번 가지 않음",
             "verbatim": true
           }
@@ -805,7 +610,7 @@
           "verbatim": true
         },
         "lead": {
-          "text": "각 클라이언트는 자기 캐릭터만 계산하고, 다른 캐릭터는 결과 좌표만 받아 그린다",
+          "text": "이 경험에서 \"각 클라이언트는 자기 캐릭터만 계산하고, 다른 캐릭터는 결과 좌표만 받아 그린다\" 는 원칙을 얻었습니다 (7.4).",
           "verbatim": true
         },
         "sectionPath": [
@@ -815,8 +620,8 @@
         "points": [
           {
             "label": "서버 검증을 넣지 않은 이유",
-            "text": "거리 · 쿨다운 검증을 서버에 두면 서버가 캐릭터 좌표와 애니메이션 상태까지 알아야 해서",
-            "verbatim": true
+            "text": "서버에 거리 · 쿨다운 검증을 두면 캐릭터 좌표와 애니메이션 상태까지 알아야 해 서버 책임이 너무 커지므로, 의도적으로 클라이언트 판정으로 두었습니다.",
+            "verbatim": false
           }
         ],
         "visuals": [
@@ -899,73 +704,6 @@
         ]
       },
       {
-        "key": "item-roles",
-        "chapter": "item",
-        "layout": "full",
-        "tab": "구조",
-        "title": {
-          "text": "5.2 시스템 구조",
-          "verbatim": true
-        },
-        "lead": {
-          "text": "매대에서 가장 가까운 아이템을 찾는 코드(`GetNearestActiveItemIndex`)와 아이템을 매대에 되돌려 놓는 코드를 더했습니다.",
-          "verbatim": true
-        },
-        "sectionPath": [
-          "5. 기능 C — 아이템 집기 · 운반 · 가방 · 교체",
-          "5.2 시스템 구조"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 1,
-            "fp": "역할|클래스|하는 일|하지 않는 일"
-          }
-        ]
-      },
-      {
-        "key": "item-swap",
-        "chapter": "item",
-        "layout": "overview",
-        "tab": "구현",
-        "title": {
-          "text": "교체 시 기존 아이템을 원래 자리로",
-          "verbatim": true
-        },
-        "lead": {
-          "text": "서버가 \"가방에서 빠진 아이템 ID\"만 알려주면, 그 ID로 원래 매대 슬롯을 찾아 다시 켠다",
-          "verbatim": true
-        },
-        "sectionPath": [
-          "5. 기능 C — 아이템 집기 · 운반 · 가방 · 교체",
-          "5.3 핵심 기능 및 사용법"
-        ],
-        "points": [
-          {
-            "label": "서버",
-            "text": "빠진 아이템의 소유권(`itemOwnersDic`)을 풀어 다른 플레이어가 다시 집을 수 있게 합니다.",
-            "verbatim": true
-          },
-          {
-            "label": "라운드 전환 시 초기화",
-            "text": "모든 플레이어의 `SelectedItems`와 손에 든 아이템을 지워, 이전 라운드 아이템이 회의실이나 다음 마트에 남지 않게 했습니다.",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "한 매대에 3개가 놓이면서, 탐지점과 가장 가까운 '아직 남아있는' 아이템을 골라야 했다",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "여기서는 요청만 보낸다. 손에 붙이는 건 서버 응답(SuccessGetItem)에서",
-            "verbatim": true
-          }
-        ],
-        "visuals": []
-      },
-      {
         "key": "item-choice",
         "chapter": "item",
         "layout": "full",
@@ -998,7 +736,7 @@
           "verbatim": true
         },
         "lead": {
-          "text": "가방이 추가되면서 \"플레이어 기준으로 가방과 매대를 찾는\" 판정이 별도로 필요해졌습니다.",
+          "text": "기존 매대 코드는 매대가 플레이어를 찾는 구조로 작성되어 있어, 가방이 추가되면서 \"플레이어 기준으로 가방과 매대를 찾는\" 판정이 별도로 필요해졌습니다.",
           "verbatim": true
         },
         "sectionPath": [
@@ -1076,85 +814,6 @@
         ]
       },
       {
-        "key": "vote-msg",
-        "chapter": "vote",
-        "layout": "full",
-        "tab": "구조",
-        "title": {
-          "text": "6.2 시스템 구조",
-          "verbatim": true
-        },
-        "lead": {
-          "text": "본 문서에서는 입력 · 상태 처리와의 연결 지점만 다룹니다.",
-          "verbatim": true
-        },
-        "sectionPath": [
-          "6. 기능 D — 회의실 지목 · 투표 입력",
-          "6.2 시스템 구조"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 1,
-            "fp": "서버 메시지|Vote_System 상태|클라이언트 처리"
-          }
-        ]
-      },
-      {
-        "key": "vote-ballot",
-        "chapter": "vote",
-        "layout": "visual",
-        "tab": "구현",
-        "title": {
-          "text": "6.3 핵심 기능",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "6. 기능 D — 회의실 지목 · 투표 입력",
-          "6.3 핵심 기능"
-        ],
-        "points": [
-          {
-            "label": "투표",
-            "text": "전송 즉시 UI를 닫아 한 번만 투표할 수 있습니다.",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "지목된 본인에게는 투표 UI를 열지 않습니다",
-            "verbatim": true
-          },
-          {
-            "label": "최종 사이클 스킵 버튼 비활성화",
-            "text": "최종 사이클에서는 서버가 스킵을 처리하지 않으므로, 클라이언트도 스킵 버튼을 띄우지 않아 상태가 잘못 전환되지 않게 했습니다.",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "서버가 중계한 Select를 모든 클라이언트가 같은 순서로 재생",
-            "verbatim": true
-          }
-        ],
-        "visuals": [
-          {
-            "kind": "image",
-            "src": "images/vote_ui.png",
-            "w": 1280,
-            "h": 720,
-            "caption": {
-              "text": "투표 UI (3지선다 버튼)",
-              "verbatim": true
-            },
-            "sectionPath": [
-              "6. 기능 D — 회의실 지목 · 투표 입력",
-              "6.1 개요"
-            ]
-          }
-        ]
-      },
-      {
         "key": "vote-input",
         "chapter": "vote",
         "layout": "full",
@@ -1199,205 +858,6 @@
             "fp": "|대안 A: 새 지목 메시지 1개|대안 B: 취소 → 지목 2개 ✅"
           }
         ]
-      },
-      {
-        "key": "outcome",
-        "chapter": "result",
-        "layout": "full",
-        "tab": "결과",
-        "title": {
-          "text": "7.1 결과",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "7. 결과 및 배운 점",
-          "7.1 결과"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 1,
-            "fp": "목표 (개요의 Why)|결과|근거"
-          }
-        ]
-      },
-      {
-        "key": "troubleshoot",
-        "chapter": "result",
-        "layout": "full",
-        "tab": "문제 해결",
-        "title": {
-          "text": "7.2 문제 해결 경험 (Troubleshooting)",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "7. 결과 및 배운 점",
-          "7.2 문제 해결 경험 (Troubleshooting)"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 1,
-            "fp": "#|문제|원인|해결 / 개선|상태"
-          }
-        ]
-      },
-      {
-        "key": "ts-rubber",
-        "chapter": "result",
-        "layout": "problem",
-        "tab": "문제 해결",
-        "title": {
-          "text": "1 · 2번 상세 — 시도했지만 효과가 없었던 방법",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "7. 결과 및 배운 점",
-          "7.2 문제 해결 경험 (Troubleshooting)"
-        ],
-        "points": [
-          {
-            "label": "",
-            "text": "씬 이동 시작부터 캐릭터의 첫 좌표 배치까지를 전부 비동기(await)로 묶은 뒤 서버 좌표 연결을 시작하도록 바꿔 보았습니다.",
-            "verbatim": true
-          },
-          {
-            "label": "원인",
-            "text": "원인이 \"배치 순서\"가 아니라 원격 보간이 이미 지나간 좌표를 계속 따라가는 것이라는 걸 알게 됐습니다.",
-            "verbatim": true
-          },
-          {
-            "label": "해결",
-            "text": "좌표를 받는 쪽에서 걸러내는 방식(1초 무시 + 3m 기준)으로 바꿔 해결했습니다.",
-            "verbatim": true
-          }
-        ],
-        "visuals": []
-      },
-      {
-        "key": "ts-color",
-        "chapter": "result",
-        "layout": "overview",
-        "tab": "문제 해결",
-        "title": {
-          "text": "6번 상세 — 색상 동기화",
-          "verbatim": true
-        },
-        "lead": {
-          "text": "목표는 각 플레이어마다 하나의 색을, 모든 PC에서 똑같이 그리는 것이었습니다.",
-          "verbatim": true
-        },
-        "sectionPath": [
-          "7. 결과 및 배운 점",
-          "7.2 문제 해결 경험 (Troubleshooting)"
-        ],
-        "points": [
-          {
-            "label": "결과",
-            "text": "색을 정렬된 입장 순서 하나로만 정하고 전원 색을 한 번에 다시 칠하게 바꾼 뒤, 각 플레이어가 모든 PC에서 같은 색으로 보이게 됐습니다.",
-            "verbatim": true
-          }
-        ],
-        "visuals": []
-      },
-      {
-        "key": "regrets",
-        "chapter": "result",
-        "layout": "full",
-        "tab": "결과",
-        "title": {
-          "text": "7.3 아쉬운 점 및 향후 계획",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "7. 결과 및 배운 점",
-          "7.3 아쉬운 점 및 향후 계획"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 1,
-            "fp": "아쉬운 점|영향|향후 계획"
-          }
-        ]
-      },
-      {
-        "key": "anim-state",
-        "chapter": "result",
-        "layout": "overview",
-        "tab": "선택",
-        "title": {
-          "text": "설계상 뺀 것 — 캐릭터 애니메이션 상태 패턴",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "7. 결과 및 배운 점",
-          "7.3 아쉬운 점 및 향후 계획"
-        ],
-        "points": [
-          {
-            "label": "",
-            "text": "처음에는 캐릭터 애니메이션을 상태 패턴(`PickState`, `PushState`, `PutDownState`)으로 관리하려고 클래스를 만들었습니다.",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "Animator 파라미터를 직접 제어하는 방식으로 정리하고 상태 클래스는 쓰지 않게 됐습니다",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "상태가 많아지거나(예: 아이템 떨어뜨리기, 기절) 전이 조건이 복잡해지면 그때 상태 패턴을 다시 도입할 계획입니다.",
-            "verbatim": true
-          }
-        ],
-        "visuals": []
-      },
-      {
-        "key": "lessons",
-        "chapter": "result",
-        "layout": "overview",
-        "tab": "결과",
-        "title": {
-          "text": "7.4 배운 점",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "7. 결과 및 배운 점",
-          "7.4 배운 점"
-        ],
-        "points": [
-          {
-            "label": "배운 점",
-            "text": "각 클라이언트는 자기 캐릭터만 계산한다.",
-            "verbatim": true
-          },
-          {
-            "label": "배운 점",
-            "text": "서버에 무엇을 맡길지 기준이 필요하다.",
-            "verbatim": true
-          },
-          {
-            "label": "배운 점",
-            "text": "원인을 잘못 짚으면 올바른 기술도 효과가 없다.",
-            "verbatim": true
-          },
-          {
-            "label": "배운 점",
-            "text": "협업 코드는 서로의 전제를 맞춰야 한다.",
-            "verbatim": true
-          }
-        ],
-        "visuals": []
       }
     ]
   }

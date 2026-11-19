@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-15",
+  "generatedAt": "2026-11-19",
   "profile": {
     "name": "나정원",
     "nameEn": "NA JUNG WON",
@@ -18,27 +18,27 @@
       "name": "Unity",
       "evidence": [
         {
-          "text": "NavMeshAgent 대신 200×200 격자를 시작할 때 한 번 굽고, 흐름장(Flow Field) 하나를 모든 몹이 공유 — 몹은 자기 칸에 적힌 방향만 읽어 1000마리여도 경로 계산은 한 번",
+          "text": "MapGrid로 맵을 한 번 굽고 흐름장 하나를 몹 전체가 공유",
           "project": "06-project3d"
         },
         {
-          "text": "Kinematic Rigidbody + X·Z 축별 BoxCast로 이동·충돌·넉백 처리",
+          "text": "Kinematic Rigidbody + 축별 BoxCast로 이동·충돌·넉백 직접 구현",
           "project": "01-market-liar"
         },
         {
-          "text": "Time.timeScale로 크로노스 감속, 녹화 재생만 unscaledDeltaTime으로 분리",
+          "text": "Kinematic Rigidbody2D + BoxCast로 계단 step · 플랫폼 통과 이동 구현",
           "project": "02-katana-zero"
         },
         {
-          "text": "GridLayoutGroup UI 가방의 칸 상태를 2차원 배열 원본으로 관리하고 화면은 그 결과만 표시",
+          "text": "uGUI GridLayoutGroup 기반 5×7 그리드 인벤토리·드래그 배치",
           "project": "04-inventory-player"
         },
         {
-          "text": "GridLayout 칸과 별도 레이어의 타일을 나눠, 판정은 board[,] 데이터로 하고 화면은 따라가게 구성",
+          "text": "GridLayoutGroup 칸과 별도 타일 레이어로 미끄러지는 2048 보드 구성",
           "project": "05-meow2048"
         },
         {
-          "text": "공격 레이어 + 아바타 마스크로 상체 공격 · 하체 이동을 나누고 발걸음은 공격 방향 기준으로 블렌드 트리에",
+          "text": "공격 레이어·아바타 마스크·블렌드 트리로 공격 중 뒷걸음질 이동",
           "project": "03-dgs"
         }
       ]
@@ -47,27 +47,27 @@
       "name": "C#",
       "evidence": [
         {
-          "text": "몹에 물리 콜라이더 없이 피격 원통(반경 · 반높이)을 두고, 공격 모양(구 · 기둥 · 직육면체)과 크기만으로 IsHitBy 하나에서 수학 판정. 후보는 공간 격자로 좁힘",
+          "text": "HitUnit 상속(직진·추적·소환)과 IHitEffect 인터페이스로 판정 구조화",
           "project": "06-project3d"
         },
         {
-          "text": "UniTask로 씬을 Additive 로드한 뒤 전원을 재배치하는 비동기 흐름 작성",
+          "text": "서버 응답 후에만 손에 붙이는 아이템 집기·가방 교체 처리(ItemInteractionHandler)",
           "project": "01-market-liar"
         },
         {
-          "text": "코루틴(IEnumerator)으로 플랫폼을 벗어날 때까지 충돌 LayerMask 교체",
+          "text": "틱 단위 상태 스냅샷 녹화와 보간 재생(TimeLineRecorder) 구현",
           "project": "02-katana-zero"
         },
         {
-          "text": "Firebase async Task 결과를 플래그로 넘겨 코루틴(메인 스레드)에서 UI 갱신",
+          "text": "async Task<bool> 게스트 로그인과 Firebase 초기화 가드 구현",
           "project": "04-inventory-player"
         },
         {
-          "text": "코루틴 병렬 이동 + 완료 카운트로 \"모든 타일 도착\" 시점을 확정",
+          "text": "board[,] 즉시 갱신과 hasMergedThisTurn 표시로 한 턴 1회 합치기 판정",
           "project": "05-meow2048"
         },
         {
-          "text": "생성/파괴 → List → Queue로 바꿔 몬스터 타입 · 종류별 오브젝트 풀",
+          "text": "MonsterSpawnData 시간표로 \"메인 + 서브\" 몹 웨이브를 데이터로 정의",
           "project": "03-dgs"
         }
       ]
@@ -76,28 +76,59 @@
       "name": "디자인 패턴",
       "evidence": [
         {
-          "text": "몹 · 투사체 · 이펙트 · 경험치 구 · 구조물을 프리팹 이름 키 하나의 ObjectPoolManager로 풀링하고, 스턴 같은 추가 효과는 인터페이스로 분리",
+          "text": "Strategy+Factory 대신 공격 컴포넌트(FPS Weapon 방식)로 몹 공격 구성",
           "project": "06-project3d"
         },
         {
-          "text": "밀치기 사운드 등 부가 처리를 옵저버(`observerList`)로 분리",
+          "text": "Vote_System 상태 머신(Wait·Point·Vote)으로 지목·투표 입력 전환",
           "project": "01-market-liar"
         },
         {
-          "text": "오브젝트 풀(슬래시 8개 · 잔상 20개)로 타격 연출 재사용",
+          "text": "오브젝트 풀(슬래시 8개 · 잔상 20개)로 타격 연출을 ScreenEffectManager 한 곳에",
           "project": "02-katana-zero"
         },
         {
-          "text": "스폰 데이터를 웨이브 · 시간 순으로 정렬한 Queue로 한 번씩 꺼내 처리",
+          "text": "싱글톤 Game_Manager로 씬 간 스테이지·캐릭터 데이터 전달",
           "project": "04-inventory-player"
         },
         {
-          "text": "타일 SFX가 OnEnable / OnDisable에서 볼륨 매니저에 스스로 등록 · 해제",
-          "project": "05-meow2048"
+          "text": "타입별 Queue 오브젝트 풀 + 위치 이벤트 구독으로 피격 이펙트 재사용",
+          "project": "03-dgs"
+        }
+      ]
+    },
+    {
+      "name": "Firebase",
+      "evidence": [
+        {
+          "text": "Realtime Database에 기기 ID 매핑으로 게스트 계정·진행 데이터 저장",
+          "project": "04-inventory-player"
         },
         {
-          "text": "투사체는 피격 위치만 이벤트로 알리고 이펙트 풀은 무기 본체가 관리",
-          "project": "03-dgs"
+          "text": "Realtime Database 필드별 병합 저장으로 최고 점수·누적 플레이 시간 유지",
+          "project": "05-meow2048"
+        }
+      ]
+    },
+    {
+      "name": "Android",
+      "evidence": [
+        {
+          "text": "Android 빌드 Firebase 연동 실패를 빌드 전처리 스크립트·Gradle 템플릿으로 해결",
+          "project": "04-inventory-player"
+        },
+        {
+          "text": "Galaxy Note 9 Android 빌드에서 4×4 한 판 평균 29.9fps 측정",
+          "project": "05-meow2048"
+        }
+      ]
+    },
+    {
+      "name": "WebSocket",
+      "evidence": [
+        {
+          "text": "WebSocket(JSON) 요청 → 서버 선착순 판정 → 응답 반영으로 4인 아이템 동기화",
+          "project": "01-market-liar"
         }
       ]
     }

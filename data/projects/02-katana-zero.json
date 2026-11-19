@@ -8,7 +8,7 @@
   "team": {
     "type": "solo",
     "size": "1인",
-    "role": "수업 기본 코드를 뺀 직접 구현: CharacterController2D 확장 · ChronosSystem · ScreenEffectManager · CameraController · GameManager 게임 흐름 · 녹화 데이터 구조 · HitBox 확장 · 총알 반사"
+    "role": "직접 구현: CharacterController2D 확장 · ChronosSystem · ScreenEffectManager · CameraController · GameManager 게임 흐름 · 녹화 데이터 구조와 기록 흐름 · HitBox 확장 · 총알 반사 / AI 도구와 함께 진행: 재생 · 역재생"
   },
   "meta": [
     {
@@ -171,18 +171,17 @@
     "achieved": [
       "계단 대각선 이동 · 플랫폼 통과 · 벽 붙기 · 공중제비 · 구르기 구현 (CharacterController2D 166줄 → 1,014줄)",
       "크로노스 · 히트스탑 · 일시정지가 겹쳐도 timeScale이 꼬이지 않음",
-      "역재생 9배속, 정방향 1배속 리플레이 · 틱 사이 보간",
-      "100초(5,000틱) 녹화에 Mono 메모리 약 +8.5 MB, 녹화 · 역재생 · 리플레이 중 180 fps(VSync 상한) 유지 (빌드 측정)",
-      "타이틀 + 스테이지 8개, Windows 빌드 (13일, 1인)"
+      "역재생 9배속, 정방향 1배속 리플레이 · 틱 사이 보간 + 루프 / 단발 애니메이션 정상 재생",
+      "100초(5,000틱) 녹화에 Mono 메모리 약 +8.5 MB, 녹화 · 역재생 · 리플레이 중 180 fps(VSync 상한)에서 떨어지지 않음 (빌드 측정)"
     ],
     "regrets": [
-      "엔딩(보스전) 미완성",
-      "상태별 화면 효과 없음",
-      "대각선 이동이 기본 이동 / 구르기 두 가지 로직",
-      "플랫폼 판정 기준이 섞여 있음"
+      "처음 해 본 2주짜리 단기 프로젝트라 필요해 보이는 기능부터 만들다 보니, 엔딩 · UI를 급하게 만들거나 보스 · 던지기 · 맵 장애물 · 재생 연출을 빼야 했음",
+      "상태별 화면 효과 없음 — 플레이 · 재생 · 역재생 · 일시정지 화면이 구분되지 않음",
+      "대각선 이동이 기본 이동 / 구르기 두 가지 로직 — 계단 관련 수정 시 두 곳을 고쳐야 함",
+      "플랫폼 판정 기준이 섞여 있음 — 7.2 문제 8의 처리가 불안정"
     ],
     "plans": [
-      "보스전 + 엔딩 연출",
+      "다음 프로젝트부터는 전체 범위와 일정을 먼저 잡고 시작",
       "재생 흑백, 역재생 글리치, 일시정지 VHS 노이즈",
       "분할 이동 하나로 통합 (기본 이동도 slice 1개로 처리)",
       "플랫폼 판정을 하나의 기준 · 함수로 통일, 레이어 번호 대신 LayerMask 필드 사용"
@@ -232,76 +231,9 @@
         "sectionPath": [
           "6. 기능 D — 전투 확장 · 화면 연출"
         ]
-      },
-      {
-        "key": "result",
-        "title": "결과 및 배운 점",
-        "sectionPath": [
-          "7. 결과 및 배운 점"
-        ]
       }
     ],
     "slides": [
-      {
-        "key": "what",
-        "chapter": "overview",
-        "layout": "overview",
-        "tab": "개요",
-        "title": {
-          "text": "1.1 What — 무엇을 만들었나",
-          "verbatim": true
-        },
-        "lead": {
-          "text": "플레이어와 적 모두 한 번 맞으면 죽고, 죽으면 그 판을 되감아(역재생) 처음부터 다시 시작합니다.",
-          "verbatim": true
-        },
-        "sectionPath": [
-          "1. 프로젝트 개요",
-          "1.1 What — 무엇을 만들었나"
-        ],
-        "points": [
-          {
-            "label": "",
-            "text": "스테이지의 모든 적을 처치하면 방금 플레이를 CCTV 리플레이처럼 정방향 재생한 뒤 다음 스테이지로 넘어갑니다.",
-            "verbatim": true
-          }
-        ],
-        "visuals": [
-          {
-            "kind": "image",
-            "src": "images/title.jpg",
-            "w": 1270,
-            "h": 720,
-            "caption": {
-              "text": "타이틀 화면",
-              "verbatim": true
-            }
-          }
-        ]
-      },
-      {
-        "key": "game-loop",
-        "chapter": "overview",
-        "layout": "code",
-        "tab": "흐름",
-        "title": {
-          "text": "1.1 What — 무엇을 만들었나",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "1. 프로젝트 개요",
-          "1.1 What — 무엇을 만들었나"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "code",
-            "n": 1,
-            "fp": "타이틀 → 스테이지 준비(클릭 대기) → 플레이(녹화) ─┬─ 모든 적 처치 → 정방향 재생 → 다음 스테이"
-          }
-        ]
-      },
       {
         "key": "role",
         "chapter": "overview",
@@ -311,7 +243,10 @@
           "text": "1.2 담당 범위",
           "verbatim": true
         },
-        "lead": null,
+        "lead": {
+          "text": "학원 수업에서 만든 액션 플랫포머 기본 코드(Study_Unity_Basic_2D)를 복사해서 시작했기 때문에, 수업 코드와 제 작업을 아래처럼 나눕니다.",
+          "verbatim": true
+        },
         "sectionPath": [
           "1. 프로젝트 개요",
           "1.2 담당 범위"
@@ -322,84 +257,6 @@
             "kind": "table",
             "n": 1,
             "fp": "구분|내용"
-          }
-        ]
-      },
-      {
-        "key": "why",
-        "chapter": "overview",
-        "layout": "full",
-        "tab": "개요",
-        "title": {
-          "text": "1.3 Why — 왜 이렇게 만들었나",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "1. 프로젝트 개요",
-          "1.3 Why — 왜 이렇게 만들었나"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 1,
-            "fp": "문제 상황 (Before)|결과적으로 생기는 비용|해결 방향"
-          }
-        ]
-      },
-      {
-        "key": "arch",
-        "chapter": "overview",
-        "layout": "full",
-        "tab": "구조",
-        "title": {
-          "text": "1.5 전체 구조 한눈에 보기",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "1. 프로젝트 개요",
-          "1.5 전체 구조 한눈에 보기"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "mermaid",
-            "n": 1,
-            "fp": "flowchart TB"
-          }
-        ]
-      },
-      {
-        "key": "state-flow",
-        "chapter": "base",
-        "layout": "visual",
-        "tab": "흐름",
-        "title": {
-          "text": "2.1 게임 상태 흐름",
-          "verbatim": true
-        },
-        "lead": {
-          "text": "GameManager가 GameState 하나로 스테이지 흐름을 관리하고, 상태마다 Time.timeScale과 녹화기 모드를 함께 바꿉니다.",
-          "verbatim": true
-        },
-        "sectionPath": [
-          "2. 공통 기반 — 게임 흐름과 시간축 분리",
-          "2.1 게임 상태 흐름"
-        ],
-        "points": [
-          {
-            "label": "",
-            "text": "ESC 일시정지는 그림의 Playing뿐 아니라 Ready · Fin을 뺀 모든 상태(Dead · Rewind · RePlay 포함) 에서 가능하고, 해제하면 일시정지 직전 상태로 돌아갑니다.",
-            "verbatim": true
-          }
-        ],
-        "visuals": [
-          {
-            "kind": "mermaid",
-            "n": 1,
-            "fp": "stateDiagram-v2"
           }
         ]
       },
@@ -467,44 +324,6 @@
         ]
       },
       {
-        "key": "move-screens",
-        "chapter": "move",
-        "layout": "screens",
-        "tab": "결과",
-        "title": {
-          "text": "3.1 개요",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "3. 기능 A — 플레이어 이동",
-          "3.1 개요"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "image",
-            "src": "images/platform.gif",
-            "w": 800,
-            "h": 450,
-            "caption": {
-              "text": "플랫폼 통과: 점프 · 계단 위에서 LayerMask의 Platform 제외 (씬 뷰)",
-              "verbatim": true
-            }
-          },
-          {
-            "kind": "image",
-            "src": "images/wall_flip.gif",
-            "w": 800,
-            "h": 450,
-            "caption": {
-              "text": "벽 붙기 → 공중제비",
-              "verbatim": true
-            }
-          }
-        ]
-      },
-      {
         "key": "move-struct",
         "chapter": "move",
         "layout": "visual",
@@ -527,29 +346,6 @@
             "kind": "mermaid",
             "n": 1,
             "fp": "flowchart TB"
-          }
-        ]
-      },
-      {
-        "key": "move-velocity",
-        "chapter": "move",
-        "layout": "full",
-        "tab": "구조",
-        "title": {
-          "text": "3.2 시스템 구조",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "3. 기능 A — 플레이어 이동",
-          "3.2 시스템 구조"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 1,
-            "fp": "속도 구성|용도|감쇠 방식"
           }
         ]
       },
@@ -599,7 +395,7 @@
           {
             "label": "",
             "text": "이동을 기본 이동 / 계단 이동 / 구르기 계단 이동 3가지로 나누고 구르기만 CeilToInt로 분할했습니다.",
-            "verbatim": true
+            "verbatim": false
           }
         ],
         "visuals": [
@@ -607,64 +403,6 @@
             "kind": "table",
             "n": 2,
             "fp": "|대안 A: 충돌 normal 방향으로 이동|대안 B: step 방식 ✅"
-          }
-        ]
-      },
-      {
-        "key": "platform-choice",
-        "chapter": "move",
-        "layout": "full",
-        "tab": "선택",
-        "title": {
-          "text": "결정 3. 플랫폼 통과를 어떻게 할 것인가?",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "3. 기능 A — 플레이어 이동",
-          "3.4 고민과 선택"
-        ],
-        "points": [
-          {
-            "label": "",
-            "text": "대각선 이동 중 플랫폼을 통과하지 못하는 부작용은 계단 위 · 점프 상승 중에는 플랫폼 제외 레이어를 쓰는 규칙으로 해결했습니다.",
-            "verbatim": true
-          }
-        ],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 3,
-            "fp": "|대안 A: 플랫폼 콜라이더를 잠깐 끄기|대안 B: 플레이어의 충돌 LayerMask 교체 ✅"
-          }
-        ]
-      },
-      {
-        "key": "boost-choice",
-        "chapter": "move",
-        "layout": "full",
-        "tab": "선택",
-        "title": {
-          "text": "결정 4. 대시 · 넉백 이동값을 어떻게 줄 것인가?",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "3. 기능 A — 플레이어 이동",
-          "3.4 고민과 선택"
-        ],
-        "points": [
-          {
-            "label": "",
-            "text": "초기 버전은 구르기 · 대시를 rollDrag / dashDrag(감쇠)로 처리했는데, 구르기 거리가 매번 달라져 거리 / 시간 방식으로 바꿨습니다.",
-            "verbatim": true
-          }
-        ],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 4,
-            "fp": "|대안 A: power + drag|대안 B: speed(거리) + duration"
           }
         ]
       },
@@ -813,6 +551,11 @@
           },
           {
             "label": "",
+            "text": "클리어 → 기록을 정방향으로 재생(CCTV 리플레이)한 뒤 다음 스테이지",
+            "verbatim": true
+          },
+          {
+            "label": "",
             "text": "최대 5,000틱(초당 50틱 기준 100초)을 넘기면 시간 초과로 사망 처리",
             "verbatim": true
           }
@@ -827,28 +570,7 @@
               "text": "사망 후 역재생 — 공격 · 점프가 9배속으로 거꾸로 감긴 뒤 같은 스테이지 처음으로",
               "verbatim": true
             }
-          }
-        ]
-      },
-      {
-        "key": "record-replay",
-        "chapter": "record",
-        "layout": "visual",
-        "tab": "결과",
-        "title": {
-          "text": "5.1 개요",
-          "verbatim": true
-        },
-        "lead": {
-          "text": "클리어 → 기록을 정방향으로 재생(CCTV 리플레이)한 뒤 다음 스테이지",
-          "verbatim": true
-        },
-        "sectionPath": [
-          "5. 기능 C — 녹화 · 재생 · 역재생",
-          "5.1 개요"
-        ],
-        "points": [],
-        "visuals": [
+          },
           {
             "kind": "image",
             "src": "images/replay.gif",
@@ -871,7 +593,7 @@
           "verbatim": true
         },
         "lead": {
-          "text": "한 틱 = TimelineFrame 1개 = 플레이어 1명 + 적 n + 오브젝트 n + 이펙트 n",
+          "text": "데이터 구조 (직접 설계) — 한 틱 = TimelineFrame 1개 = 플레이어 1명 + 적 n + 오브젝트 n + 이펙트 n",
           "verbatim": true
         },
         "sectionPath": [
@@ -884,57 +606,6 @@
             "kind": "mermaid",
             "n": 1,
             "fp": "classDiagram"
-          }
-        ]
-      },
-      {
-        "key": "record-inspector",
-        "chapter": "record",
-        "layout": "visual",
-        "tab": "구조",
-        "title": {
-          "text": "5.2 시스템 구조",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "5. 기능 C — 녹화 · 재생 · 역재생",
-          "5.2 시스템 구조"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "image",
-            "src": "images/recorder_inspector.png",
-            "w": 1280,
-            "h": 720,
-            "caption": {
-              "text": "녹화 대상 TimelineTrackable과 TimeLineRecorder 인스펙터",
-              "verbatim": true
-            }
-          }
-        ]
-      },
-      {
-        "key": "record-modes",
-        "chapter": "record",
-        "layout": "full",
-        "tab": "구조",
-        "title": {
-          "text": "5.2 시스템 구조",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "5. 기능 C — 녹화 · 재생 · 역재생",
-          "5.2 시스템 구조"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 1,
-            "fp": "녹화 모드|동작|루프"
           }
         ]
       },
@@ -984,12 +655,41 @@
           "5. 기능 C — 녹화 · 재생 · 역재생",
           "5.4 고민과 선택"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "",
+            "text": "각 단계는 원인을 AI와 주고받으며 찾았습니다(1.2).",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "table",
             "n": 2,
             "fp": "|대안 A: 기록 · 재생 모두 FixedUpdate 틱 단위|대안 B: 기록은 틱, 재생은 Update + 보간 ✅"
+          }
+        ]
+      },
+      {
+        "key": "troubleshoot",
+        "chapter": "record",
+        "layout": "problem",
+        "tab": "문제 해결",
+        "title": {
+          "text": "7.2 문제 해결 경험 (Troubleshooting)",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "7. 결과 및 배운 점",
+          "7.2 문제 해결 경험 (Troubleshooting)"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "#|문제|원인|해결 / 개선|결과"
           }
         ]
       },
@@ -1031,57 +731,6 @@
         ]
       },
       {
-        "key": "parry",
-        "chapter": "combat",
-        "layout": "visual",
-        "tab": "결과",
-        "title": {
-          "text": "6.1 개요",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "6. 기능 D — 전투 확장 · 화면 연출",
-          "6.1 개요"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "image",
-            "src": "images/parry.gif",
-            "w": 800,
-            "h": 450,
-            "caption": {
-              "text": "타이밍을 맞춰 총알 반사(패링)",
-              "verbatim": true
-            }
-          }
-        ]
-      },
-      {
-        "key": "combat-struct",
-        "chapter": "combat",
-        "layout": "full",
-        "tab": "구조",
-        "title": {
-          "text": "6.2 시스템 구조",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "6. 기능 D — 전투 확장 · 화면 연출",
-          "6.2 시스템 구조"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 1,
-            "fp": "클래스|출처|역할"
-          }
-        ]
-      },
-      {
         "key": "deadzone",
         "chapter": "combat",
         "layout": "visual",
@@ -1101,7 +750,7 @@
         "points": [
           {
             "label": "",
-            "text": "목표점(anchor)을 매번 맵 경계로 즉시 클램프해서, 맵 끝에 오래 서 있다가 반대로 움직일 때 카메라가 튀지 않게 했습니다",
+            "text": "목표점(anchor)을 매번 맵 경계로 즉시 클램프해서, 맵 끝에 오래 서 있다가 반대로 움직일 때 카메라가 튀지 않게 했습니다(CameraController.cs:92).",
             "verbatim": true
           },
           {
@@ -1149,89 +798,6 @@
             "kind": "table",
             "n": 1,
             "fp": "|대안 A: 연출마다 호출하는 쪽에서 직접 처리|대안 B: ScreenEffectManager 정적 API로 통합 ✅"
-          }
-        ]
-      },
-      {
-        "key": "camera-choice",
-        "chapter": "combat",
-        "layout": "full",
-        "tab": "선택",
-        "title": {
-          "text": "결정 2. 카메라를 어떻게 따라가게 할 것인가?",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "6. 기능 D — 전투 확장 · 화면 연출",
-          "6.4 고민과 선택"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 2,
-            "fp": "|대안 A: 수업 코드 SimpleFollowCamera (단순 추적)|대안 B: 데드존 + 맵 경계 제한 CameraController 직접 작성 ✅"
-          }
-        ]
-      },
-      {
-        "key": "measure",
-        "chapter": "result",
-        "layout": "full",
-        "tab": "결과",
-        "title": {
-          "text": "측정 — 녹화 데이터의 메모리 비용과 fps",
-          "verbatim": true
-        },
-        "lead": {
-          "text": "녹화 · 역재생 · 리플레이 모두 180 fps에서 떨어지지 않았습니다.",
-          "verbatim": true
-        },
-        "sectionPath": [
-          "7. 결과 및 배운 점",
-          "7.1 결과"
-        ],
-        "points": [
-          {
-            "label": "",
-            "text": "180은 수직 동기화(Standalone 기본 품질 Ultra · VSync On)로 모니터 주사율에 묶인 상한",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "100초(5,000틱) 녹화로 Mono 힙이 약 8.5 MB 늘었습니다 → 틱 하나에 약 1.7 KB, 1분에 약 5 MB.",
-            "verbatim": true
-          }
-        ],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 2,
-            "fp": "상황|시간|기록된 틱|Mono 메모리|평균 / 최저 fps"
-          }
-        ]
-      },
-      {
-        "key": "troubleshoot",
-        "chapter": "result",
-        "layout": "full",
-        "tab": "문제 해결",
-        "title": {
-          "text": "7.2 문제 해결 경험 (Troubleshooting)",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "7. 결과 및 배운 점",
-          "7.2 문제 해결 경험 (Troubleshooting)"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "table",
-            "n": 1,
-            "fp": "#|문제|원인|해결 / 개선|결과"
           }
         ]
       }
