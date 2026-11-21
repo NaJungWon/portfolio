@@ -3,7 +3,7 @@
   "id": "02-market-liar",
   "doc": "기술문서.md",
   "title": "시장에 가면",
-  "tagline": "4인이 WebSocket 서버로 접속해 플레이하는 3D 쿼터뷰 추리 게임",
+  "tagline": "3~4인이 WebSocket 서버로 접속해 플레이하는 3D 쿼터뷰 추리 게임",
   "cover": "images/cover.png",
   "team": {
     "type": "team",
@@ -13,7 +13,7 @@
   "meta": [
     {
       "label": "장르",
-      "value": "3D 쿼터뷰 추리 게임 (라이어 게임 모티브)"
+      "value": "3D 쿼터뷰 멀티플레이 추리 게임 (라이어 게임 모티브, 3~4인)"
     },
     {
       "label": "기간",
@@ -48,16 +48,16 @@
     ]
   },
   "intent": {
-    "text": "4명이 같은 물건을 동시에 집거나 서로 밀칠 때 PC마다 결과가 갈리지 않도록, 다툼이 생기는 데이터만 서버가 판정하고 각 클라이언트는 자기 캐릭터만 직접 계산하도록 나눴습니다.",
+    "text": "WebSocket 서버와 3~4인 클라이언트 사이에서, 팀이 정한 메시지 규약으로 서버 동기화를 직접 경험해 보는 것을 목표로 했습니다.",
     "verbatim": false
   },
   "highlights": [
     {
-      "title": "캐릭터 이동 · 충돌 · 위치 동기화",
+      "title": "캐릭터 이동 · 위치 동기화",
       "what": "로컬 캐릭터는 직접 충돌을 계산하며 움직이고, 원격 캐릭터는 서버 좌표만 부드럽게 따라갑니다.",
       "how": "Kinematic Rigidbody에서 X·Z 축을 따로 BoxCast로 검사해 이동하고, 넉백도 같은 충돌 검사를 거치게 했습니다.",
       "why": "점프 등 y축 이동이 없어 중력이 필요 없고, 이동·충돌·넉백을 전부 코드로 통제하려고 수업의 2D Kinematic 컨트롤러를 3D로 옮겼습니다.",
-      "section": "3.1 개요",
+      "section": "3. 마트: 플레이어 조작",
       "image": {
         "src": "images/move.gif",
         "w": 640,
@@ -70,7 +70,7 @@
       "what": "Space로 다른 플레이어를 밀쳐 방해할 수 있습니다.",
       "how": "애니메이션 타이밍에 켜지는 트리거로 판정 → `PushQuery`로 서버 승인 → 맞은 사람이 자기 화면에서만 넉백을 적용합니다.",
       "why": "모든 클라이언트가 넉백을 계산하면 좌표 오차로 방향이 PC마다 달라 튕겼기 때문에, 넉백 결과를 맞은 사람 한 곳에서만 결정하도록 했습니다.",
-      "section": "4.1 개요",
+      "section": "3.3 플레이어 밀치기",
       "image": {
         "src": "images/push.gif",
         "w": 640,
@@ -79,11 +79,11 @@
       }
     },
     {
-      "title": "아이템 집기 · 운반 · 가방 · 교체",
+      "title": "아이템 집기 · 가방 · 교체",
       "what": "F키로 가장 가까운 아이템을 집고, 다시 F키를 누르면 위치에 따라 가방에 넣거나 원래 매대에 돌려놓습니다. 같은 카테고리는 교체됩니다.",
       "how": "집기는 서버 선착순(`TryAdd`) 응답을 받은 뒤에만 반영하고, 내려놓을 곳은 `ItemPutDownResolver`가 가방 → 원래 매대 순으로 판정합니다.",
       "why": "누르는 즉시 집으면 PC마다 상태가 갈리고 동시 집기의 승자를 정할 곳이 없어, 서버 선착순 + 응답 후 반영을 선택했습니다.",
-      "section": "5.1 개요",
+      "section": "4. 마트: 아이템 상호작용",
       "image": {
         "src": "images/item_pick.gif",
         "w": 640,
@@ -92,11 +92,11 @@
       }
     },
     {
-      "title": "회의실 지목 · 투표 입력",
+      "title": "회의실 지목 · 투표",
       "what": "의심 가는 3D 캐릭터를 직접 클릭해 지목·취소·재지목하고, 3지선다로 투표합니다.",
-      "how": "`Vote_System`의 Point 상태에서 Raycast로 `RemotePlayer`만 지목하고, 재지목은 \"취소 → 지목\" 두 메시지로 보냅니다.",
-      "why": "서버는 지목을 덮어쓰고 중계만 하므로, 취소와 지목을 독립 이벤트로 알려 모든 클라이언트가 같은 화살표 연출을 같은 순서로 재생하게 했습니다.",
-      "section": "6.1 개요",
+      "how": "`Vote_System`의 지목 단계에서 Raycast로 `RemotePlayer`만 지목하고, 서버가 중계한 지목을 받아 모든 클라이언트가 지목한 사람의 색으로 화살표를 그립니다.",
+      "why": "플레이어 목록 UI보다 누가 누구를 의심하는지 화면 위에서 보이고, 캐릭터 외곽선과 지목 화살표 연출을 살릴 수 있어 3D 캐릭터 직접 클릭을 골랐습니다.",
+      "section": "5. 회의실: 지목 · 투표",
       "image": {
         "src": "images/point.gif",
         "w": 640,
@@ -107,31 +107,31 @@
   ],
   "troubleshooting": [
     {
-      "title": "씬 이동 후 원격 캐릭터가 고무줄처럼 끌려감",
-      "problem": "원격 캐릭터가 씬 이동 후 고무줄처럼 끌려감",
+      "title": "씬을 옮기면 다른 플레이어가 끌려가는 문제 (고무줄 현상)",
+      "problem": "마트로 씬을 옮기면 다른 플레이어 캐릭터가 엉뚱한 곳에서 새 자리까지 끌려가듯 미끄러짐(고무줄 현상)",
       "cause": "씬 전환 직후 이전 씬에서 보낸 좌표가 늦게 도착하고, 원격 보간이 그 좌표를 따라감",
-      "solution": "`Teleport` 시 1초간 좌표 무시 + 마지막 목표점에서 3m 이상 떨어진 좌표는 버림",
+      "solution": "좌표를 받는 쪽에서 거름: `Teleport` 뒤 1초간 좌표 무시 + 마지막 목표점에서 3m 넘게 떨어진 좌표 버리기",
       "result": "회의실 ↔ 마트 반복 진입에도 고무줄 현상 없음",
-      "lesson": "원인을 잘못 짚으면 올바른 기술도 효과가 없다. 고치기 전에 \"어떤 데이터가 언제 들어오는지\"를 먼저 로그로 확인하게 됐습니다.",
-      "section": "7.2 문제 해결 경험 (Troubleshooting)"
+      "lesson": "원인을 잘못 짚으면 올바른 기술도 효과가 없습니다. 그 뒤로는 고치기 전에 \"어떤 데이터가 언제 들어오는지\"를 먼저 로그로 확인하게 됐습니다.",
+      "section": "3.4 트러블슈팅: 씬을 옮기면 다른 플레이어가 끌려가는 문제 (고무줄 현상)"
     },
     {
-      "title": "밀치기 시 캐릭터가 이리저리 튕겨 나감",
-      "problem": "밀치기 시 캐릭터가 이리저리 튕겨 나감",
-      "cause": "모든 클라이언트가 모든 캐릭터에 넉백 적용 → PC마다 좌표 오차만큼 방향이 다름",
-      "solution": "맞은 사람이 본인일 때만 적용",
-      "result": "튕김 현상 제거, 모든 화면에서 같은 위치로 밀림",
-      "lesson": "각 클라이언트는 자기 캐릭터만 계산한다.",
-      "section": "7.2 문제 해결 경험 (Troubleshooting)"
+      "title": "선택하지 않은 아이템이 집히는 문제",
+      "problem": "매대 앞에서 F키를 누르면 바라본 아이템이 아닌 다른 아이템이 집힘",
+      "cause": "처음에는 매대당 아이템 1개로 설계했는데, 3개로 늘어난 뒤에도 매대 단위로 집고 있었음",
+      "solution": "플레이어 앞쪽 탐지점(`FindItemPivot`)과 매대의 3개 아이템 거리를 비교해, 아직 남아 있는 아이템 중 가장 가까운 것을 집도록 변경",
+      "result": "선택한 아이템만 집히고, 집은 아이템과 가방에 들어간 아이템이 일치함",
+      "lesson": "",
+      "section": "4.4 트러블슈팅: 선택하지 않은 아이템이 집히는 문제"
     },
     {
-      "title": "같은 플레이어가 PC마다 다른 색으로 보임",
+      "title": "같은 플레이어가 PC마다 다른 색으로 보인 문제",
       "problem": "같은 플레이어가 PC마다 다른 색으로 보임",
       "cause": "`welcome` / `join` 처리 순서와 색상 적용 순서가 PC마다 달라 색 배정이 갈림",
-      "solution": "입장 순서로 매겨진 ID를 오름차순 정렬한 `userOrder` 인덱스로 색을 고정하고, 전원 색을 한 번에 다시 칠하도록 순서를 변경",
-      "result": "각 플레이어가 모든 PC에서 같은 색으로 보이게 됐습니다.",
-      "lesson": "협업 코드는 서로의 전제를 맞춰야 한다.",
-      "section": "7.2 문제 해결 경험 (Troubleshooting)"
+      "solution": "입장 순서로 매겨진 ID를 오름차순 정렬한 `userOrder` 인덱스로 색을 고정하고, 전원 색을 한 번에 다시 칠하도록(`DoRefreshAllPlayerColors`) 순서를 바꿈",
+      "result": "각 플레이어가 모든 PC에서 같은 색으로 보이게 됨",
+      "lesson": "",
+      "section": "6.7 트러블슈팅: 같은 플레이어가 PC마다 다른 색으로 보인 문제"
     }
   ],
   "screenshots": [
@@ -150,12 +150,6 @@
     {
       "src": "images/item_pick.gif",
       "caption": "F키로 아이템을 집어 들고 이동해 가방에 넣는 장면",
-      "w": 640,
-      "h": 360
-    },
-    {
-      "src": "images/item_swap.gif",
-      "caption": "같은 카테고리 아이템으로 교체하는 장면 (5배속)",
       "w": 640,
       "h": 360
     },
@@ -180,60 +174,60 @@
     ],
     "regrets": [
       "밀치면 들고 있던 아이템이 떨어지는 기능을 넣지 못함",
-      "아이템을 교체하면 기존 아이템이 선택 목록(`SelectedItems`)에 남는 버그 — 아이템 ID를 매대 슬롯 번호와 비교한 실수",
+      "회의실 매니저 호출에 `?.`를 씀 — 파괴된 Unity 오브젝트는 `?.`로 걸러지지 않아 안전해 보이기만 함",
       "`LiarClient`가 약 1,700줄로 비대함",
       "밀치기 · 위치를 서버가 검증하지 않음"
     ],
     "plans": [
-      "`PushAnswer` 처리 시 들고 있던 아이템의 소유권 해제 + 바닥 드롭 상태 추가",
-      "비교 대상을 `itemId`로 고치고, `TryFindStandByItemId`의 결과를 확인한 뒤 매대를 켬",
+      "`PushAnswer` 처리 시 맞은 사람이 `HandItem`을 들고 있으면 소유권 해제 + 바닥 드롭 상태 추가",
+      "`OnDestroy`에서 `Instance`를 비우고, 회의실 단계에서만 부르거나 `!= null`로 검사",
       "회의 · 마트 · 상호작용 · 씬 배치를 기능별 핸들러로 분리하고, `LiarClient`는 수신 분기만 담당",
       "공개 서비스라면 서버에서 거리 · 쿨다운 · 이동 속도 상한 검증 추가"
     ],
-    "section": "7. 결과 및 배운 점"
+    "section": "7. 회고"
   },
   "deck": {
     "chapters": [
       {
         "key": "overview",
-        "title": "프로젝트 개요",
+        "title": "개요",
         "sectionPath": [
-          "1. 프로젝트 개요"
+          "1. 개요"
         ]
       },
       {
         "key": "base",
-        "title": "공통 기반 — 서버와 클라이언트의 역할 분담",
+        "title": "서버 판정과 메시지 흐름",
         "sectionPath": [
-          "2. 공통 기반 — 서버와 클라이언트의 역할 분담"
+          "2. 서버 판정과 메시지 흐름"
         ]
       },
       {
         "key": "move",
-        "title": "기능 A — 캐릭터 이동 · 충돌 · 위치 동기화",
+        "title": "마트: 플레이어 조작",
         "sectionPath": [
-          "3. 기능 A — 캐릭터 이동 · 충돌 · 위치 동기화"
-        ]
-      },
-      {
-        "key": "push",
-        "title": "기능 B — 플레이어 밀치기",
-        "sectionPath": [
-          "4. 기능 B — 플레이어 밀치기"
+          "3. 마트: 플레이어 조작"
         ]
       },
       {
         "key": "item",
-        "title": "기능 C — 아이템 집기 · 운반 · 가방 · 교체",
+        "title": "마트: 아이템 상호작용",
         "sectionPath": [
-          "5. 기능 C — 아이템 집기 · 운반 · 가방 · 교체"
+          "4. 마트: 아이템 상호작용"
         ]
       },
       {
         "key": "vote",
-        "title": "기능 D — 회의실 지목 · 투표 입력",
+        "title": "회의실: 지목 · 투표",
         "sectionPath": [
-          "6. 기능 D — 회의실 지목 · 투표 입력"
+          "5. 회의실: 지목 · 투표"
+        ]
+      },
+      {
+        "key": "extra",
+        "title": "그 밖의 기능",
+        "sectionPath": [
+          "6. 그 밖의 기능"
         ]
       }
     ],
@@ -244,16 +238,16 @@
         "layout": "overview",
         "tab": "개요",
         "title": {
-          "text": "1.1 What — 무엇을 만들었나",
+          "text": "1.1 게임 소개",
           "verbatim": true
         },
         "lead": {
-          "text": "시장에 가면은 4인이 WebSocket 서버로 접속해 플레이하는 3D 쿼터뷰 추리 게임입니다.",
+          "text": "시장에 가면은 3~4인이 WebSocket 서버로 접속해 플레이하는 3D 쿼터뷰 추리 게임입니다.",
           "verbatim": true
         },
         "sectionPath": [
-          "1. 프로젝트 개요",
-          "1.1 What — 무엇을 만들었나"
+          "1. 개요",
+          "1.1 게임 소개"
         ],
         "points": [
           {
@@ -274,35 +268,58 @@
             }
           },
           {
-            "kind": "code",
+            "kind": "mermaid",
             "n": 1,
-            "fp": "회의실(장르·키워드 확인) → 마트(이동·밀치기·물건 집기·가방 제출) → 회의실(발언 → 지목 → 변론 →"
+            "fp": "flowchart TB"
           }
         ]
       },
       {
-        "key": "authority",
-        "chapter": "base",
+        "key": "goal",
+        "chapter": "overview",
         "layout": "full",
-        "tab": "구조",
+        "tab": "개요",
         "title": {
-          "text": "2.1 원칙: \"다툼이 생기는 것만 서버가 판정한다\"",
+          "text": "1.2 목표",
           "verbatim": true
         },
-        "lead": {
-          "text": "서버가 모든 것을 계산하게 할 수도 있었지만, 그러면 서버의 책임이 지나치게 커진다고 판단했습니다.",
-          "verbatim": true
-        },
+        "lead": null,
         "sectionPath": [
-          "2. 공통 기반 — 서버와 클라이언트의 역할 분담",
-          "2.1 원칙: \"다툼이 생기는 것만 서버가 판정한다\""
+          "1. 개요",
+          "1.2 목표"
         ],
         "points": [],
         "visuals": [
           {
             "kind": "table",
             "n": 1,
-            "fp": "데이터|판정 주체|이유"
+            "fp": "문제 상황 (Before)|결과적으로 생기는 비용|해결 방향"
+          }
+        ]
+      },
+      {
+        "key": "role",
+        "chapter": "overview",
+        "layout": "full",
+        "tab": "개요",
+        "title": {
+          "text": "1.3 내가 맡은 부분",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "서버는 팀원이 작성했고, 저는 팀이 함께 정의한 Protocol을 기준으로 메시지를 보내고, 서버가 보낸 결과를 클라이언트에 적용하는 쪽을 맡았습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "1. 개요",
+          "1.3 내가 맡은 부분"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "구분|내용"
           }
         ]
       },
@@ -312,7 +329,7 @@
         "layout": "visual",
         "tab": "흐름",
         "title": {
-          "text": "2.2 요청 → 응답 흐름",
+          "text": "2.1 요청 · 응답 메시지 흐름",
           "verbatim": true
         },
         "lead": {
@@ -320,8 +337,8 @@
           "verbatim": true
         },
         "sectionPath": [
-          "2. 공통 기반 — 서버와 클라이언트의 역할 분담",
-          "2.2 요청 → 응답 흐름"
+          "2. 서버 판정과 메시지 흐름",
+          "2.1 요청 · 응답 메시지 흐름"
         ],
         "points": [],
         "visuals": [
@@ -333,39 +350,77 @@
         ]
       },
       {
-        "key": "scene-state",
+        "key": "msg-table",
         "chapter": "base",
         "layout": "full",
         "tab": "구조",
         "title": {
-          "text": "2.3 씬 전환과 플레이어 상태",
+          "text": "2.1 요청 · 응답 메시지 흐름",
           "verbatim": true
         },
         "lead": {
-          "text": "이를 씬 이름이 아니라 상태 문자열로 정의해, 같은 캐릭터 오브젝트를 재사용하면서 상태만 바꿉니다.",
+          "text": "메시지 종류는 Protocol.UserInteractionMessage 하나로 통일되어 있고, InteractionType으로 구분합니다.",
           "verbatim": true
         },
         "sectionPath": [
-          "2. 공통 기반 — 서버와 클라이언트의 역할 분담",
-          "2.3 씬 전환과 플레이어 상태"
+          "2. 서버 판정과 메시지 흐름",
+          "2.1 요청 · 응답 메시지 흐름"
         ],
-        "points": [
-          {
-            "label": "",
-            "text": "씬은 Additive로 먼저 올리고, 완전히 로드된 뒤에 전원을 재배치한다",
-            "verbatim": true
-          },
-          {
-            "label": "이유",
-            "text": "새 씬의 매니저가 Awake를 끝낸 뒤라야 스폰 포인트를 읽을 수 있다",
-            "verbatim": true
-          }
-        ],
+        "points": [],
         "visuals": [
           {
             "kind": "table",
             "n": 1,
-            "fp": "상태|적용 시점|이동|애니메이션"
+            "fp": "요청 (클라 → 서버)|응답 (서버 → 전체)|서버 판정|클라이언트 처리"
+          }
+        ]
+      },
+      {
+        "key": "judge-choice",
+        "chapter": "base",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "2.1.1 무엇을 서버가 판정할 것인가",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "2. 서버 판정과 메시지 흐름",
+          "2.1.1 무엇을 서버가 판정할 것인가"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|[A] 서버가 모든 것을 계산|[B] 다툼이 생기는 것만 서버가 판정 ✓"
+          }
+        ]
+      },
+      {
+        "key": "authority",
+        "chapter": "base",
+        "layout": "full",
+        "tab": "구조",
+        "title": {
+          "text": "2.1.1 무엇을 서버가 판정할 것인가",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "서버가 모든 것을 계산하게 할 수도 있었지만, 그러면 서버의 책임이 지나치게 커진다고 판단했습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "2. 서버 판정과 메시지 흐름",
+          "2.1.1 무엇을 서버가 판정할 것인가"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 2,
+            "fp": "데이터|판정 주체|이유"
           }
         ]
       },
@@ -375,18 +430,23 @@
         "layout": "visual",
         "tab": "개요",
         "title": {
-          "text": "3.1 개요",
+          "text": "3. 마트: 플레이어 조작",
           "verbatim": true
         },
         "lead": {
-          "text": "로컬은 직접 충돌을 계산하며 움직이고, 원격은 충돌 계산 없이 좌표만 부드럽게 따라갑니다.",
+          "text": "WASD로 움직이는 로컬 캐릭터와, 서버에서 받은 좌표를 따라가는 원격 캐릭터를 서로 다른 컨트롤러로 분리했습니다.",
           "verbatim": true
         },
         "sectionPath": [
-          "3. 기능 A — 캐릭터 이동 · 충돌 · 위치 동기화",
-          "3.1 개요"
+          "3. 마트: 플레이어 조작"
         ],
-        "points": [],
+        "points": [
+          {
+            "label": "",
+            "text": "로컬은 직접 충돌을 계산하며 움직이고, 원격은 충돌 계산 없이 좌표만 부드럽게 따라갑니다.",
+            "verbatim": true
+          }
+        ],
         "visuals": [
           {
             "kind": "image",
@@ -406,13 +466,15 @@
         "layout": "full",
         "tab": "구조",
         "title": {
-          "text": "3.2 시스템 구조",
+          "text": "3. 마트: 플레이어 조작",
           "verbatim": true
         },
-        "lead": null,
+        "lead": {
+          "text": "이동은 루트, 바라보는 방향은 Body에만 적용합니다.",
+          "verbatim": true
+        },
         "sectionPath": [
-          "3. 기능 A — 캐릭터 이동 · 충돌 · 위치 동기화",
-          "3.2 시스템 구조"
+          "3. 마트: 플레이어 조작"
         ],
         "points": [],
         "visuals": [
@@ -424,25 +486,85 @@
         ]
       },
       {
+        "key": "move-cast",
+        "chapter": "move",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "3.1 내 캐릭터 이동: 축을 나눠 검사하는 BoxCast",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 마트: 플레이어 조작",
+          "3.1 내 캐릭터 이동: 축을 나눠 검사하는 BoxCast"
+        ],
+        "points": [
+          {
+            "label": "",
+            "text": "넉백도 ResolveAxisMovement를 거치기 때문에, 벽에 부딪히면 더 이상 밀리지 않습니다.",
+            "verbatim": true
+          }
+        ],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "lines": [
+              1,
+              19
+            ],
+            "fp": "// CharacterController3D.cs"
+          }
+        ]
+      },
+      {
         "key": "move-choice",
         "chapter": "move",
         "layout": "full",
         "tab": "선택",
         "title": {
-          "text": "결정 1. 이동을 무엇으로 구현할 것인가?",
+          "text": "3.1.1 이동을 무엇으로 구현할 것인가",
           "verbatim": true
         },
         "lead": null,
         "sectionPath": [
-          "3. 기능 A — 캐릭터 이동 · 충돌 · 위치 동기화",
-          "3.4 고민과 선택"
+          "3. 마트: 플레이어 조작",
+          "3.1.1 이동을 무엇으로 구현할 것인가"
         ],
         "points": [],
         "visuals": [
           {
             "kind": "table",
             "n": 1,
-            "fp": "|대안 A: Dynamic Rigidbody (물리 엔진)|대안 B: Unity CharacterController|대안 C: Kinematic Rigidbody + BoxCast 직접 구현 ✅"
+            "fp": "|[A] Dynamic Rigidbody (물리 엔진)|[B] Unity CharacterController|[C] Kinematic Rigidbody + BoxCast 직접 구현 ✓"
+          }
+        ]
+      },
+      {
+        "key": "remote-sync",
+        "chapter": "move",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "3.2 다른 플레이어 위치 동기화: 보간과 좌표 거르기",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 마트: 플레이어 조작",
+          "3.2 다른 플레이어 위치 동기화: 보간과 좌표 거르기"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "lines": [
+              1,
+              17
+            ],
+            "fp": "// RemotePlayerController.cs"
           }
         ]
       },
@@ -452,7 +574,7 @@
         "layout": "full",
         "tab": "선택",
         "title": {
-          "text": "결정 2. 원격 캐릭터를 어떻게 따라가게 할 것인가?",
+          "text": "3.2.1 원격 캐릭터를 어떻게 따라가게 할 것인가",
           "verbatim": true
         },
         "lead": {
@@ -460,72 +582,34 @@
           "verbatim": true
         },
         "sectionPath": [
-          "3. 기능 A — 캐릭터 이동 · 충돌 · 위치 동기화",
-          "3.4 고민과 선택"
+          "3. 마트: 플레이어 조작",
+          "3.2.1 원격 캐릭터를 어떻게 따라가게 할 것인가"
         ],
         "points": [],
         "visuals": [
           {
             "kind": "table",
-            "n": 2,
-            "fp": "|대안 A: 받은 좌표로 즉시 이동 (스냅)|대안 B: 모든 좌표를 보간|대안 C: 보간 + 씬 전환 직후 무시 + 비정상 거리 버리기 ✅"
+            "n": 1,
+            "fp": "|[A] 받은 좌표로 즉시 이동 (스냅)|[B] 모든 좌표를 보간|[C] 보간 + 씬 전환 직후 무시 + 비정상 거리 버리기 ✓"
           }
         ]
       },
       {
-        "key": "ts-rubber",
-        "chapter": "move",
-        "layout": "problem",
-        "tab": "문제 해결",
-        "title": {
-          "text": "1 · 2번 상세 — 시도했지만 효과가 없었던 방법",
-          "verbatim": true
-        },
-        "lead": null,
-        "sectionPath": [
-          "7. 결과 및 배운 점",
-          "7.2 문제 해결 경험 (Troubleshooting)"
-        ],
-        "points": [
-          {
-            "label": "문제",
-            "text": "원격 캐릭터가 씬 이동 후 고무줄처럼 끌려감",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "처음에는 순서 문제라고 생각해, 씬 이동 시작부터 캐릭터의 첫 좌표 배치까지를 전부 비동기(await)로 묶은 뒤 서버 좌표 연결을 시작하도록 바꿔 보았습니다.",
-            "verbatim": true
-          },
-          {
-            "label": "원인",
-            "text": "하지만 큰 차이가 없었고, 원인이 \"배치 순서\"가 아니라 원격 보간이 이미 지나간 좌표를 계속 따라가는 것이라는 걸 알게 됐습니다.",
-            "verbatim": true
-          },
-          {
-            "label": "해결",
-            "text": "그래서 좌표를 받는 쪽에서 걸러내는 방식(1초 무시 + 3m 기준)으로 바꿔 해결했습니다.",
-            "verbatim": true
-          }
-        ],
-        "visuals": []
-      },
-      {
         "key": "push-intro",
-        "chapter": "push",
+        "chapter": "move",
         "layout": "visual",
         "tab": "개요",
         "title": {
-          "text": "4.1 개요",
+          "text": "3.3 플레이어 밀치기",
           "verbatim": true
         },
         "lead": {
-          "text": "판정은 애니메이션 타이밍에 맞춰 켜지는 트리거로 하고, 서버 승인을 받은 뒤 맞은 사람이 자기 화면에서만 넉백을 적용합니다.",
+          "text": "Space로 다른 플레이어를 밀쳐 방해할 수 있습니다.",
           "verbatim": true
         },
         "sectionPath": [
-          "4. 기능 B — 플레이어 밀치기",
-          "4.1 개요"
+          "3. 마트: 플레이어 조작",
+          "3.3 플레이어 밀치기"
         ],
         "points": [],
         "visuals": [
@@ -543,17 +627,17 @@
       },
       {
         "key": "push-flow",
-        "chapter": "push",
+        "chapter": "move",
         "layout": "visual",
         "tab": "흐름",
         "title": {
-          "text": "4.2 흐름",
+          "text": "3.3 플레이어 밀치기",
           "verbatim": true
         },
         "lead": null,
         "sectionPath": [
-          "4. 기능 B — 플레이어 밀치기",
-          "4.2 흐름"
+          "3. 마트: 플레이어 조작",
+          "3.3 플레이어 밀치기"
         ],
         "points": [],
         "visuals": [
@@ -566,85 +650,121 @@
       },
       {
         "key": "push-apply",
-        "chapter": "push",
-        "layout": "overview",
+        "chapter": "move",
+        "layout": "code",
         "tab": "구현",
         "title": {
-          "text": "4.3 핵심 기능",
+          "text": "3.3 플레이어 밀치기",
           "verbatim": true
         },
-        "lead": {
-          "text": "맞은 사람이 '나'일 때만 실제로 밀려난다.",
-          "verbatim": true
-        },
+        "lead": null,
         "sectionPath": [
-          "4. 기능 B — 플레이어 밀치기",
-          "4.3 핵심 기능"
+          "3. 마트: 플레이어 조작",
+          "3.3 플레이어 밀치기"
         ],
-        "points": [
+        "points": [],
+        "visuals": [
           {
-            "label": "이유",
-            "text": "다른 클라이언트는 내 MoveMessage를 받아 원격 캐릭터를 움직이므로 따로 계산할 필요가 없다.",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "판정은 '미는 사람 본인' 클라이언트에서만 서버에 요청한다",
-            "verbatim": true
-          },
-          {
-            "label": "이유",
-            "text": "원격 캐릭터의 트리거는 무시 → 요청이 4번 가지 않음",
-            "verbatim": true
+            "kind": "code",
+            "n": 2,
+            "fp": "// Interaction_System.cs — 서버 승인 후 넉백 적용"
           }
-        ],
-        "visuals": []
+        ]
       },
       {
         "key": "push-choice",
-        "chapter": "push",
+        "chapter": "move",
         "layout": "full",
         "tab": "선택",
         "title": {
-          "text": "4.4 고민과 선택 — 넉백을 누가 계산할 것인가?",
+          "text": "3.3.1 넉백을 누가 계산할 것인가",
           "verbatim": true
         },
-        "lead": {
-          "text": "이 경험에서 \"각 클라이언트는 자기 캐릭터만 계산하고, 다른 캐릭터는 결과 좌표만 받아 그린다\" 는 원칙을 얻었습니다 (7.4).",
-          "verbatim": true
-        },
+        "lead": null,
         "sectionPath": [
-          "4. 기능 B — 플레이어 밀치기",
-          "4.4 고민과 선택 — 넉백을 누가 계산할 것인가?"
+          "3. 마트: 플레이어 조작",
+          "3.3.1 넉백을 누가 계산할 것인가"
         ],
-        "points": [
-          {
-            "label": "서버 검증을 넣지 않은 이유",
-            "text": "서버에 거리 · 쿨다운 검증을 두면 캐릭터 좌표와 애니메이션 상태까지 알아야 해 서버 책임이 너무 커지므로, 의도적으로 클라이언트 판정으로 두었습니다.",
-            "verbatim": false
-          }
-        ],
+        "points": [],
         "visuals": [
           {
             "kind": "table",
             "n": 1,
-            "fp": "|대안 A: 모든 클라이언트가 모든 캐릭터 넉백 계산|대안 B: 맞은 본인만 넉백 계산, 나머지는 좌표만 받음 ✅"
+            "fp": "|[A] 모든 클라이언트가 모든 캐릭터 넉백 계산|[B] 맞은 본인만 넉백 계산, 나머지는 좌표만 받음 ✓"
+          }
+        ]
+      },
+      {
+        "key": "ts-rubber",
+        "chapter": "move",
+        "layout": "problem",
+        "tab": "문제 해결",
+        "title": {
+          "text": "3.4 트러블슈팅: 씬을 옮기면 다른 플레이어가 끌려가는 문제 (고무줄 현상)",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 마트: 플레이어 조작",
+          "3.4 트러블슈팅: 씬을 옮기면 다른 플레이어가 끌려가는 문제 (고무줄 현상)"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "단계|내용"
+          },
+          {
+            "kind": "image",
+            "src": "images/rubber_band.gif",
+            "w": 720,
+            "h": 406,
+            "caption": {
+              "text": "마트로 넘어온 직후 다른 플레이어 캐릭터가 사라졌다가 먼 곳에서 스폰 자리까지 끌려오는 장면 (고치기 전 녹화)",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "ts-rotate",
+        "chapter": "move",
+        "layout": "problem",
+        "tab": "문제 해결",
+        "title": {
+          "text": "3.5 트러블슈팅: 회의실로 돌아오면 캐릭터 위치 · 회전이 틀어지는 문제",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 마트: 플레이어 조작",
+          "3.5 트러블슈팅: 회의실로 돌아오면 캐릭터 위치 · 회전이 틀어지는 문제"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "단계|내용"
           }
         ]
       },
       {
         "key": "item-intro",
         "chapter": "item",
-        "layout": "screens",
+        "layout": "visual",
         "tab": "개요",
         "title": {
-          "text": "5.1 개요",
+          "text": "4. 마트: 아이템 상호작용",
           "verbatim": true
         },
-        "lead": null,
+        "lead": {
+          "text": "매대 근처에서 F키를 누르면 가장 가까운 아이템을 집고, 들고 다니다가 다시 F키를 누르면 위치에 따라 가방에 넣거나 원래 매대에 돌려놓습니다.",
+          "verbatim": true
+        },
         "sectionPath": [
-          "5. 기능 C — 아이템 집기 · 운반 · 가방 · 교체",
-          "5.1 개요"
+          "4. 마트: 아이템 상호작용"
         ],
         "points": [],
         "visuals": [
@@ -657,26 +777,6 @@
               "text": "F키로 아이템을 집어 들고 이동해 가방에 넣는 장면",
               "verbatim": true
             }
-          },
-          {
-            "kind": "image",
-            "src": "images/item_swap.gif",
-            "w": 640,
-            "h": 360,
-            "caption": {
-              "text": "같은 카테고리 아이템으로 교체하는 장면 (5배속)",
-              "verbatim": true
-            }
-          },
-          {
-            "kind": "image",
-            "src": "images/bag_ui.png",
-            "w": 1280,
-            "h": 720,
-            "caption": {
-              "text": "Q키 가방 UI에 카테고리별 아이템이 표시된 화면",
-              "verbatim": true
-            }
           }
         ]
       },
@@ -686,13 +786,12 @@
         "layout": "full",
         "tab": "구조",
         "title": {
-          "text": "5.2 시스템 구조",
+          "text": "4. 마트: 아이템 상호작용",
           "verbatim": true
         },
         "lead": null,
         "sectionPath": [
-          "5. 기능 C — 아이템 집기 · 운반 · 가방 · 교체",
-          "5.2 시스템 구조"
+          "4. 마트: 아이템 상호작용"
         ],
         "points": [],
         "visuals": [
@@ -704,25 +803,100 @@
         ]
       },
       {
+        "key": "stand-api",
+        "chapter": "item",
+        "layout": "full",
+        "tab": "구조",
+        "title": {
+          "text": "4. 마트: 아이템 상호작용",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "매대를 찾는 부분(CheckWhenStend)과 아이템 배치는 팀원 코드이고, 아이템 ID로 찾고 되돌리는 부분은 제가 더했습니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "4. 마트: 아이템 상호작용"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 2,
+            "fp": "메서드|작성|하는 일 · 내가 쓰는 곳"
+          }
+        ]
+      },
+      {
+        "key": "item-pick-code",
+        "chapter": "item",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "4.1 아이템 집기: 가장 가까운 아이템을 서버 응답 뒤에 집기",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "4. 마트: 아이템 상호작용",
+          "4.1 아이템 집기: 가장 가까운 아이템을 서버 응답 뒤에 집기"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "// ItemInteractionHandler.cs"
+          }
+        ]
+      },
+      {
         "key": "item-choice",
         "chapter": "item",
         "layout": "full",
         "tab": "선택",
         "title": {
-          "text": "결정 1. 집기를 서버 응답 전에 먼저 보여줄 것인가?",
+          "text": "4.1.1 집기를 서버 응답 전에 먼저 보여줄 것인가",
           "verbatim": true
         },
         "lead": null,
         "sectionPath": [
-          "5. 기능 C — 아이템 집기 · 운반 · 가방 · 교체",
-          "5.4 고민과 선택"
+          "4. 마트: 아이템 상호작용",
+          "4.1.1 집기를 서버 응답 전에 먼저 보여줄 것인가"
         ],
         "points": [],
         "visuals": [
           {
             "kind": "table",
             "n": 1,
-            "fp": "|대안 A: 누르는 즉시 집고, 서버에는 알리기만|대안 B: 서버 응답을 받은 뒤에만 집기 ✅"
+            "fp": "|[A] 누르는 즉시 집고, 서버에는 알리기만|[B] 서버 응답을 받은 뒤에만 집기 ✓"
+          }
+        ]
+      },
+      {
+        "key": "item-putdown",
+        "chapter": "item",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "4.2 내려놓기: F키 하나로 가방 / 원래 매대 판정",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "4. 마트: 아이템 상호작용",
+          "4.2 내려놓기: F키 하나로 가방 / 원래 매대 판정"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "lines": [
+              6,
+              25
+            ],
+            "fp": "// ItemPutDownResolver.cs"
           }
         ]
       },
@@ -732,23 +906,70 @@
         "layout": "full",
         "tab": "선택",
         "title": {
-          "text": "결정 2. 집기와 내려놓기를 같은 키(F)로 할 것인가?",
+          "text": "4.2.1 집기와 내려놓기를 같은 키(F)로 할 것인가",
           "verbatim": true
         },
-        "lead": {
-          "text": "기존 매대 코드는 매대가 플레이어를 찾는 구조로 작성되어 있어, 가방이 추가되면서 \"플레이어 기준으로 가방과 매대를 찾는\" 판정이 별도로 필요해졌습니다.",
-          "verbatim": true
-        },
+        "lead": null,
         "sectionPath": [
-          "5. 기능 C — 아이템 집기 · 운반 · 가방 · 교체",
-          "5.4 고민과 선택"
+          "4. 마트: 아이템 상호작용",
+          "4.2.1 집기와 내려놓기를 같은 키(F)로 할 것인가"
         ],
         "points": [],
         "visuals": [
           {
             "kind": "table",
-            "n": 2,
-            "fp": "|대안 A: 집기 / 가방 넣기 / 돌려놓기 키 분리|대안 B: F키 하나 + 위치로 판정 ✅"
+            "n": 1,
+            "fp": "|[A] 집기 / 가방 넣기 / 돌려놓기 키 분리|[B] F키 하나 + 위치로 판정 ✓"
+          }
+        ]
+      },
+      {
+        "key": "item-swap",
+        "chapter": "item",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "4.3 같은 카테고리 교체: 기존 아이템을 원래 자리로",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "4. 마트: 아이템 상호작용",
+          "4.3 같은 카테고리 교체: 기존 아이템을 원래 자리로"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "lines": [
+              1,
+              16
+            ],
+            "fp": "// ItemInteractionHandler.cs — 서버가 ChangedItemId를 주면 교체"
+          }
+        ]
+      },
+      {
+        "key": "ts-pick",
+        "chapter": "item",
+        "layout": "problem",
+        "tab": "문제 해결",
+        "title": {
+          "text": "4.4 트러블슈팅: 선택하지 않은 아이템이 집히는 문제",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "4. 마트: 아이템 상호작용",
+          "4.4 트러블슈팅: 선택하지 않은 아이템이 집히는 문제"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "단계|내용"
           }
         ]
       },
@@ -758,13 +979,15 @@
         "layout": "screens",
         "tab": "개요",
         "title": {
-          "text": "6.1 개요",
+          "text": "5. 회의실: 지목 · 투표",
           "verbatim": true
         },
-        "lead": null,
+        "lead": {
+          "text": "발언이 끝나면 지목 단계가 시작되고, 플레이어는 의심 가는 캐릭터를 직접 클릭해 지목합니다.",
+          "verbatim": true
+        },
         "sectionPath": [
-          "6. 기능 D — 회의실 지목 · 투표 입력",
-          "6.1 개요"
+          "5. 회의실: 지목 · 투표"
         ],
         "points": [],
         "visuals": [
@@ -796,13 +1019,12 @@
         "layout": "full",
         "tab": "구조",
         "title": {
-          "text": "6.2 시스템 구조",
+          "text": "5. 회의실: 지목 · 투표",
           "verbatim": true
         },
         "lead": null,
         "sectionPath": [
-          "6. 기능 D — 회의실 지목 · 투표 입력",
-          "6.2 시스템 구조"
+          "5. 회의실: 지목 · 투표"
         ],
         "points": [],
         "visuals": [
@@ -814,25 +1036,75 @@
         ]
       },
       {
+        "key": "point-code",
+        "chapter": "vote",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "5.1 지목: 3D 캐릭터를 클릭해 지목 · 취소 · 재지목",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "5. 회의실: 지목 · 투표",
+          "5.1 지목: 3D 캐릭터를 클릭해 지목 · 취소 · 재지목"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "lines": [
+              9,
+              28
+            ],
+            "fp": "// Vote_System.cs — 지목 단계에서만 클릭을 받는다"
+          }
+        ]
+      },
+      {
         "key": "vote-input",
         "chapter": "vote",
         "layout": "full",
         "tab": "선택",
         "title": {
-          "text": "결정 1. 지목 입력 방식",
+          "text": "5.1.1 지목 입력을 무엇으로 할 것인가",
           "verbatim": true
         },
         "lead": null,
         "sectionPath": [
-          "6. 기능 D — 회의실 지목 · 투표 입력",
-          "6.4 고민과 선택"
+          "5. 회의실: 지목 · 투표",
+          "5.1.1 지목 입력을 무엇으로 할 것인가"
         ],
         "points": [],
         "visuals": [
           {
             "kind": "table",
             "n": 1,
-            "fp": "|대안 A: 플레이어 목록 UI 버튼|대안 B: 3D 캐릭터 직접 클릭 ✅"
+            "fp": "|[A] 플레이어 목록 UI 버튼|[B] 3D 캐릭터 직접 클릭 ✓"
+          }
+        ]
+      },
+      {
+        "key": "select-code",
+        "chapter": "vote",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "5.2 지목 표시: 서버가 중계한 지목을 모두가 같은 순서로 재생",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "5. 회의실: 지목 · 투표",
+          "5.2 지목 표시: 서버가 중계한 지목을 모두가 같은 순서로 재생"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "// LiarClient.cs — 서버가 중계한 Select를 모든 클라이언트가 같은 순서로 재생"
           }
         ]
       },
@@ -842,20 +1114,151 @@
         "layout": "full",
         "tab": "선택",
         "title": {
-          "text": "결정 2. 재지목을 \"취소 + 지목\" 두 메시지로 보낸 이유",
+          "text": "5.2.1 재지목을 \"취소 + 지목\" 두 메시지로 보낼 것인가",
           "verbatim": true
         },
         "lead": null,
         "sectionPath": [
-          "6. 기능 D — 회의실 지목 · 투표 입력",
-          "6.4 고민과 선택"
+          "5. 회의실: 지목 · 투표",
+          "5.2.1 재지목을 \"취소 + 지목\" 두 메시지로 보낼 것인가"
         ],
         "points": [],
         "visuals": [
           {
             "kind": "table",
-            "n": 2,
-            "fp": "|대안 A: 새 지목 메시지 1개|대안 B: 취소 → 지목 2개 ✅"
+            "n": 1,
+            "fp": "|[A] 새 지목 메시지 1개 (처음 방식)|[B] 취소 → 지목 2개 ✓"
+          }
+        ]
+      },
+      {
+        "key": "ts-vote",
+        "chapter": "vote",
+        "layout": "problem",
+        "tab": "문제 해결",
+        "title": {
+          "text": "5.4 트러블슈팅: 늦게 들어온 플레이어에게 투표가 안 되는 문제",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "5. 회의실: 지목 · 투표",
+          "5.4 트러블슈팅: 늦게 들어온 플레이어에게 투표가 안 되는 문제"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "단계|내용"
+          },
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "// Vote_System.cs — 고치기 전: SetInitializeData(me, otherUsers)"
+          }
+        ]
+      },
+      {
+        "key": "scene-state",
+        "chapter": "extra",
+        "layout": "full",
+        "tab": "구조",
+        "title": {
+          "text": "6.1 씬 전환과 플레이어 상태",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "회의실 ↔ 마트를 오갈 때마다 플레이어의 \"할 수 있는 일\"이 바뀝니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "6. 그 밖의 기능",
+          "6.1 씬 전환과 플레이어 상태"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "상태|적용 시점|이동|애니메이션"
+          }
+        ]
+      },
+      {
+        "key": "outline",
+        "chapter": "extra",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "6.3 지목 단계 마우스 오버 테두리: 셰이더 (AI 활용)",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "지목 단계에서 다른 플레이어에게 마우스를 올리면 그 캐릭터에 테두리가 그려집니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "6. 그 밖의 기능",
+          "6.3 지목 단계 마우스 오버 테두리: 셰이더 (AI 활용)"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "// StickmanColorOutline.shader — Inverted Hull: 앞면을 버리고(Cull"
+          }
+        ]
+      },
+      {
+        "key": "anim-choice",
+        "chapter": "extra",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "6.5.1 애니메이션을 상태 패턴으로 관리할 것인가",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "6. 그 밖의 기능",
+          "6.5.1 애니메이션을 상태 패턴으로 관리할 것인가"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "|[A] 상태 패턴 (PickState · PushState · PutDownState)|[B] Animator 파라미터 직접 제어 ✓"
+          }
+        ]
+      },
+      {
+        "key": "ts-color",
+        "chapter": "extra",
+        "layout": "problem",
+        "tab": "문제 해결",
+        "title": {
+          "text": "6.7 트러블슈팅: 같은 플레이어가 PC마다 다른 색으로 보인 문제",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "6. 그 밖의 기능",
+          "6.7 트러블슈팅: 같은 플레이어가 PC마다 다른 색으로 보인 문제"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "단계|내용"
+          },
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "// PlayerColorSet.cs — 색은 '정렬된 입장 순서'로만 결정 → 모든 PC에서 같은 결과"
           }
         ]
       }

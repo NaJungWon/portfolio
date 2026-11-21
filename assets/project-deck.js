@@ -388,10 +388,15 @@
         const t = txt(x.sl.title) || c.title, last = groups[groups.length - 1];
         if (last && last.t === t) last.xs.push(x); else groups.push({ t, xs: [x] });
       });
+      // [수강생 변경 11-22] 목록에는 문서 번호(4. · 4.1 · 4.1.1 · A.1)를 떼고 보이고, 장 첫머리 장면(제목 = 장 제목)은 장 이름을 되풀이하지 않고 "장 소개"로
+      const NUM = /^(?:\d+|[A-Z])(?:\.\d+)*\.?\s+/;
+      const plain = (t) => String(t || '').replace(NUM, '').trim();
+      const chT = plain((c.sectionPath && c.sectionPath[0]) || c.title);
       const list = groups.map((g, i) => {
         const tabs = [...new Set(g.xs.map((x) => PF.tab(x.sl.tab)).filter(Boolean))].join(' · ');
         const lastX = g.xs[g.xs.length - 1];
-        return item(String(i + 1), g.t, tabs, g.xs[0].scenes[0].id, roomy ? txt(g.xs[0].sl.lead) : '', lastX.scenes[lastX.scenes.length - 1].id);
+        const shown = (plain(g.t) === chT || plain(g.t) === plain(c.title)) ? '장 소개' : plain(g.t);
+        return item(String(i + 1), shown, tabs, g.xs[0].scenes[0].id, roomy ? txt(g.xs[0].sl.lead) : '', lastX.scenes[lastX.scenes.length - 1].id);
       }).join('');
       PF.body(s).innerHTML = `<div class="toprow"><span class="pf-eyebrow long">${esc(ptitle)}</span><span class="rl">${esc(PF.t('deck.ch-count', { n: slides.length }))}</span></div>
         <div class="ch-mid"><div><p class="ch-no">${esc(PF.t('en.chapter'))} ${String(ci + 1).padStart(2, '0')}</p><h2 class="ch-t">${esc(c.title)}</h2>${DOT}</div>
