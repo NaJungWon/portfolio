@@ -372,7 +372,8 @@
 
   // 목록 한 줄(같은 슬라이드 안 이동 = 같은 탭). 쪽 번호(p.N)는 키트가 채움
   //   ld = 장 표지 넉넉한 변형에서 그 장면의 도입(lead, 데이터의 글 조각 그대로)
-  const item = (n, t, d, ref, ld = '') => `<li><a href="#${esc(ref)}" data-pf-ref="${esc(ref)}"><span class="n">${esc(n)}</span><span class="tx"><span class="t">${inline(t)}</span>${d ? `<span class="d">${esc(d)}</span>` : ''}${ld ? `<span class="ld">${inline(ld)}</span>` : ''}</span><span class="pg"><span class="pf-n-screen">p.00</span><span class="pf-n-print"></span></span></a></li>`;
+  //   refEnd = [수강생 변경 11-21] 같은 제목 장면을 묶었을 때 마지막 장면 id → 쪽 번호를 p.13~14처럼 범위로
+  const item = (n, t, d, ref, ld = '', refEnd = '') => `<li><a href="#${esc(ref)}" data-pf-ref="${esc(ref)}"${refEnd && refEnd !== ref ? ` data-pf-ref-end="${esc(refEnd)}"` : ''}><span class="n">${esc(n)}</span><span class="tx"><span class="t">${inline(t)}</span>${d ? `<span class="d">${esc(d)}</span>` : ''}${ld ? `<span class="ld">${inline(ld)}</span>` : ''}</span><span class="pg"><span class="pf-n-screen">p.00</span><span class="pf-n-print"></span></span></a></li>`;
   const band = (s, auto) => { if (auto) s.querySelector('.pf-foot > span').insertAdjacentHTML('beforeend', '<span class="pf-autoband" data-pf-ui="note">예전 데이터로 자동 구성</span>'); return s; };
 
   // 장 표지: 장면이 적으면(4개 이하) 넉넉한 변형 — 목차 크기 목록 + 장면마다 도입(결정 I7). 안 들어가면 보통 → 촘촘
@@ -381,7 +382,17 @@
     const make = (mode) => {
       const s = PF.scene({ id: chId, tpl: 'CH', kind: 'bare', cls: mode === 'compact' ? 'compact' : '', foot, sec: c.title, group: c.title, stitle: c.title });
       const roomy = mode === 'roomy';
-      const list = slides.map((x, i) => item(String(i + 1), txt(x.sl.title) || c.title, PF.tab(x.sl.tab), x.scenes[0].id, roomy ? txt(x.sl.lead) : '')).join('');
+      // [수강생 변경 11-21] 제목이 같은 장면이 이어지면 한 줄로 묶고(라벨은 겹치지 않게 이어 붙임), 쪽 번호는 첫 장면 ~ 마지막 장면
+      const groups = [];
+      slides.forEach((x) => {
+        const t = txt(x.sl.title) || c.title, last = groups[groups.length - 1];
+        if (last && last.t === t) last.xs.push(x); else groups.push({ t, xs: [x] });
+      });
+      const list = groups.map((g, i) => {
+        const tabs = [...new Set(g.xs.map((x) => PF.tab(x.sl.tab)).filter(Boolean))].join(' · ');
+        const lastX = g.xs[g.xs.length - 1];
+        return item(String(i + 1), g.t, tabs, g.xs[0].scenes[0].id, roomy ? txt(g.xs[0].sl.lead) : '', lastX.scenes[lastX.scenes.length - 1].id);
+      }).join('');
       PF.body(s).innerHTML = `<div class="toprow"><span class="pf-eyebrow long">${esc(ptitle)}</span><span class="rl">${esc(PF.t('deck.ch-count', { n: slides.length }))}</span></div>
         <div class="ch-mid"><div><p class="ch-no">${esc(PF.t('en.chapter'))} ${String(ci + 1).padStart(2, '0')}</p><h2 class="ch-t">${esc(c.title)}</h2>${DOT}</div>
         <div class="ch-list t-P2${mode === 'normal' ? '' : ' ' + mode}"><ol class="toc-list${roomy ? '' : ' sub'}">${list}</ol></div></div>`;

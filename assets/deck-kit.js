@@ -137,8 +137,12 @@
       const sc = t ? (t.classList.contains('pf-scene') ? t : t.closest('.pf-scene')) : null;
       const si = scenes.indexOf(sc), pj = P.indexOf(sc);
       const scr = a.querySelector('.pf-n-screen'), prn = a.querySelector('.pf-n-print');
-      if (scr) scr.textContent = si >= 0 ? `p.${si + 1}` : '';
-      if (prn) prn.textContent = pj >= 0 ? `p.${pj + 1}` : refUrl(a.dataset.pfRef);
+      // [수강생 변경 11-21] data-pf-ref-end가 있으면 마지막 장면까지 범위(p.13~14)
+      const te = a.dataset.pfRefEnd ? document.getElementById(a.dataset.pfRefEnd) : null;
+      const se = te ? (te.classList.contains('pf-scene') ? te : te.closest('.pf-scene')) : null;
+      const ei = se ? scenes.indexOf(se) : -1, pe = se ? P.indexOf(se) : -1;
+      if (scr) scr.textContent = si >= 0 ? `p.${si + 1}${ei > si ? `~${ei + 1}` : ''}` : '';
+      if (prn) prn.textContent = pj >= 0 ? `p.${pj + 1}${pe > pj ? `~${pe + 1}` : ''}` : refUrl(a.dataset.pfRef);
     });
     hudSync();
   }

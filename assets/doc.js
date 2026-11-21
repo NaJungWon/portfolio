@@ -143,7 +143,7 @@
     const resolve = (title) => PF.resolveHeading(list, title)?.el || null;
     window.PFDoc = Object.assign(window.PFDoc || {}, { resolve });
 
-    const tocHtml = headings.filter((h) => h.tagName === 'H2' || h.tagName === 'H3')
+    const tocHtml = headings.filter((h) => h.tagName === 'H2' || h.tagName === 'H3' || h.tagName === 'H4')   // [수강생 변경 11-21] 고민과 선택(N.x.y, ####)도 목차에
       .map((h) => `<a class="${h.tagName.toLowerCase()}" href="#${esc(h.id)}">${esc(htext(h))}</a>`).join('');
     document.querySelectorAll('.toc-links').forEach((el) => { el.innerHTML = tocHtml; });
 
@@ -255,7 +255,7 @@
     document.querySelector('.print-urls').innerHTML = `<p>${T('doc.print-web')}: ${esc(here.href)}</p><p>${T('name.deck')}: ${esc(deckAbs)}</p>`;
 
     // ⑩ 목차 현재 위치(스크롤 기준) + 레일 "지금 읽는 절"
-    trackSection(headings.filter((h) => h.tagName === 'H2' || h.tagName === 'H3'));
+    trackSection(headings.filter((h) => h.tagName === 'H2' || h.tagName === 'H3' || h.tagName === 'H4'));   // [수강생 변경 11-21]
 
     // ⑪ 이미지 크게 보기, 다이어그램 크게 보기(같은 페이지 dialog)
     doc.addEventListener('click', (e) => {

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "id": "04-inventory-player",
+  "id": "05-inventory-player",
   "doc": "기술문서.md",
   "title": "인벤토리 플레이어",
   "tagline": "가방 정리가 곧 전투력인 모바일 2D 전략 퍼즐 게임",

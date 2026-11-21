@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "id": "01-market-liar",
+  "id": "02-market-liar",
   "doc": "기술문서.md",
   "title": "시장에 가면",
   "tagline": "4인이 WebSocket 서버로 접속해 플레이하는 3D 쿼터뷰 추리 게임",
