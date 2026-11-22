@@ -445,15 +445,17 @@
   // 맺음: 프로젝트 상세 문서(전문) · 바깥 링크 · 포트폴리오. 슬라이드 → 상세 문서 링크는 표지와 여기에만(G1)
   function endScene(p, foot, ext, auto) {
     const card = (k, label, href, kind, visible, primary) => `<div class="lcard${primary ? ' primary' : ''}">${link({ href, kind, label: `<span class="lc-k">${esc(k)}</span><span class="lc-t">${esc(label)}</span><span class="url">${esc(visible)}</span>` })}</div>`;
-    const make = () => {
+    // [수강생 변경 11-22] 링크가 많아 한 줄씩으로 넘치면 링크 칸을 넓히고 2열로 놓는다
+    const make = (two) => {
       const s = PF.scene({ id: 'end', tpl: 'EN', kind: 'bare', foot, sec: PF.t('deck.more'), stitle: PF.t('deck.end-title') });
       PF.body(s).innerHTML = `<div class="toprow"><span class="pf-eyebrow">${esc(PF.t('en.more'))}</span><span class="rl">${esc(PF.teamLabel(p.team))}</span></div>
-        <div class="en-mid"><div><h2 class="en-t">${esc(p.title)}</h2>${p.tagline ? `<p class="tagline">${inline(p.tagline)}</p>` : ''}${DOT}</div>
-        <div class="en-links">${card(PF.t('en.techdoc'), PF.t('deck.end-doc'), PF.docUrl(p.id), 'page', PF.visibleUrl(PF.docUrl(p.id)), true)}
+        <div class="en-mid${two ? ' en-wide' : ''}"><div><h2 class="en-t">${esc(p.title)}</h2>${p.tagline ? `<p class="tagline">${inline(p.tagline)}</p>` : ''}${DOT}</div>
+        <div class="en-links${two ? ' two' : ''}">${card(PF.t('en.techdoc'), PF.t('deck.end-doc'), PF.docUrl(p.id), 'page', PF.visibleUrl(PF.docUrl(p.id)), true)}
           ${ext.map((l) => card(PF.extEn(l), l.label, l.url, 'external', shortUrl(l.url))).join('')}
           ${card(PF.t('en.portfolio'), PF.t('ui.back'), 'index.html', 'page', PF.visibleUrl(''))}</div></div>`;
       return band(s, auto);
     };
-    return PF.guard(make(), PFScene.refUrl('end'), info.overflow);
+    const one = make(false);
+    return PF.guard(PF.fitsM(one) ? one : make(true), PFScene.refUrl('end'), info.overflow);
   }
 })();

@@ -302,6 +302,10 @@ table.md-table img { max-height: 120px; max-width: 100%; height: auto; }   /* wi
 .t-EN .dotrule { margin-top: 22px; max-width: 360px; }
 .en-links { display: grid; gap: 10px; }
 .en-links .lcard.primary a { border-color: var(--accent); background: var(--accent-soft); }
+/* [수강생 변경 11-22] 링크가 많으면 링크 칸을 넓히고 2열 */
+.en-mid.en-wide { grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); gap: 40px; }
+.en-links.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.en-links.two .lcard a { height: 100%; }
 
 /* 원칙 5 ② 축소용 감싸개 */
 .pf-zoomwrap { display: inherit; flex-direction: inherit; justify-content: inherit; align-items: inherit; align-content: inherit;
