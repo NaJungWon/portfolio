@@ -4,7 +4,7 @@
   "doc": "기술문서.md",
   "title": "Meow2048",
   "tagline": "동물 이미지 타일로 만든 모바일 2D 캐주얼 퍼즐 2048",
-  "cover": "images/title.jpg",
+  "cover": "images/play_4x4.gif",
   "team": {
     "type": "solo",
     "size": "1인",
@@ -13,7 +13,7 @@
   "meta": [
     {
       "label": "장르",
-      "value": "2D 캐주얼 퍼즐 (고전 퍼즐 2048의 모바일판)"
+      "value": "모바일 2D 캐주얼 퍼즐 (고전 퍼즐 2048)"
     },
     {
       "label": "기간",
@@ -25,34 +25,37 @@
     },
     {
       "label": "환경",
-      "value": "Unity 2022.3.62f3 (2D) · Android (minSdk 22) · PC 빌드 병행 · Firebase Unity SDK 11.1.0 (Realtime Database)"
+      "value": "Unity 2022.3.62f3 (2D) · Android (minSdk 22) · PC 빌드 병행"
     }
   ],
   "tags": [
     "Unity 2022.3",
     "C#",
     "Android",
-    "Firebase RTDB",
+    "GridLayoutGroup",
     "코루틴 연출",
-    "EaseOutElastic",
     "턴 처리"
   ],
   "links": {
     "github": "https://github.com/NaJungWon/2048_project",
-    "video": "https://youtu.be/_ddYiKwi6YQ",
+    "video": "https://youtube.com/shorts/I9XZb4MZAuA",
     "extra": [
       {
+        "label": "전체 영상",
+        "url": "https://youtu.be/j3z04k8qnvg"
+      },
+      {
         "label": "Windows 실행 파일",
-        "url": "https://drive.google.com/file/d/1OAPT0y5rDcTFP749rAGN4_4eXQJjMAhI/view?usp=drive_link"
+        "url": "https://drive.google.com/file/d/1OAPT0y5rDcTFP749rAGN4_4eXQJjMAhI/view"
       },
       {
         "label": "Android 실행 파일",
-        "url": "https://drive.google.com/file/d/1dljWg_zfzrOo9sCURy_s_vqRm34iGEiZ/view?usp=drive_link"
+        "url": "https://drive.google.com/file/d/1dljWg_zfzrOo9sCURy_s_vqRm34iGEiZ/view"
       }
     ]
   },
   "intent": {
-    "text": "인벤토리와 같은 조건(Firebase로 데이터를 유지하고, 모바일 기기에서 실행된다)을 두고, 규칙이 단순한 게임으로 \"한 턴이 정확하게 돌아가는 퍼즐 루프\"를 끝까지 만드는 데 집중했습니다.",
+    "text": "인벤토리와 같은 조건(모바일 기기에서 실행된다)을 두고, 규칙이 단순한 게임으로 \"한 턴이 정확하게 돌아가는 퍼즐 루프\"를 끝까지 만드는 데 집중했습니다.",
     "verbatim": true
   },
   "highlights": [
@@ -61,31 +64,33 @@
       "what": "스와이프 한 번에 여러 타일이 동시에 움직이고 합쳐져도, 2048 규칙(한 턴에 한 번만 합쳐짐)이 깨지지 않습니다.",
       "how": "판정 단계에서 `board[,]`와 타일 좌표를 즉시 갱신하고 이동·합치기 목록만 모읍니다. 합칠 두 타일에 `hasMergedThisTurn`을 표시하고, 값은 연출이 끝난 뒤 `ProcessMerges`에서 바꿉니다.",
       "why": "각 타일이 언제 도착하느냐에 판정이 기대면 규칙이 화면 속도에 따라 달라지기 때문에, \"데이터가 먼저 맞고, 화면은 따라간다\"를 원칙으로 두었습니다.",
-      "section": "3.4 핵심 기능 ③: 한 턴에 한 번만 합치기",
-      "image": null
+      "section": "3.3 한 턴에 한 번만 합치기",
+      "image": {
+        "src": "images/merge_once.gif",
+        "w": 360,
+        "h": 642,
+        "caption": "한 턴에 한 번만 합치기 — 왼쪽 줄의 2 · 2 · 4를 아래로 밀면 2 + 2만 합쳐져 4 · 4가 됨 (0.5배속)"
+      }
     },
     {
       "title": "연출: 병렬 이동·이징",
       "what": "트윈 라이브러리 없이 코루틴만으로 타일 이동, 생성·합치기 탄성 스케일, 파티클·동물 소리 피드백을 만들었습니다.",
       "how": "모든 타일을 동시에 선형 이동(`Lerp`)시키고 전부 도착할 때까지 기다린 뒤 합칩니다. 생성·합치기는 스케일을 0 또는 1.2배에서 원래 크기로 `EaseOutElastic`으로 되돌립니다.",
-      "why": "필요한 연출이 이동과 스케일 두 종류뿐이라, 라이브러리를 익히기보다 필요한 함수 몇 개를 직접 만들며 원리를 이해하는 쪽이 이 프로젝트의 목적(학습)에 맞다고 판단했습니다.",
-      "section": "4.1 개요",
-      "image": null
-    },
-    {
-      "title": "기록 저장: Firebase 필드별 병합",
-      "what": "서버를 만들지 않고, 기기별 게스트 계정으로 최고 점수와 플레이 시간을 클라우드에 유지합니다.",
-      "how": "`UpdatePlayerData`가 서버의 현재 값을 읽은 뒤, 이름은 값이 있을 때만 · 최고 점수는 더 클 때만 · 플레이 시간은 누적하는 규칙으로 합쳐 저장합니다.",
-      "why": "60초마다 플레이 시간만 저장하는 일이 계속 일어나는데, 통째로 덮어쓰면 그때마다 최고 점수가 지워질 위험이 있기 때문입니다.",
-      "section": "5.2 핵심 기능 ①: 필드별 병합 저장",
-      "image": null
+      "why": "당시에는 DOTween 같은 트윈 라이브러리를 몰랐고, 이징이라는 것이 있다는 것만 알고 있어서 이징 함수(EaseOutElastic)는 AI를 활용해 만들었습니다.",
+      "section": "4.1 병렬 이동: 모든 타일을 동시에 출발시키고 전부 도착할 때까지 기다리기",
+      "image": {
+        "src": "images/slide_together.gif",
+        "w": 360,
+        "h": 642,
+        "caption": "여러 타일이 함께 미끄러진 뒤 합쳐짐 (4×4, 0.5배속)"
+      }
     },
     {
       "title": "칸과 타일 레이어 분리",
       "what": "숫자 타일을 GridLayout 칸의 자식이 아닌 별도 레이어에 두어, 타일이 칸 사이를 미끄러지는 연출을 만들 수 있게 했습니다.",
       "how": "칸은 GridLayout이 배치하고, 타일은 다른 부모(`moveSlotGroup`) 아래에서 칸 위치를 복사합니다. 칸 상태(Empty / Occupied)는 `MoveSlotToImmediate` 한 곳에서만 바꿉니다.",
       "why": "보드 데이터를 먼저 정하고 그 데이터를 기준으로 이동 처리를 만들어 칸과 타일을 나눠 두는 쪽이 자연스러웠고, GridLayout 안에서는 자식의 위치를 GridLayout이 정해 이동 연출을 만들기 어렵기 때문입니다.",
-      "section": "2.4 고민과 선택: 타일을 칸 안에 넣을 것인가, 따로 둘 것인가",
+      "section": "2.2.1 타일을 칸 안에 넣을 것인가, 따로 둘 것인가",
       "image": null
     }
   ],
@@ -93,11 +98,11 @@
     {
       "title": "같은 줄의 타일이 한 턴에 연달아 합쳐짐",
       "problem": "한 턴에 한 번만 합쳐져야 하는데, 같은 줄의 타일이 연달아 한꺼번에 합쳐짐",
-      "cause": "합치기 값이 연출 뒤에 바뀌어, 판정 중에는 이미 합쳐질 타일을 다른 타일이 같은 숫자로 봄 (3.4)",
+      "cause": "합치기 값이 연출 뒤에 바뀌어, 판정 중에는 이미 합쳐질 타일을 다른 타일이 같은 숫자로 봄 (3.3)",
       "solution": "`hasMergedThisTurn`을 판정 단계에서 두 타일 모두에 표시",
       "result": "한 턴에 한 번만 합쳐짐",
       "lesson": "",
-      "section": "6.1 문제 해결 (Troubleshooting)"
+      "section": "3.7 트러블슈팅: 같은 줄의 타일이 한 턴에 연달아 합쳐지는 문제"
     },
     {
       "title": "합쳐져 사라진 타일을 코루틴이 계속 움직임",
@@ -106,30 +111,30 @@
       "solution": "코루틴이 매 프레임 `null` 확인 후 종료, 완료 콜백은 반드시 호출. 합치기 전에 소스 타일을 이동 목록에서 제거",
       "result": "예외 없이 턴 종료",
       "lesson": "코루틴은 자기가 다루는 오브젝트보다 오래 살 수 있습니다. 수명이 다른 비동기 작업에는 매 프레임 유효성 검사와 \"끝났다는 신호\"를 확실히 보내는 처리가 필요합니다.",
-      "section": "6.1 문제 해결 (Troubleshooting)"
+      "section": "4.4 트러블슈팅: 합쳐져 사라진 타일을 코루틴이 계속 움직이는 문제"
     },
     {
-      "title": "최고 점수를 갱신하면 플레이 시간이 두 배가 됨",
-      "problem": "기록을 깰 때마다 서버의 누적 플레이 시간이 두 배로 늘어남",
-      "cause": "게임 오버 때 서버에서 받은 전체 데이터(`playTime` 포함)를 그대로 `UpdatePlayerData`에 넘김. 병합 규칙이 그 `playTime`을 서버 값에 한 번 더 더함",
-      "solution": "바꿀 필드만 넘김: `new PlayerData { high_score = score }`",
-      "result": "기록을 갱신해도 플레이 시간이 두 배가 되지 않음 (플레이로 확인)",
-      "lesson": "규칙을 저장 계층에 모은 것만으로는 부족하고, 잘못 쓰기 어려운 형태(예: 필드별 메서드)로 만들어야 한다는 것을 배웠습니다.",
-      "section": "6.3 아쉬운 점과 개선 계획"
+      "title": "막힌 뒤 한 번 더 스와이프해야 게임 오버가 뜸",
+      "problem": "마지막 빈칸이 새 타일로 채워져 막혀도 결과 화면이 바로 뜨지 않음",
+      "cause": "게임 오버 판정을 \"움직임이 없는 스와이프\" 때만 실행",
+      "solution": "새 타일을 만든 직후에도 `CheckGameOver()` 호출",
+      "result": "막히는 즉시 게임 오버 화면이 뜸 (플레이로 확인)",
+      "lesson": "",
+      "section": "3.8 트러블슈팅: 막힌 뒤 한 번 더 스와이프해야 게임 오버가 뜨는 문제"
     }
   ],
   "screenshots": [
     {
-      "src": "images/play_4x4.jpg",
-      "caption": "4×4 플레이 화면 (최고 점수 · 현재 점수 · 보드 크기 버튼)",
-      "w": 540,
-      "h": 960
+      "src": "images/play_4x4.gif",
+      "caption": "4×4 플레이 — 타일이 함께 미끄러지고, 합쳐질 때 톡 튀며 파티클이 터짐",
+      "w": 360,
+      "h": 642
     },
     {
-      "src": "images/gameover.jpg",
-      "caption": "게임 오버 화면",
-      "w": 540,
-      "h": 960
+      "src": "images/gameover_anim.gif",
+      "caption": "보드가 막히면 바로 게임 오버 화면이 뜸",
+      "w": 360,
+      "h": 642
     },
     {
       "src": "images/settings.jpg",
@@ -142,86 +147,166 @@
     "achieved": [
       "스와이프 → 판정 → 병렬 이동 → 합치기 → 새 타일 순서가 매 턴 지켜지고, 한 턴에 한 번만 합쳐지는 규칙이 4×4·8×8 모두에서 동작",
       "Galaxy Note 9 Android 빌드에서 4×4 한 판(보드 가득 16타일) 평균 29.9fps · 1초 구간 최저 26.9fps (상한 30fps). 8×8은 측정하지 않음",
-      "트윈 라이브러리 없이 병렬 이동, 탄성 스케일, 파티클·동물 소리 피드백",
-      "기기별 자동 로그인, 최고 점수와 누적 플레이 시간을 클라우드에 저장 (Android 기기에서 동작)"
+      "트윈 라이브러리 없이 병렬 이동, 탄성 스케일, 파티클·동물 소리 피드백"
     ],
     "regrets": [
       "`Game_System` 1,167줄 한 클래스",
       "칸 조회가 매번 전체 순회",
-      "기기 ID 식별, DB 보안 규칙 개방",
-      "UID 발급이 원자적이지 않음"
+      "시작 버튼 전부터 Game 상태",
+      "프리팹 자식 순서에 의존"
     ],
     "plans": [
-      "입력 / 보드 판정(순수 C#) / 연출 / 저장 연동으로 분리. 판정을 순수 클래스로 빼면 단위 테스트도 가능",
+      "입력 / 보드 판정(순수 C#) / 연출로 분리. 판정을 순수 클래스로 빼면 단위 테스트도 가능",
       "판정 시작 때 `Move_Slot[,]` 배열을 만들어 바로 조회",
-      "Firebase 익명 인증으로 UID 발급, 보안 규칙을 `auth.uid` 기준으로 제한, `Delete()` 제거",
-      "`RunTransaction` 사용, 또는 Auth UID로 대체"
+      "상태 변경을 `StartGame()` 한 곳으로 모으고, 보드 생성은 상태를 건드리지 않게 분리. 리셋은 Main으로 돌아가게",
+      "`[SerializeField]` 직접 참조로 교체"
     ],
-    "section": "6. 결과 · 회고"
+    "section": "5. 회고"
   },
   "deck": {
     "chapters": [
       {
         "key": "overview",
-        "title": "프로젝트 개요",
+        "title": "개요",
         "sectionPath": [
-          "1. 프로젝트 개요"
+          "1. 개요"
         ]
       },
       {
         "key": "arch",
-        "title": "전체 구조",
+        "title": "칸과 타일을 어떻게 나눠 둘 것인가",
         "sectionPath": [
-          "2. 전체 구조"
+          "2. 칸과 타일을 어떻게 나눠 둘 것인가"
         ]
       },
       {
         "key": "turn",
-        "title": "시스템 ① 턴 처리: 이동·합치기",
+        "title": "한 턴이 정확하게 돌아가게 하려면",
         "sectionPath": [
-          "3. 시스템 ① 턴 처리: 이동·합치기 ★"
+          "3. 한 턴이 정확하게 돌아가게 하려면"
         ]
       },
       {
         "key": "fx",
-        "title": "시스템 ② 연출: 병렬 이동·이징",
+        "title": "여러 타일이 함께 미끄러지고 톡 튀게 하려면",
         "sectionPath": [
-          "4. 시스템 ② 연출: 병렬 이동·이징"
-        ]
-      },
-      {
-        "key": "save",
-        "title": "시스템 ③ 기록 저장: Firebase",
-        "sectionPath": [
-          "5. 시스템 ③ 기록 저장: Firebase"
+          "4. 여러 타일이 함께 미끄러지고 톡 튀게 하려면"
         ]
       }
     ],
     "slides": [
       {
-        "key": "why",
+        "key": "what",
         "chapter": "overview",
-        "layout": "overview",
+        "layout": "visual",
         "tab": "개요",
         "title": {
-          "text": "1.2 왜, 무엇에 집중했나 (Why)",
+          "text": "1.1 게임 소개",
           "verbatim": true
         },
         "lead": {
-          "text": "2048은 규칙은 단순하지만, 스와이프 한 번에 이동·합치기·연출·새 타일 생성이 한꺼번에 일어납니다.",
+          "text": "「Meow2048」은 고전 퍼즐 2048을 모바일용으로 만든 2D 캐주얼 퍼즐입니다.",
           "verbatim": true
         },
         "sectionPath": [
-          "1. 프로젝트 개요",
-          "1.2 왜, 무엇에 집중했나 (Why)"
+          "1. 개요",
+          "1.1 게임 소개"
         ],
-        "points": [
+        "points": [],
+        "visuals": [
           {
-            "label": "",
-            "text": "그래서 처음부터 \"보드 데이터를 먼저 끝까지 계산하고, 화면은 그 결과를 따라간다\"는 원칙으로 턴을 설계했습니다.",
-            "verbatim": true
+            "kind": "image",
+            "src": "images/play_4x4.gif",
+            "w": 360,
+            "h": 642,
+            "caption": {
+              "text": "4×4 플레이 — 타일이 함께 미끄러지고, 합쳐질 때 톡 튀며 파티클이 터짐",
+              "verbatim": true
+            }
+          },
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "flowchart TB"
           }
+        ]
+      },
+      {
+        "key": "play",
+        "chapter": "overview",
+        "layout": "screens",
+        "tab": "결과",
+        "title": {
+          "text": "1.1 게임 소개",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "1. 개요",
+          "1.1 게임 소개"
         ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/title.jpg",
+            "w": 540,
+            "h": 960,
+            "caption": {
+              "text": "Meow2048 타이틀 화면",
+              "verbatim": true
+            }
+          },
+          {
+            "kind": "image",
+            "src": "images/play_8x8.jpg",
+            "w": 404,
+            "h": 720,
+            "caption": {
+              "text": "8×8 보드 (시작 직후)",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "rules",
+        "chapter": "overview",
+        "layout": "full",
+        "tab": "개요",
+        "title": {
+          "text": "1.1 게임 소개",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "1. 개요",
+          "1.1 게임 소개"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "구분|규칙"
+          }
+        ]
+      },
+      {
+        "key": "why",
+        "chapter": "overview",
+        "layout": "full",
+        "tab": "개요",
+        "title": {
+          "text": "1.2 목표",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "1. 개요",
+          "1.2 목표"
+        ],
+        "points": [],
         "visuals": [
           {
             "kind": "table",
@@ -236,34 +321,44 @@
         "layout": "visual",
         "tab": "구조",
         "title": {
-          "text": "2.1 아키텍처",
+          "text": "2. 칸과 타일을 어떻게 나눠 둘 것인가",
           "verbatim": true
         },
         "lead": {
-          "text": "씬은 하나이고, `Game_System`이 상태(Main / Game / Result)·입력·턴 처리·연출·점수를 모두 맡습니다.",
+          "text": "씬은 하나이고, Game_System이 상태(Main / Game / Result)·입력·턴 처리·연출·점수를 모두 맡습니다.",
           "verbatim": true
         },
         "sectionPath": [
-          "2. 전체 구조",
-          "2.1 아키텍처"
+          "2. 칸과 타일을 어떻게 나눠 둘 것인가"
         ],
-        "points": [
-          {
-            "label": "칸(프레임)",
-            "text": "`GridLayoutGroup` 아래에 깔린 배경 칸. 각 칸의 `Slot_Status`(Empty / Occupied)를 `board[x, y]` 배열로 들고 있습니다.",
-            "verbatim": true
-          },
-          {
-            "label": "타일(숫자)",
-            "text": "별도의 부모(`moveSlotGroup`) 아래에 있는 `Move_Slot`. 값(`slotNumber`)과 그리드 좌표(`gridX`, `gridY`)를 들고, 화면 위치는 해당 칸의 위치를 복사해 씁니다.",
-            "verbatim": true
-          }
-        ],
+        "points": [],
         "visuals": [
           {
             "kind": "mermaid",
             "n": 1,
             "fp": "flowchart LR"
+          }
+        ]
+      },
+      {
+        "key": "roles",
+        "chapter": "arch",
+        "layout": "full",
+        "tab": "구조",
+        "title": {
+          "text": "2. 칸과 타일을 어떻게 나눠 둘 것인가",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "2. 칸과 타일을 어떻게 나눠 둘 것인가"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "클래스|하는 일|하지 않는 일"
           }
         ]
       },
@@ -273,24 +368,15 @@
         "layout": "visual",
         "tab": "흐름",
         "title": {
-          "text": "2.2 상태 흐름",
+          "text": "2.1 상태 흐름: 보드가 준비되면 Game으로",
           "verbatim": true
         },
-        "lead": {
-          "text": "상태 값은 보드가 준비됐는지를 기준으로 바뀝니다.",
-          "verbatim": true
-        },
+        "lead": null,
         "sectionPath": [
-          "2. 전체 구조",
-          "2.2 상태 흐름"
+          "2. 칸과 타일을 어떻게 나눠 둘 것인가",
+          "2.1 상태 흐름: 보드가 준비되면 Game으로"
         ],
-        "points": [
-          {
-            "label": "",
-            "text": "그래서 시작 버튼은 상태를 바꾸지 않고 첫 타일을 만드는 역할이고, 리셋은 Main으로 잠깐 돌렸다가 같은 프레임에 다시 Game이 됩니다.",
-            "verbatim": true
-          }
-        ],
+        "points": [],
         "visuals": [
           {
             "kind": "mermaid",
@@ -300,40 +386,28 @@
         ]
       },
       {
-        "key": "play",
+        "key": "layer-code",
         "chapter": "arch",
-        "layout": "screens",
-        "tab": "결과",
+        "layout": "code",
+        "tab": "구현",
         "title": {
-          "text": "2.2 상태 흐름",
+          "text": "2.2 타일은 칸 밖에서 칸 위치만 따라가기",
           "verbatim": true
         },
-        "lead": null,
+        "lead": {
+          "text": "칸은 GridLayoutGroup이 배치하고, 타일은 다른 부모(moveSlotGroup) 아래에서 칸의 위치만 복사합니다.",
+          "verbatim": true
+        },
         "sectionPath": [
-          "2. 전체 구조",
-          "2.2 상태 흐름"
+          "2. 칸과 타일을 어떻게 나눠 둘 것인가",
+          "2.2 타일은 칸 밖에서 칸 위치만 따라가기"
         ],
         "points": [],
         "visuals": [
           {
-            "kind": "image",
-            "src": "images/play_4x4.jpg",
-            "w": 540,
-            "h": 960,
-            "caption": {
-              "text": "4×4 플레이 화면 (최고 점수 · 현재 점수 · 보드 크기 버튼)",
-              "verbatim": true
-            }
-          },
-          {
-            "kind": "image",
-            "src": "images/gameover.jpg",
-            "w": 540,
-            "h": 960,
-            "caption": {
-              "text": "게임 오버 화면",
-              "verbatim": true
-            }
+            "kind": "code",
+            "n": 1,
+            "fp": "// Game_System.cs:201 InitializeSlots — 칸은 GridLayout이 배치"
           }
         ]
       },
@@ -343,26 +417,16 @@
         "layout": "full",
         "tab": "선택",
         "title": {
-          "text": "2.4 고민과 선택: 타일을 칸 안에 넣을 것인가, 따로 둘 것인가",
+          "text": "2.2.1 타일을 칸 안에 넣을 것인가, 따로 둘 것인가",
           "verbatim": true
         },
         "lead": null,
         "sectionPath": [
-          "2. 전체 구조",
-          "2.4 고민과 선택: 타일을 칸 안에 넣을 것인가, 따로 둘 것인가"
+          "2. 칸과 타일을 어떻게 나눠 둘 것인가",
+          "2.2 타일은 칸 밖에서 칸 위치만 따라가기",
+          "2.2.1 타일을 칸 안에 넣을 것인가, 따로 둘 것인가"
         ],
-        "points": [
-          {
-            "label": "[최종 결정]",
-            "text": "먼저 보드 데이터(칸의 상태 · 타일의 값과 좌표)를 정하고, 그 데이터를 기준으로 이동 처리를 만들었기 때문에 칸과 타일을 나눠 두는 쪽이 자연스러웠습니다.",
-            "verbatim": true
-          },
-          {
-            "label": "[감수한 대가]",
-            "text": "타일이 움직일 때마다 원래 칸은 Empty, 새 칸은 Occupied로 직접 바꿔야 합니다.",
-            "verbatim": true
-          }
-        ],
+        "points": [],
         "visuals": [
           {
             "kind": "table",
@@ -372,12 +436,38 @@
         ]
       },
       {
+        "key": "board-size",
+        "chapter": "arch",
+        "layout": "full",
+        "tab": "구현",
+        "title": {
+          "text": "2.3 보드 크기: 4×4 / 8×8",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "크기 버튼을 누르면 보드를 지우고 다시 만듭니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "2. 칸과 타일을 어떻게 나눠 둘 것인가",
+          "2.3 보드 크기: 4×4 / 8×8"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "값|4×4|8×8"
+          }
+        ]
+      },
+      {
         "key": "turn-flow",
         "chapter": "turn",
-        "layout": "visual",
+        "layout": "full",
         "tab": "흐름",
         "title": {
-          "text": "3.1 개요",
+          "text": "3. 한 턴이 정확하게 돌아가게 하려면",
           "verbatim": true
         },
         "lead": {
@@ -385,16 +475,9 @@
           "verbatim": true
         },
         "sectionPath": [
-          "3. 시스템 ① 턴 처리: 이동·합치기 ★",
-          "3.1 개요"
+          "3. 한 턴이 정확하게 돌아가게 하려면"
         ],
-        "points": [
-          {
-            "label": "",
-            "text": "한 턴은 아래 순서로 진행되고, 판정(1)은 그 자리에서 끝까지 계산하고, 연출(2~3)은 그 결과를 따라갑니다.",
-            "verbatim": true
-          }
-        ],
+        "points": [],
         "visuals": [
           {
             "kind": "mermaid",
@@ -404,39 +487,86 @@
         ]
       },
       {
-        "key": "merge-once",
+        "key": "swipe",
         "chapter": "turn",
-        "layout": "visual",
+        "layout": "full",
         "tab": "구현",
         "title": {
-          "text": "3.4 핵심 기능 ③: 한 턴에 한 번만 합치기",
+          "text": "3.1 스와이프 입력: 드래그를 네 방향으로 바꾸기",
           "verbatim": true
         },
         "lead": {
-          "text": "합치기는 예약만 하고 값은 바꾸지 않습니다.",
+          "text": "드래그를 스와이프로 바꾸는 규칙은 네 가지입니다.",
           "verbatim": true
         },
         "sectionPath": [
-          "3. 시스템 ① 턴 처리: 이동·합치기 ★",
-          "3.4 핵심 기능 ③: 한 턴에 한 번만 합치기"
+          "3. 한 턴이 정확하게 돌아가게 하려면",
+          "3.1 스와이프 입력: 드래그를 네 방향으로 바꾸기"
         ],
-        "points": [
-          {
-            "label": "",
-            "text": "값은 연출이 끝난 뒤 `ProcessMerges`에서 바뀝니다.",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "그래서 판정 도중에는 합쳐질 타일의 값이 아직 2로 남아 있고, 이때 `hasMergedThisTurn`이 없으면 세 번째 타일이 같은 타일에 또 합쳐집니다.",
-            "verbatim": true
-          }
-        ],
+        "points": [],
         "visuals": [
           {
-            "kind": "mermaid",
+            "kind": "table",
             "n": 1,
-            "fp": "flowchart LR"
+            "fp": "값|수치|이유"
+          }
+        ]
+      },
+      {
+        "key": "move-step",
+        "chapter": "turn",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "3.2 이동 판정: 한 칸씩 밀기를 반복",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 한 턴이 정확하게 돌아가게 하려면",
+          "3.2 이동 판정: 한 칸씩 밀기를 반복"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "// Game_System.cs:724 ProcessMoveWithAnimation (발췌)"
+          }
+        ]
+      },
+      {
+        "key": "move-rule",
+        "chapter": "turn",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "3.2 이동 판정: 한 칸씩 밀기를 반복",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "한 칸 앞을 보고 내리는 판단은 세 가지입니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "3. 한 턴이 정확하게 돌아가게 하려면",
+          "3.2 이동 판정: 한 칸씩 밀기를 반복"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "앞 칸|처리"
+          },
+          {
+            "kind": "code",
+            "n": 2,
+            "fp": "// Game_System.cs:837 ProcessSlotsLineStepWithAnimation (발췌)",
+            "lines": [
+              13,
+              27
+            ]
           }
         ]
       },
@@ -446,26 +576,16 @@
         "layout": "full",
         "tab": "선택",
         "title": {
-          "text": "3.6 고민과 선택: 보드 데이터를 언제 바꿀 것인가",
+          "text": "3.2.1 보드 데이터를 언제 바꿀 것인가",
           "verbatim": true
         },
         "lead": null,
         "sectionPath": [
-          "3. 시스템 ① 턴 처리: 이동·합치기 ★",
-          "3.6 고민과 선택: 보드 데이터를 언제 바꿀 것인가"
+          "3. 한 턴이 정확하게 돌아가게 하려면",
+          "3.2 이동 판정: 한 칸씩 밀기를 반복",
+          "3.2.1 보드 데이터를 언제 바꿀 것인가"
         ],
-        "points": [
-          {
-            "label": "[최종 결정]",
-            "text": "스와이프 한 번에 타일 수십 개(8×8은 최대 64개)가 동시에 움직이는데, 각 타일이 언제 도착하느냐에 판정이 기대면 규칙이 화면 속도에 따라 달라지기 때문입니다.",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "\"데이터가 먼저 맞고, 화면은 따라간다\"를 원칙으로 두었습니다.",
-            "verbatim": true
-          }
-        ],
+        "points": [],
         "visuals": [
           {
             "kind": "table",
@@ -480,26 +600,16 @@
         "layout": "full",
         "tab": "선택",
         "title": {
-          "text": "3.7 고민과 선택: 한 줄을 한 번에 계산할 것인가, 한 칸씩 밀 것인가",
+          "text": "3.2.2 한 줄을 한 번에 계산할 것인가, 한 칸씩 밀 것인가",
           "verbatim": true
         },
         "lead": null,
         "sectionPath": [
-          "3. 시스템 ① 턴 처리: 이동·합치기 ★",
-          "3.7 고민과 선택: 한 줄을 한 번에 계산할 것인가, 한 칸씩 밀 것인가"
+          "3. 한 턴이 정확하게 돌아가게 하려면",
+          "3.2 이동 판정: 한 칸씩 밀기를 반복",
+          "3.2.2 한 줄을 한 번에 계산할 것인가, 한 칸씩 밀 것인가"
         ],
-        "points": [
-          {
-            "label": "[최종 결정]",
-            "text": "2048 규칙을 그대로 옮기는 것이 목표였고, 무엇보다 여러 타일이 연속으로 와다다 밀릴 때 순서가 섞이지 않게 하고 싶었습니다.",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "앞쪽 타일부터 처리하므로 뒤 타일은 항상 앞 타일이 자리를 잡은 뒤에 움직입니다.",
-            "verbatim": true
-          }
-        ],
+        "points": [],
         "visuals": [
           {
             "kind": "table",
@@ -509,25 +619,164 @@
         ]
       },
       {
-        "key": "troubleshoot",
+        "key": "merge-once",
         "chapter": "turn",
-        "layout": "problem",
-        "tab": "문제 해결",
+        "layout": "visual",
+        "tab": "흐름",
         "title": {
-          "text": "6.1 문제 해결 (Troubleshooting)",
+          "text": "3.3 한 턴에 한 번만 합치기",
           "verbatim": true
         },
         "lead": null,
         "sectionPath": [
-          "6. 결과 · 회고",
-          "6.1 문제 해결 (Troubleshooting)"
+          "3. 한 턴이 정확하게 돌아가게 하려면",
+          "3.3 한 턴에 한 번만 합치기"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "mermaid",
+            "n": 1,
+            "fp": "flowchart LR"
+          },
+          {
+            "kind": "image",
+            "src": "images/merge_once.gif",
+            "w": 360,
+            "h": 642,
+            "caption": {
+              "text": "한 턴에 한 번만 합치기 — 왼쪽 줄의 2 · 2 · 4를 아래로 밀면 2 + 2만 합쳐져 4 · 4가 됨 (0.5배속)",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "new-tile-choice",
+        "chapter": "turn",
+        "layout": "full",
+        "tab": "선택",
+        "title": {
+          "text": "3.4.1 새 타일을 2와 4 중 무엇으로 만들 것인가",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 한 턴이 정확하게 돌아가게 하려면",
+          "3.4 새 타일과 합치기 상한",
+          "3.4.1 새 타일을 2와 4 중 무엇으로 만들 것인가"
         ],
         "points": [],
         "visuals": [
           {
             "kind": "table",
             "n": 1,
-            "fp": "증상|원인|해결|결과"
+            "fp": "|[A] 2 또는 4 (원작)|[B] 항상 2 ✓"
+          }
+        ]
+      },
+      {
+        "key": "gameover",
+        "chapter": "turn",
+        "layout": "code",
+        "tab": "구현",
+        "title": {
+          "text": "3.5 게임 오버 판정",
+          "verbatim": true
+        },
+        "lead": {
+          "text": "게임 오버는 두 조건이 모두 참일 때입니다.",
+          "verbatim": true
+        },
+        "sectionPath": [
+          "3. 한 턴이 정확하게 돌아가게 하려면",
+          "3.5 게임 오버 판정"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "// Game_System.cs:1123 CheckGameOver (발췌)"
+          },
+          {
+            "kind": "image",
+            "src": "images/gameover_anim.gif",
+            "w": 360,
+            "h": 642,
+            "caption": {
+              "text": "보드가 막히면 바로 게임 오버 화면이 뜸",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "ts-input",
+        "chapter": "turn",
+        "layout": "problem",
+        "tab": "문제 해결",
+        "title": {
+          "text": "3.6 트러블슈팅: 연출 도중 다음 스와이프가 들어와 두 턴이 섞이는 문제",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 한 턴이 정확하게 돌아가게 하려면",
+          "3.6 트러블슈팅: 연출 도중 다음 스와이프가 들어와 두 턴이 섞이는 문제"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "단계|내용"
+          }
+        ]
+      },
+      {
+        "key": "troubleshoot",
+        "chapter": "turn",
+        "layout": "problem",
+        "tab": "문제 해결",
+        "title": {
+          "text": "3.7 트러블슈팅: 같은 줄의 타일이 한 턴에 연달아 합쳐지는 문제",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 한 턴이 정확하게 돌아가게 하려면",
+          "3.7 트러블슈팅: 같은 줄의 타일이 한 턴에 연달아 합쳐지는 문제"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "단계|내용"
+          }
+        ]
+      },
+      {
+        "key": "ts-gameover",
+        "chapter": "turn",
+        "layout": "problem",
+        "tab": "문제 해결",
+        "title": {
+          "text": "3.8 트러블슈팅: 막힌 뒤 한 번 더 스와이프해야 게임 오버가 뜨는 문제",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "3. 한 턴이 정확하게 돌아가게 하려면",
+          "3.8 트러블슈팅: 막힌 뒤 한 번 더 스와이프해야 게임 오버가 뜨는 문제"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "table",
+            "n": 1,
+            "fp": "단계|내용"
           }
         ]
       },
@@ -537,7 +786,7 @@
         "layout": "full",
         "tab": "개요",
         "title": {
-          "text": "4.1 개요",
+          "text": "4. 여러 타일이 함께 미끄러지고 톡 튀게 하려면",
           "verbatim": true
         },
         "lead": {
@@ -545,21 +794,9 @@
           "verbatim": true
         },
         "sectionPath": [
-          "4. 시스템 ② 연출: 병렬 이동·이징",
-          "4.1 개요"
+          "4. 여러 타일이 함께 미끄러지고 톡 튀게 하려면"
         ],
-        "points": [
-          {
-            "label": "",
-            "text": "이동은 빠르게, 생성·합치기는 크게 튀게 나눴습니다.",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "이동은 다음 입력까지의 대기 시간이라 짧고 정직해야 하고, 합치기는 보상이라 과장해도 된다고 봤습니다.",
-            "verbatim": true
-          }
-        ],
+        "points": [],
         "visuals": [
           {
             "kind": "table",
@@ -571,70 +808,82 @@
       {
         "key": "single-move",
         "chapter": "fx",
-        "layout": "overview",
+        "layout": "code",
         "tab": "구현",
         "title": {
-          "text": "4.2 핵심 기능 ①: 병렬 이동과 완료 대기",
+          "text": "4.1 병렬 이동: 모든 타일을 동시에 출발시키고 전부 도착할 때까지 기다리기",
+          "verbatim": true
+        },
+        "lead": null,
+        "sectionPath": [
+          "4. 여러 타일이 함께 미끄러지고 톡 튀게 하려면",
+          "4.1 병렬 이동: 모든 타일을 동시에 출발시키고 전부 도착할 때까지 기다리기"
+        ],
+        "points": [],
+        "visuals": [
+          {
+            "kind": "code",
+            "n": 1,
+            "fp": "// Game_System.cs:520 AnimateSlots — 모든 타일을 동시에 출발시키고 전부 도착할"
+          },
+          {
+            "kind": "image",
+            "src": "images/slide_together.gif",
+            "w": 360,
+            "h": 642,
+            "caption": {
+              "text": "여러 타일이 함께 미끄러진 뒤 합쳐짐 (4×4, 0.5배속)",
+              "verbatim": true
+            }
+          }
+        ]
+      },
+      {
+        "key": "ease",
+        "chapter": "fx",
+        "layout": "visual",
+        "tab": "구현",
+        "title": {
+          "text": "4.2 탄성 스케일: 목표를 살짝 넘었다가 출렁이며 멈추기 (AI 활용)",
           "verbatim": true
         },
         "lead": {
-          "text": "이동 시간은 모든 타일이 같은 `moveDuration`(씬 설정값 0.15초)입니다.",
+          "text": "새 타일은 0에서 \"톡\" 튀어나오고, 합쳐진 타일은 1.2배에서 출렁이며 원래 크기로 돌아옵니다.",
           "verbatim": true
         },
         "sectionPath": [
-          "4. 시스템 ② 연출: 병렬 이동·이징",
-          "4.2 핵심 기능 ①: 병렬 이동과 완료 대기"
+          "4. 여러 타일이 함께 미끄러지고 톡 튀게 하려면",
+          "4.2 탄성 스케일: 목표를 살짝 넘었다가 출렁이며 멈추기 (AI 활용)"
         ],
-        "points": [
+        "points": [],
+        "visuals": [
           {
-            "label": "",
-            "text": "멀리 가는 타일은 빠르게, 가까운 타일은 느리게 움직여 모두 동시에 도착합니다.",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "턴 코루틴(`OnSwipeCoroutine`)은 이 대기가 끝난 뒤에 합치기를 확정하고 새 타일을 만듭니다.",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "그래서 화면에서는 항상 \"다 움직인 다음 합쳐지고, 그다음 새 타일이 나온다\"는 순서가 지켜집니다.",
-            "verbatim": true
+            "kind": "image",
+            "src": "images/ease_out_elastic.png",
+            "w": 900,
+            "h": 540,
+            "caption": {
+              "text": "EaseOutElastic 곡선 — 코드의 식으로 그린 그래프 (최대 1.37, t = 0.14)",
+              "verbatim": true
+            }
           }
-        ],
-        "visuals": []
+        ]
       },
       {
         "key": "volume",
         "chapter": "fx",
         "layout": "visual",
-        "tab": "결과",
+        "tab": "구현",
         "title": {
-          "text": "4.4 핵심 기능 ③: 사운드·볼륨",
+          "text": "4.3 사운드 · 볼륨: 생성되는 타일이 스스로 볼륨 매니저에 등록하기",
           "verbatim": true
         },
         "lead": null,
         "sectionPath": [
-          "4. 시스템 ② 연출: 병렬 이동·이징",
-          "4.4 핵심 기능 ③: 사운드·볼륨"
+          "4. 여러 타일이 함께 미끄러지고 톡 튀게 하려면",
+          "4.3 사운드 · 볼륨: 생성되는 타일이 스스로 볼륨 매니저에 등록하기"
         ],
-        "points": [
-          {
-            "label": "BGM",
-            "text": "상태별 3종(타이틀 / 인게임 / 게임 오버)을 `Game_System.Update`에서 상태에 맞게 전환합니다.",
-            "verbatim": true
-          },
-          {
-            "label": "SFX 자동 등록",
-            "text": "타일은 계속 생성·파괴되므로 볼륨 매니저에 미리 등록해 둘 수 없습니다.",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "그래서 타일의 `SFX_Control`이 활성화될 때 스스로 `Setting_Manager`에 등록하고, 비활성화될 때 해제합니다.",
-            "verbatim": true
-          }
-        ],
+        "points": [],
         "visuals": [
           {
             "kind": "image",
@@ -645,157 +894,62 @@
               "text": "설정 팝업 — Sound Fx / Music 볼륨 슬라이더",
               "verbatim": true
             }
+          },
+          {
+            "kind": "image",
+            "src": "images/bgm_inspector.png",
+            "w": 793,
+            "h": 486,
+            "caption": {
+              "text": "Game_System 인스펙터 — 상태별 BGM 3종(타이틀 · 인게임 · 게임 오버)",
+              "verbatim": true
+            }
           }
         ]
       },
       {
-        "key": "tween-choice",
+        "key": "ts-coroutine",
         "chapter": "fx",
-        "layout": "full",
-        "tab": "선택",
+        "layout": "problem",
+        "tab": "문제 해결",
         "title": {
-          "text": "4.5 고민과 선택: 트윈 라이브러리를 쓸 것인가",
+          "text": "4.4 트러블슈팅: 합쳐져 사라진 타일을 코루틴이 계속 움직이는 문제",
           "verbatim": true
         },
         "lead": null,
         "sectionPath": [
-          "4. 시스템 ② 연출: 병렬 이동·이징",
-          "4.5 고민과 선택: 트윈 라이브러리를 쓸 것인가"
+          "4. 여러 타일이 함께 미끄러지고 톡 튀게 하려면",
+          "4.4 트러블슈팅: 합쳐져 사라진 타일을 코루틴이 계속 움직이는 문제"
         ],
-        "points": [
-          {
-            "label": "[최종 결정]",
-            "text": "라이브러리를 익히기보다 필요한 함수 몇 개를 직접 만들면서 원리를 이해하는 쪽이 이 프로젝트의 목적(학습)에 맞다고 판단했습니다.",
-            "verbatim": true
-          },
-          {
-            "label": "[감수한 대가]",
-            "text": "연출 종류가 늘어나는 프로젝트라면 라이브러리를 먼저 검토하겠습니다.",
-            "verbatim": true
-          }
-        ],
+        "points": [],
         "visuals": [
           {
             "kind": "table",
             "n": 1,
-            "fp": "|[A] 트윈 라이브러리|[B] 코루틴 + 이징 직접 구현 ✓"
+            "fp": "단계|내용"
           }
         ]
       },
       {
-        "key": "db-tree",
-        "chapter": "save",
-        "layout": "visual",
-        "tab": "구조",
+        "key": "ts-particle",
+        "chapter": "fx",
+        "layout": "problem",
+        "tab": "문제 해결",
         "title": {
-          "text": "5.1 개요",
-          "verbatim": true
-        },
-        "lead": {
-          "text": "서버를 따로 만들지 않고, 기기 ID로 플레이어를 찾고, 처음 온 기기에는 순번 UID를 발급합니다.",
-          "verbatim": true
-        },
-        "sectionPath": [
-          "5. 시스템 ③ 기록 저장: Firebase",
-          "5.1 개요"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "mermaid",
-            "n": 1,
-            "fp": "flowchart TB"
-          }
-        ]
-      },
-      {
-        "key": "save-flow",
-        "chapter": "save",
-        "layout": "visual",
-        "tab": "흐름",
-        "title": {
-          "text": "5.1 개요",
-          "verbatim": true
-        },
-        "lead": {
-          "text": "앱이 시작되면 Firebase 초기화 → 자동 게스트 로그인 → 최고 점수 표시까지 진행됩니다.",
-          "verbatim": true
-        },
-        "sectionPath": [
-          "5. 시스템 ③ 기록 저장: Firebase",
-          "5.1 개요"
-        ],
-        "points": [],
-        "visuals": [
-          {
-            "kind": "mermaid",
-            "n": 2,
-            "fp": "sequenceDiagram"
-          }
-        ]
-      },
-      {
-        "key": "merge-save",
-        "chapter": "save",
-        "layout": "overview",
-        "tab": "구현",
-        "title": {
-          "text": "5.2 핵심 기능 ①: 필드별 병합 저장",
-          "verbatim": true
-        },
-        "lead": {
-          "text": "저장할 때 넘긴 객체로 서버 데이터를 통째로 덮어쓰지 않고, 서버의 현재 값을 읽은 뒤 필드마다 정해진 규칙으로 합쳐서 저장합니다.",
-          "verbatim": true
-        },
-        "sectionPath": [
-          "5. 시스템 ③ 기록 저장: Firebase",
-          "5.2 핵심 기능 ①: 필드별 병합 저장"
-        ],
-        "points": [
-          {
-            "label": "",
-            "text": "호출하는 쪽은 바꾸고 싶은 필드만 담아 넘깁니다.",
-            "verbatim": true
-          },
-          {
-            "label": "",
-            "text": "60초 저장은 `new PlayerData { playTime = 60f }`만 넘기므로 `high_score`가 0이어도 최고 점수가 지워지지 않습니다.",
-            "verbatim": true
-          }
-        ],
-        "visuals": []
-      },
-      {
-        "key": "save-choice",
-        "chapter": "save",
-        "layout": "full",
-        "tab": "선택",
-        "title": {
-          "text": "5.4 고민과 선택: 기록을 어디에, 어떻게 저장할 것인가",
+          "text": "4.5 트러블슈팅: 합치기 때 파티클이 재생되지 않는 문제",
           "verbatim": true
         },
         "lead": null,
         "sectionPath": [
-          "5. 시스템 ③ 기록 저장: Firebase",
-          "5.4 고민과 선택: 기록을 어디에, 어떻게 저장할 것인가"
+          "4. 여러 타일이 함께 미끄러지고 톡 튀게 하려면",
+          "4.5 트러블슈팅: 합치기 때 파티클이 재생되지 않는 문제"
         ],
-        "points": [
-          {
-            "label": "[최종 결정]",
-            "text": "60초마다 플레이 시간만 저장하는 일이 계속 일어나는데, 덮어쓰기라면 그때마다 최고 점수가 지워질 위험이 있습니다.",
-            "verbatim": true
-          },
-          {
-            "label": "[감수한 대가]",
-            "text": "실제로 게임 오버 때 최고 점수를 저장하는 코드가 이 약속을 어기고 서버에서 받은 전체 데이터를 넘기고 있어, 플레이 시간이 두 배가 되는 버그가 있었습니다.",
-            "verbatim": true
-          }
-        ],
+        "points": [],
         "visuals": [
           {
             "kind": "table",
             "n": 1,
-            "fp": "|[A] 통째로 덮어쓰기|[B] 필드별 병합 ✓"
+            "fp": "단계|내용"
           }
         ]
       }

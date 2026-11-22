@@ -98,15 +98,6 @@
       ]
     },
     {
-      "name": "Firebase",
-      "evidence": [
-        {
-          "text": "Realtime Database 필드별 병합 저장으로 최고 점수·누적 플레이 시간 유지",
-          "project": "06-meow2048"
-        }
-      ]
-    },
-    {
       "name": "Android",
       "evidence": [
         {
