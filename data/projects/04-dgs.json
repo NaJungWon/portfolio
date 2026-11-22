@@ -39,8 +39,12 @@
   ],
   "links": {
     "github": "https://github.com/NaJungWon/BGS_Project",
-    "video": "https://youtu.be/vwIEpD6847I",
+    "video": "https://youtube.com/shorts/De9RPDw-PVw",
     "extra": [
+      {
+        "label": "전체 영상",
+        "url": "https://youtu.be/vwIEpD6847I"
+      },
       {
         "label": "실행 파일",
         "url": "https://drive.google.com/file/d/171ISSnbpYfknuxBB_edwc7VileEMU4aD/view?usp=drive_link"

@@ -38,15 +38,19 @@
   ],
   "links": {
     "github": "https://github.com/NaJungWon/Inventory_Player",
-    "video": "https://youtu.be/kDzTGrIM8M0",
+    "video": "https://youtube.com/shorts/Rnicbd1Siko",
     "extra": [
+      {
+        "label": "전체 영상",
+        "url": "https://youtu.be/kDzTGrIM8M0"
+      },
       {
         "label": "Windows 실행 파일",
         "url": "https://drive.google.com/file/d/1EXKoKSK5ZjoUS6K-guy7PDsMTsIcnTyK/view"
       },
       {
         "label": "Android 실행 파일",
-        "url": "https://drive.google.com/file/d/1oe80GqxYBO_P2ZSlpxeFSt-d2LHG5U4L/view?usp=drive_link"
+        "url": "https://drive.google.com/file/d/1oe80GqxYBO_P2ZSlpxeFSt-d2LHG5U4L/view"
       }
     ]
   },
