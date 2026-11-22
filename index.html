@@ -8,7 +8,7 @@
 <link rel="icon" href="data:," />
 <!-- [수강생 변경] 소개·이력 / 자기소개서 / 포트폴리오 3패널 페이지(Portfolio_Sample 디자인).
      소개·이력·자기소개서 글은 이 파일에 그대로, 기술 스택 · 프로젝트 내용은 data/portfolio.json · data/projects/*.json에서 읽습니다.
-     슬라이드는 project.html?p=<폴더>, 상세 문서는 doc.html?p=<폴더>, 인쇄용(A4 PDF) 포트폴리오는 PRINT_PAGE. -->
+     슬라이드는 project.html?p=<폴더>, 상세 문서는 doc.html?p=<폴더>. -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/poppins@5.2.5/latin-600.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/poppins@5.2.5/latin-800.css" />
@@ -381,9 +381,6 @@ dialog[open]{animation:pop .3s ease}
             <h2 class="title">프로젝트</h2>
             <p class="sub" style="margin-top:6px" id="pf-sub"></p>
           </div>
-          <div class="links">
-            <a class="btn primary" id="pf-site" href="#" target="_blank" rel="noopener">인쇄용 포트폴리오 ↗</a>
-          </div>
         </div>
         <div class="cards" id="cards"><p class="status">프로젝트를 불러오는 중…</p></div>
       </div>
@@ -400,9 +397,6 @@ dialog[open]{animation:pop .3s ease}
 <script src="assets/strings.js"></script>
 <script src="assets/common.js"></script>
 <script>
-/* 인쇄용(A4 PDF) 포트폴리오 페이지 */
-const PRINT_PAGE = 'portfolio.html';
-
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const { esc, inline: md, isUrl, t } = PF;
@@ -462,7 +456,7 @@ const LETTER = [
     '이러한 성향을 그대로 두기보다 <b>전체 시스템의 큰 틀을 먼저 정리하는 방식</b>으로 개발 방식을 조정했습니다. 핵심 구조와 흐름을 우선 설계한 뒤 세부 기능은 확장 가능하도록 구성하고, 이후 단계적으로 기능 추가나 편의성 개선, 최적화를 진행하고 있습니다.',
     '그 결과 다양한 요소를 함께 고려하는 저의 성향이 시스템 전반의 연결성과 확장성을 높이는 방향으로 작용하게 되었고, 현재는 변화에 유연하면서도 구조적으로 안정적인 개발을 진행할 수 있게 되었습니다.',
     '2D 모바일 프로젝트에서는 제한된 화면과 입력 환경을 고려해 UI와 게임 로직을 분리하고 불필요한 복잡도를 줄이는 방향으로 시스템을 설계했습니다. 또한 기능을 구현한 뒤 실제 플레이를 통해 불편한 조작이나 흐름이 발생하는 부분을 확인하고 구조를 수정하며 개선하는 과정을 반복했습니다.',
-    'Firebase 연동을 통해 사용자 진행 정보와 기록을 저장하고 동기화하여 모바일 환경에서도 안정적인 데이터 흐름을 구성한 경험이 있습니다. 또한 실제 모바일 기기에 빌드하여 직접 플레이하며 조작감과 UI 동작을 반복적으로 점검하고 개선했습니다. 이 과정에서 인벤토리와 퍼즐 시스템 등 핵심 기능을 구현했습니다.',
+    '실제 모바일 기기에 빌드하여 직접 플레이하며 조작감과 UI 동작을 반복적으로 점검하고 개선했습니다. 이 과정에서 인벤토리와 퍼즐 시스템 등 핵심 기능을 구현했습니다.',
     '3D 프로젝트에서는 다수의 적과 투사체가 동시에 등장하는 전투 환경을 고려해 <b>Queue 기반 오브젝트 풀링 구조</b>를 적용하여 객체 생성과 삭제로 인한 성능 저하를 최소화했습니다. 또한 캐릭터 이동과 전투 조작감을 중심으로 애니메이션과 카메라 연출을 함께 고려해 시스템을 구현하며 전투 흐름과 플레이 감각이 자연스럽게 이어지도록 설계했습니다.' ] },
   { n: '03', t: '확장', h: '직업 훈련에서의 실전', en: 'EXPANSION', p: [
     '직업 훈련 과정에서는 대학에서 프로젝트를 진행하던 방식과 다른 개발 환경을 경험했습니다. 대학에서는 한 학기 15주 동안 하나의 게임을 완성하는 흐름이었다면, 훈련 과정에서는 <b>2주가 되지 않는 기간</b> 안에 게임을 완성해야 했습니다. 짧은 기간 안에는 구현하고 싶은 모든 것을 담을 수 없기 때문에 게임의 핵심 요소를 먼저 정의하고 우선순위에 따라 구현하는 방식을 자연스럽게 학습하게 되었습니다. 기획과 구현, 플레이 테스트와 개선으로 이어지는 사이클을 짧게 반복하며 완성도는 기간이 아니라 검증의 반복에서 나온다는 것을 배웠습니다.',
@@ -499,7 +493,6 @@ function showCh(i) {
 showCh(0);
 
 /* ─────────── 포트폴리오 데이터 (data/에서 읽기) ─────────── */
-$('#pf-site').href = PRINT_PAGE;
 const projects = {};
 async function loadData() {
   try {
@@ -515,7 +508,7 @@ async function loadData() {
     openFromHash();
   } catch (e) {
     console.error(e);
-    $('#cards').innerHTML = `<p class="status">프로젝트 정보를 불러오지 못했습니다. <a href="${PRINT_PAGE}" target="_blank" rel="noopener">인쇄용 포트폴리오에서 보기 ↗</a></p>`;
+    $('#cards').innerHTML = `<p class="status">프로젝트 정보를 불러오지 못했습니다. 새로고침해 주세요.</p>`;
     const n = $('#evi .note'); if (n) n.textContent = '근거를 불러오지 못했습니다.';
   }
 }
@@ -570,12 +563,7 @@ function renderCards(list) {
         <div class="chips">${(p.tags || []).slice(0, 4).map(x => `<span>${esc(x)}</span>`).join('')}</div>
         <div class="go"><span>소개 · ${esc(t('name.deck'))} · ${esc(t('name.doc-short'))}</span><span>→</span></div>
       </div>
-    </article>`).join('') + `
-    <div class="card more">
-      <h3>인쇄용 포트폴리오</h3>
-      <p>${list.length}개 프로젝트의 개발 의도 · 기능 소개를 한 페이지로 정리했습니다. A4로 인쇄하면 제출용 PDF가 됩니다.</p>
-      <a class="btn primary" href="${PRINT_PAGE}" target="_blank" rel="noopener">인쇄용 포트폴리오 ↗</a>
-    </div>`;
+    </article>`).join('');
   $$('#cards .card[data-id]').forEach(c => {
     c.onclick = e => { if (!e.target.closest('.ico')) openModal(c.dataset.id); };
     c.onkeydown = e => { if ((e.key === 'Enter' || e.key === ' ') && e.target === c) { e.preventDefault(); openModal(c.dataset.id); } };
