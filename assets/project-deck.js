@@ -431,9 +431,11 @@
       [String(items.length + (retro.length ? 2 : 1)).padStart(2, '0'), PF.t('deck.more'), PF.t('deck.more-desc'), 'end']].filter(Boolean);
     const make = (compact) => {
       const s = PF.scene({ id: 'toc', tpl: 'P2', kind: 'bare', cls: compact ? 'compact' : '', foot, sec: PF.t('name.toc'), stitle: PF.t('name.toc') });
-      const half = rows.length > 7 ? Math.ceil(rows.length / 2) : rows.length;
+      // [수강생 변경 11-23] 목차가 6줄 이상이면 두 칸으로 나눔(Meow2048 6줄 → 3/3). 예전 기준은 8줄 이상
+      const two = rows.length >= 6;
+      const half = two ? Math.ceil(rows.length / 2) : rows.length;
       const col = (list) => `<section><ol class="toc-list">${list.map((r) => item(...r)).join('')}</ol></section>`;
-      PF.body(s).innerHTML = `<div class="toc-top"><p class="toc-h">${esc(PF.t('en.contents'))}</p><p class="toc-sub">${esc(p.title)}</p></div>${DOT}<div class="toc-cols${rows.length > 7 ? '' : ' one'}">${col(rows.slice(0, half))}${rows.length > half ? col(rows.slice(half)) : ''}</div>`;
+      PF.body(s).innerHTML = `<div class="toc-top"><p class="toc-h">${esc(PF.t('en.contents'))}</p><p class="toc-sub">${esc(p.title)}</p></div>${DOT}<div class="toc-cols${two ? '' : ' one'}">${col(rows.slice(0, half))}${rows.length > half ? col(rows.slice(half)) : ''}</div>`;
       return band(s, auto);
     };
     for (const compact of [false, true]) { const s = make(compact); if (PF.fitsM(s)) return s; }
