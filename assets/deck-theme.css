@@ -320,6 +320,12 @@ table.md-table img { max-height: 120px; max-width: 100%; height: auto; }   /* wi
 .en-mid.en-wide { grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); gap: 40px; }
 .en-links.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .en-links.two .lcard a { height: 100%; }
+/* [수강생 변경 11-23] 맺음 링크 1열 유지: 넘치면 표지처럼 카드를 줄임(project-deck.js endScene) */
+.en-links.col { gap: 6px; }   /* 라벨 · 제목 · 주소 세 줄은 그대로, 간격과 여백만 줄임 */
+.en-links.col .lcard a { padding: 5px 30px 6px 14px; }
+.en-links.col .lcard .url { margin-top: 0; line-height: 1.35; }
+.en-links.oneline .lcard a { display: flex; align-items: baseline; gap: 0; padding: 6px 30px 6px 14px; white-space: nowrap; overflow: hidden; }
+.en-links.oneline .lcard .url { margin: 0 0 0 10px; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 
 /* 원칙 5 ② 축소용 감싸개 */
 .pf-zoomwrap { display: inherit; flex-direction: inherit; justify-content: inherit; align-items: inherit; align-content: inherit;

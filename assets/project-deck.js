@@ -217,6 +217,10 @@
     }
     // arrange: "split" = 위 줄에 첫 시각 자료(왼쪽) + 요점 카드(오른쪽), 아래 줄에 나머지 시각 자료(표 등)를 가로 전체로
     //  (카드가 적을 때 오른쪽이 비지 않게)
+    // [수강생 변경 11-23] arrange: "aside" = 첫 시각 자료는 왼쪽, 나머지 시각 자료는 오른쪽 요점 카드 위에 붙임(인벤토리 5.1 스테이지 · 몬스터 데이터)
+    if (sl.arrange === 'aside' && vs.length >= 2) {
+      return `<div class="dk dk-side${tight}" style="--vw:${variant.vw}fr">${vis([vs[0]])}<div class="dk dk-stack" style="min-height:0">${vis(vs.slice(1))}${ncards(points, { num: true })}</div></div>`;
+    }
     if (sl.arrange === 'split' && vs.length >= 2) {
       return `<div class="dk dk-stack${tight}"><div class="dk dk-side" style="--vw:${variant.vw}fr;min-height:0">${vis([vs[0]])}${ncards(points, { num: true })}</div>${vis(vs.slice(1))}</div>`;
     }
@@ -268,7 +272,7 @@
     const vs = vis.map((v) => vboxHtml(v, v.ref.kind === 'code' ? codeChunk(v) : v.ref.kind === 'table' && tsplit && tsplit.v === v ? tsplit.rows : null));
     // arrange: "side" = 그림(위아래로 쌓음)은 왼쪽, 요점은 오른쪽으로 고정 — 위아래 배치(stack)를 고르지 않음
     const V = sl.layout === 'full' || sl.layout === 'screens' ? [{}, { tight: true }]
-      : sl.arrange === 'side' || sl.arrange === 'split' ? [{ vw: 1.4 }, { vw: 1.7 }, { vw: 1.15 }, { vw: 1.4, tight: true }]
+      : sl.arrange === 'side' || sl.arrange === 'split' || sl.arrange === 'aside' ? [{ vw: 1.4 }, { vw: 1.7 }, { vw: 1.15 }, { vw: 1.4, tight: true }]
       : [{ vw: 1.4 }, { vw: 1.7 }, { vw: 1.15 }, { vw: 1.4, tight: true }, { stack: true }, { stack: true, tight: true }];
     const build = (v) => {
       const s = PF.scene({ id: sid, tpl: 'D', eyebrow: meta.chapter, rlabel: meta.rlabel, title: txt(sl.title) || meta.chapter, sub: part, lead: part && part !== `1/${part.split('/')[1]}` ? '' : txt(sl.lead), foot: meta.foot, sec: meta.chapter, group: meta.chapter, stitle: txt(sl.title) });
@@ -459,16 +463,19 @@
   function endScene(p, foot, ext, auto) {
     const card = (k, label, href, kind, visible, primary) => `<div class="lcard${primary ? ' primary' : ''}">${link({ href, kind, label: `<span class="lc-k">${esc(k)}</span><span class="lc-t">${esc(label)}</span><span class="url">${esc(visible)}</span>` })}</div>`;
     // [수강생 변경 11-22] 링크가 많아 한 줄씩으로 넘치면 링크 칸을 넓히고 2열로 놓는다
-    const make = (two) => {
+    const make = (two, compact = '') => {
       const s = PF.scene({ id: 'end', tpl: 'EN', kind: 'bare', foot, sec: PF.t('deck.more'), stitle: PF.t('deck.end-title') });
       PF.body(s).innerHTML = `<div class="toprow"><span class="pf-eyebrow">${esc(PF.t('en.more'))}</span><span class="rl">${esc(PF.teamLabel(p.team))}</span></div>
-        <div class="en-mid${two ? ' en-wide' : ''}"><div><h2 class="en-t">${esc(p.title)}</h2>${p.tagline ? `<p class="tagline">${inline(p.tagline)}</p>` : ''}${DOT}</div>
-        <div class="en-links${two ? ' two' : ''}">${card(PF.t('en.techdoc'), PF.t('deck.end-doc'), PF.docUrl(p.id), 'page', PF.visibleUrl(PF.docUrl(p.id)), true)}
+        <div class="en-mid${two || compact ? ' en-wide' : ''}"><div><h2 class="en-t">${esc(p.title)}</h2>${p.tagline ? `<p class="tagline">${inline(p.tagline)}</p>` : ''}${DOT}</div>
+        <div class="en-links${two ? ' two' : ''}${compact ? ` ${compact}` : ''}"${compact.includes('oneline') ? ' data-pf-allow-clip' : ''}>${card(PF.t('en.techdoc'), PF.t('deck.end-doc'), PF.docUrl(p.id), 'page', PF.visibleUrl(PF.docUrl(p.id)), true)}
           ${ext.map((l) => card(PF.extEn(l), l.label, l.url, 'external', shortUrl(l.url))).join('')}
           ${card(PF.t('en.portfolio'), PF.t('ui.back'), 'index.html', 'page', PF.visibleUrl(''))}</div></div>`;
       return band(s, auto);
     };
+    // [수강생 변경 11-23] 한 줄씩이 넘치면 2열보다 먼저 링크 칸을 넓히고 카드 여백을 줄여(라벨 · 제목 · 주소 세 줄 유지 → 그래도 넘치면 카드 한 줄) 1열을 유지
     const one = make(false);
-    return PF.guard(PF.fitsM(one) ? one : make(true), PFScene.refUrl('end'), info.overflow);
+    if (PF.fitsM(one)) return PF.guard(one, PFScene.refUrl('end'), info.overflow);
+    for (const m of ['col', 'col oneline']) { const s = make(false, m); if (PF.fitsM(s)) return PF.guard(s, PFScene.refUrl('end'), info.overflow); }
+    return PF.guard(make(true), PFScene.refUrl('end'), info.overflow);
   }
 })();
