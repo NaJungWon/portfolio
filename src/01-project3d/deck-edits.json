@@ -334,7 +334,7 @@
           "2.2 흐름장(Flow Field)이란|image|images/flowfield_gizmo.png|1"
         ]
       },
-      "arrange": "col"
+      "arrange": "row"
     },
     {
       "key": "pipeline",

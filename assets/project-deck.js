@@ -195,7 +195,8 @@
   function bodyHtml(sl, vs, variant) {
     const points = sl.points || [];
     // arrange: "col" = 시각 자료 여러 개를 위아래로 고정(그림 아래에 표 — 나란히 놓지 않음)
-    const vis = (list) => `<div class="vis"${sl.arrange === 'col' ? ' data-arr="col"' : ''}>${list.join('')}</div>`;
+    //          "row" = 나란히 고정(그림 오른쪽에 표) [수강생 변경 11-23]
+    const vis = (list) => `<div class="vis"${sl.arrange === 'col' || sl.arrange === 'row' ? ` data-arr="${sl.arrange}"` : ''}>${list.join('')}</div>`;
     const tight = variant.tight ? ' tight' : '';
     if (!vs.length) {
       if (sl.layout === 'problem') return `<div class="dk dk-text${tight}">${flowHtml(points, variant.stack || variant.tight ? 'row' : 'col')}</div>`;

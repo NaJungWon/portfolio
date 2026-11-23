@@ -378,7 +378,7 @@
           },
           {"kind": "table", "n": 1, "fp": "칸(Tile)에 굽는 값|쓰는 곳"}
         ],
-        "arrange": "col",
+        "arrange": "row",
         "edited": true
       },
       {
@@ -1766,6 +1766,6 @@
         "visuals": [{"kind": "code", "n": 1, "fp": "// UnitAttack.cs:34 — 공격마다 갖는 애니메이션 설정 칸"}]
       }
     ],
-    "applied": "5554e2d0ca1d9709"
+    "applied": "778045c305e4479c"
   }
 }
