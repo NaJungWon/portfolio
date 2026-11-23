@@ -377,28 +377,37 @@
     const ar = d ? d.w / d.h : null;
     const variant = !p.cover || !ar ? 'nocover' : ar < 0.9 ? 'portrait' : 'landscape';
     const meta = (p.meta || []).map((m) => `<div class="mi"><dt class="meta-k">${metaEn(m.label) ? `${esc(metaEn(m.label))} · ` : ''}${esc(m.label)}</dt><dd>${inline(m.value)}</dd></div>`);
-    if (p.team?.role) meta.push(`<div class="mi wide role"><dt class="meta-k">${esc(PF.t('en.role'))} · ${esc(PF.t('name.role'))}</dt><dd>${inline(p.team.role)}</dd></div>`);
+    const roleMi = p.team?.role ? `<div class="mi wide role"><dt class="meta-k">${esc(PF.t('en.role'))} · ${esc(PF.t('name.role'))}</dt><dd>${inline(p.team.role)}</dd></div>` : '';
     const intent = p.intent?.text ? `<div class="intent"><p class="lc-k">${esc(PF.t('en.intent'))} · ${esc(PF.t('name.intent'))}</p><p class="it">${inline(p.intent.text)}</p></div>` : '';
     const cards = links.map((l) => `<div class="lcard">${PF.link({ href: l.href, kind: l.kind, label: `<span class="lc-k">${esc(l.k)}</span><span class="lc-t">${esc(l.label)}</span><span class="url">${esc(l.visible)}</span>` })}</div>`).join('');
     const tags = (p.tags || []).length ? `<ul class="tags">${p.tags.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : '';
     const cover = p.cover ? `<div class="media pi-cover"${ar ? ` style="aspect-ratio:${ar.toFixed(4)}"` : ''}>${imgTag(PF.srcPath(p.id, p.cover), p.title, d)}</div>` : '';
     const head = `<div class="pi-head"><${titleTag} class="pi-t">${esc(p.title)}</${titleTag}>${p.tagline ? `<p class="tagline">${inline(p.tagline)}</p>` : ''}</div>`;
-    const make = (tight, linksLeft, metaLeft) => {
+    const make = (tight, linksLeft, metaLeft, oneLine) => {
       const s = scene({ id, tpl, kind: 'bare', cls: `${variant}${tight ? ' pi-tight' : ''}${metaLeft ? ' pi-metaleft' : ''}`, foot, sec, group, stitle: p.title });
-      const metaHtml = meta.length ? `<dl class="pi-meta">${meta.join('')}</dl>` : '';
+      // [수강생 변경 11-23] 새 배치에서는 내 역할을 오른쪽 메타에서 빼서 왼쪽 대표 그림과 개발 의도 사이에
+      const metaItems = metaLeft ? meta : (roleMi ? [...meta, roleMi] : meta);
+      const metaHtml = metaItems.length ? `<dl class="pi-meta">${metaItems.join('')}</dl>` : '';
+      const roleHtml = metaLeft && roleMi ? `<dl class="pi-meta pi-role">${roleMi}</dl>` : '';
       // [수강생 변경 11-23] metaLeft: 왼쪽 = 제목 · 기술 태그 · 대표 GIF · 개발 의도, 오른쪽 = 장르/기간/인원/환경 · 링크 한 줄씩(1열)
       const right = metaLeft
-        ? `<div class="pi-right">${metaHtml}${cards ? `<div class="pi-links col">${cards}</div>` : ''}</div>`
+        ? `<div class="pi-right">${metaHtml}${cards ? `<div class="pi-links col${oneLine ? ' oneline' : ''}"${oneLine ? ' data-pf-allow-clip' : ''}>${cards}</div>` : ''}</div>`
         : `<div class="pi-right">${metaHtml}${intent}${!linksLeft && cards ? `<div class="pi-links">${cards}</div>` : ''}${tags}</div>`;
       const left = metaLeft
-        ? `<div class="pi-left">${head}${tags}${cover}${intent}</div>`
+        ? `<div class="pi-left">${head}${tags}${cover}${roleHtml}${intent}</div>`
         : `<div class="pi-left">${head}${cover}${linksLeft && cards ? `<div class="pi-links row">${cards}</div>` : ''}</div>`;
       body(s).innerHTML = `<div class="toprow"><span class="pf-eyebrow">${esc(eyebrow)}</span><span class="rl">${esc(PF.teamLabel(p.team))}</span></div><div class="pi-main">${left}${right}</div>`;
       return s;
     };
-    if (variant !== 'nocover') for (const tight of [false, true]) { const s = make(tight, false, true); if (fitsM(s)) return s; }   // [수강생 변경 11-23] 새 표지 배치를 (줄인 크기까지) 먼저
-    for (const tight of [false, true]) for (const linksLeft of variant === 'nocover' ? [false] : [false, true]) { const s = make(tight, linksLeft); if (fitsM(s)) return s; }
-    return shrinkOrClip(make(true, true), window.PFScene.refUrl(id), stats);
+    // [수강생 변경 11-23] 새 표지 배치를 (줄인 크기까지) 먼저 — 링크가 많으면 링크 2열로 한 번 더
+    //   표지가 있으면 예전 배치로 돌아가지 않고, 다 안 들어가면 새 배치(줄인 크기 · 링크 2열)를 통째로 줄임(화면이 작아도 같은 배치)
+    if (variant !== 'nocover') {
+      // 링크는 항상 한 줄에 하나씩(사용자 지시 11-23). 넘치면 링크 카드를 한 줄(라벨 · 제목 · 주소)로 줄임
+      for (const oneLine of [false, true]) for (const tight of [false, true]) { const s = make(tight, false, true, oneLine); if (fitsM(s)) return s; }
+      return shrinkOrClip(make(true, false, true, true), window.PFScene.refUrl(id), stats);
+    }
+    for (const tight of [false, true]) { const s = make(tight, false); if (fitsM(s)) return s; }
+    return shrinkOrClip(make(true, false), window.PFScene.refUrl(id), stats);
   }
 
   // 원문 절(section 글자) → 슬라이드 장면 id는 PF.deckSceneFor(common.js — 포트폴리오 페이지의 기능 링크도 씀)
