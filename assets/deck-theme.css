@@ -166,6 +166,7 @@ table.kv td.role { color: var(--accent-ink); font-weight: 800; }
 
 /* ── 도입 문장(결정 G7: 제목 + 도입 1~2줄, 머리 높이 가변) ── */
 .pf-lead { margin-top: 8px !important; max-width: 1080px; font-size: 17px; font-weight: 500; line-height: 1.55; color: var(--muted); }
+.pf-lead { white-space: pre-line; }   /* [수강생 변경 11-23] 도입 문장 안 줄바꿈을 그대로 */
 
 /* ── 세로 가운데(결정 G8): 본문 안 .pf-fill 하나를 위아래 auto 여백으로. 내용이 상자보다 길면 여백 0(넘침은 감사가 봄)
      .pf-sizing = 시각 자료 맞추기(PF.fitVisuals) 동안만: .pf-fill이 본문 높이를 다 써서 .vis 칸 크기를 잴 수 있게 ── */
