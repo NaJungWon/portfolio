@@ -196,6 +196,9 @@ table.kv td.role { color: var(--accent-ink); font-weight: 800; }
 .intent .it { margin-top: 4px !important; font-size: 15px; line-height: 1.62; color: var(--ink); }
 .pi-links { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 .pi-links.row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.pi-links.col { grid-template-columns: minmax(0, 1fr); }   /* [수강생 변경 11-23] 표지 metaLeft: 링크 한 줄씩 */
+.pi-links.col .lcard .lc-k { display: inline; margin-right: 8px; }   /* 라벨과 제목을 한 줄로 → 카드 두 줄 */
+.pi-links.col .lcard a { padding: 7px 30px 8px 14px; }
 .lcard a { position: relative; display: block; border: 1px solid var(--line); border-radius: calc(var(--radius) * .6); padding: 8px 30px 9px 14px; color: var(--ink); text-decoration: none; background: var(--paper); }
 .lcard a .pf-newtab-icon { position: absolute; right: 12px; top: 11px; margin: 0; }
 .lcard a:hover { border-color: var(--accent); }
@@ -224,6 +227,7 @@ table.kv td.role { color: var(--accent-ink); font-weight: 800; }
 .dk-side { grid-template-columns: minmax(0, var(--vw, 1.4fr)) minmax(0, 1fr); align-items: center; }
 .dk-side.flip { grid-template-columns: minmax(0, 1fr) minmax(0, var(--vw, 1.4fr)); }
 .dk-side.flip > .vis { order: 2; }
+.dk-side:not(.flip) { align-items: start; }   /* [수강생 변경 11-23] 옆 배치(그림 왼쪽 · 카드 오른쪽)는 위쪽 기준으로 맞춤 */
 .pf-sizing .dk-side { align-items: stretch; grid-template-rows: minmax(0, 1fr); }
 .dk-stack { grid-template-rows: auto auto; gap: 20px; }
 .pf-sizing .dk-stack { grid-template-rows: minmax(0, 1fr) auto; }

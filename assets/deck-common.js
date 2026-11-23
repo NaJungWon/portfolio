@@ -383,13 +383,20 @@
     const tags = (p.tags || []).length ? `<ul class="tags">${p.tags.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : '';
     const cover = p.cover ? `<div class="media pi-cover"${ar ? ` style="aspect-ratio:${ar.toFixed(4)}"` : ''}>${imgTag(PF.srcPath(p.id, p.cover), p.title, d)}</div>` : '';
     const head = `<div class="pi-head"><${titleTag} class="pi-t">${esc(p.title)}</${titleTag}>${p.tagline ? `<p class="tagline">${inline(p.tagline)}</p>` : ''}</div>`;
-    const make = (tight, linksLeft) => {
-      const s = scene({ id, tpl, kind: 'bare', cls: `${variant}${tight ? ' pi-tight' : ''}`, foot, sec, group, stitle: p.title });
-      const right = `<div class="pi-right">${meta.length ? `<dl class="pi-meta">${meta.join('')}</dl>` : ''}${intent}${!linksLeft && cards ? `<div class="pi-links">${cards}</div>` : ''}${tags}</div>`;
-      const left = `<div class="pi-left">${head}${cover}${linksLeft && cards ? `<div class="pi-links row">${cards}</div>` : ''}</div>`;
+    const make = (tight, linksLeft, metaLeft) => {
+      const s = scene({ id, tpl, kind: 'bare', cls: `${variant}${tight ? ' pi-tight' : ''}${metaLeft ? ' pi-metaleft' : ''}`, foot, sec, group, stitle: p.title });
+      const metaHtml = meta.length ? `<dl class="pi-meta">${meta.join('')}</dl>` : '';
+      // [수강생 변경 11-23] metaLeft: 왼쪽 = 제목 · 기술 태그 · 대표 GIF · 개발 의도, 오른쪽 = 장르/기간/인원/환경 · 링크 한 줄씩(1열)
+      const right = metaLeft
+        ? `<div class="pi-right">${metaHtml}${cards ? `<div class="pi-links col">${cards}</div>` : ''}</div>`
+        : `<div class="pi-right">${metaHtml}${intent}${!linksLeft && cards ? `<div class="pi-links">${cards}</div>` : ''}${tags}</div>`;
+      const left = metaLeft
+        ? `<div class="pi-left">${head}${tags}${cover}${intent}</div>`
+        : `<div class="pi-left">${head}${cover}${linksLeft && cards ? `<div class="pi-links row">${cards}</div>` : ''}</div>`;
       body(s).innerHTML = `<div class="toprow"><span class="pf-eyebrow">${esc(eyebrow)}</span><span class="rl">${esc(PF.teamLabel(p.team))}</span></div><div class="pi-main">${left}${right}</div>`;
       return s;
     };
+    if (variant !== 'nocover') for (const tight of [false, true]) { const s = make(tight, false, true); if (fitsM(s)) return s; }   // [수강생 변경 11-23] 새 표지 배치를 (줄인 크기까지) 먼저
     for (const tight of [false, true]) for (const linksLeft of variant === 'nocover' ? [false] : [false, true]) { const s = make(tight, linksLeft); if (fitsM(s)) return s; }
     return shrinkOrClip(make(true, true), window.PFScene.refUrl(id), stats);
   }
