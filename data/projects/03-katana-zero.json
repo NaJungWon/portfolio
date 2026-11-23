@@ -570,9 +570,9 @@
         "chapter": "chronos",
         "layout": "full",
         "tab": "선택",
-        "title": {"text": "4.1.1 시간 감속을 어떻게 구현할 것인가", "verbatim": true},
+        "title": {"text": "4.1 시간 감속을 어떻게 구현할 것인가", "verbatim": true},
         "lead": null,
-        "sectionPath": ["4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가", "4.1.1 시간 감속을 어떻게 구현할 것인가"],
+        "sectionPath": ["4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가", "4.1 시간 감속을 어떻게 구현할 것인가"],
         "points": [
           {"label": "결정", "text": "바꿔야 할 곳이 너무 많아 B를 골랐습니다.", "verbatim": true},
           {"label": "대신", "text": "대신 2.2의 시간축 분리 표를 기준으로 unscaled 대상을 정리했습니다.", "verbatim": true},
@@ -586,9 +586,9 @@
         "chapter": "chronos",
         "layout": "visual",
         "tab": "결과",
-        "title": {"text": "4.1 크로노스: 느려진 세계에서도 게이지는 실제 시간으로", "verbatim": true},
+        "title": {"text": "4.2 크로노스: 느려진 세계에서도 게이지는 실제 시간으로", "verbatim": true},
         "lead": {"text": "감속 중에도 실제 1초에 1씩 줄고, 꺼져 있을 때 초당 0.5씩 찹니다.", "verbatim": true},
-        "sectionPath": ["4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가", "4.1 크로노스: 느려진 세계에서도 게이지는 실제 시간으로"],
+        "sectionPath": ["4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가", "4.2 크로노스: 느려진 세계에서도 게이지는 실제 시간으로"],
         "points": [{"label": "실제 시간", "text": "게이지는 unscaledDeltaTime으로 계산해, 느려진 세계에서도 실제 시간만큼 줄어듭니다.", "verbatim": false}],
         "visuals": [
           {
@@ -609,12 +609,12 @@
         "chapter": "chronos",
         "layout": "code",
         "tab": "구현",
-        "title": {"text": "4.2 히트스탑: 멈췄다가 크로노스 상태로 돌아오기", "verbatim": true},
+        "title": {"text": "4.3 히트스탑: 멈췄다가 크로노스 상태로 돌아오기", "verbatim": true},
         "lead": {
           "text": "크로노스는 히트스탑 중(timeScale = 0)에는 timeScale을 바꾸지 않고, 히트스탑은 끝날 때 저장해 둔 값이 아니라 크로노스의 현재 목표 값으로 돌아갑니다.",
           "verbatim": true
         },
-        "sectionPath": ["4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가", "4.2 히트스탑: 멈췄다가 크로노스 상태로 돌아오기"],
+        "sectionPath": ["4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가", "4.3 히트스탑: 멈췄다가 크로노스 상태로 돌아오기"],
         "points": [
           {
             "label": "복귀 값",
@@ -631,9 +631,9 @@
         "chapter": "chronos",
         "layout": "full",
         "tab": "선택",
-        "title": {"text": "4.2.1 히트스탑이 끝나면 어떤 값으로 돌아갈 것인가", "verbatim": true},
+        "title": {"text": "4.3.1 히트스탑이 끝나면 어떤 값으로 돌아갈 것인가", "verbatim": true},
         "lead": null,
-        "sectionPath": ["4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가", "4.2.1 히트스탑이 끝나면 어떤 값으로 돌아갈 것인가"],
+        "sectionPath": ["4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가", "4.3 히트스탑: 멈췄다가 크로노스 상태로 돌아오기", "4.3.1 히트스탑이 끝나면 어떤 값으로 돌아갈 것인가"],
         "points": [
           {
             "label": "문제",
@@ -1419,6 +1419,6 @@
         "visuals": [{"kind": "table", "n": 1, "fp": "|[A] SimpleFollowCamera (단순 추적)|[B] 데드존 + 맵 경계 제한 CameraController 직접 작성 ✓"}]
       }
     ],
-    "applied": "c2833d3a53515b44"
+    "applied": "541424817822ec21"
   }
 }
