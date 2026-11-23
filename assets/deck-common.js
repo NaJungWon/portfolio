@@ -285,8 +285,14 @@
       // 세로로 쌓기: 표는 똑같이 나눈 몫까지 받되 칸 폭에서의 실제 높이가 더 작으면 그만큼만(남는 높이는 다이어그램·그림에)
       const avail = H - GAP * (n - 1) - caps.reduce((a, c) => a + c, 0);
       const need = nat.map((t) => (t.table ? Math.min(avail / n, t.hAt(W)) : t.k === 'code' ? t.nh : W / t.ar));
-      const f = Math.min(1, avail / Math.max(1, need.reduce((a, x) => a + x, 0)));
-      nat.forEach((t, i) => { out[i] = contain(i, W, need[i] * f); });
+      // 표는 글자 하한 아래로 줄지 않으므로 받은 높이를 그대로 두고, 남는 높이로 그림 · 다이어그램 · 코드만 줄임
+      //  (전부 같은 비율로 줄이면 표가 하한에 걸려 장면 밖으로 넘침)
+      const fixedH = need.reduce((a, x, i) => a + (nat[i].table ? x : 0), 0);
+      const flexH = need.reduce((a, x, i) => a + (nat[i].table ? 0 : x), 0);
+      const f = fixedH < avail && flexH > 0
+        ? Math.min(1, (avail - fixedH) / flexH)
+        : Math.min(1, avail / Math.max(1, need.reduce((a, x) => a + x, 0)));
+      nat.forEach((t, i) => { out[i] = contain(i, W, t.table && fixedH < avail && flexH > 0 ? need[i] : need[i] * f); });
     } else {
       const avail = W - GAP * (n - 1);
       const ars = nat.map((t) => (t.table ? 1.6 : t.ar));

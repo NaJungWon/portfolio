@@ -256,7 +256,7 @@ table.md-table img { max-height: 120px; max-width: 100%; height: auto; }   /* wi
 .ncard.nonum { grid-template-columns: minmax(0, 1fr); }
 .ncard .num { width: 26px; height: 26px; border-radius: 50%; background: var(--glow); color: #fff; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
 .ncard .lb { display: block; font-size: 13px; font-weight: 800; letter-spacing: .02em; color: var(--accent-ink); margin-bottom: 3px; }
-.ncard p { font-size: 16px; line-height: 1.58; color: var(--ink); }
+.ncard p { font-size: 16px; line-height: 1.58; color: var(--ink); white-space: pre-line; }   /* pre-line: 카드 글 안 줄바꿈을 그대로 — 아이콘 설명 목록 등 */
 .dk-text .ncard p { font-size: 17px; }
 .dk.tight .ncard { padding: 10px 14px; }
 .dk.tight .ncard p { font-size: 15px; line-height: 1.52; }

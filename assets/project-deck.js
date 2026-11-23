@@ -194,7 +194,8 @@
     `<div class="fstep${pt.label === '결과' ? ' res' : ''}">${pt.label ? `<span class="labelchip${FLOW[pt.label] ? ' ' + FLOW[pt.label] : ''}">${esc(PF.label(pt.label))}</span>` : ''}<p>${inline(txt(pt))}</p></div>`).join('')}</div>`;
   function bodyHtml(sl, vs, variant) {
     const points = sl.points || [];
-    const vis = (list) => `<div class="vis">${list.join('')}</div>`;
+    // arrange: "col" = 시각 자료 여러 개를 위아래로 고정(그림 아래에 표 — 나란히 놓지 않음)
+    const vis = (list) => `<div class="vis"${sl.arrange === 'col' ? ' data-arr="col"' : ''}>${list.join('')}</div>`;
     const tight = variant.tight ? ' tight' : '';
     if (!vs.length) {
       if (sl.layout === 'problem') return `<div class="dk dk-text${tight}">${flowHtml(points, variant.stack || variant.tight ? 'row' : 'col')}</div>`;
@@ -208,7 +209,16 @@
       return `<div class="dk dk-side flip${tight}" style="--vw:${variant.vw}fr">${vis(vs)}${flowHtml(points, 'col')}</div>`;
     }
     // 요점이 없으면(나눈 장면 등) 옆 칸이 비지 않게 시각 자료를 가로 전체로
-    if (sl.layout === 'full' || variant.stack || !points.length) return `<div class="dk dk-stack${tight}">${vis(vs)}${ncards(points, { row: true, num: sl.layout !== 'full' })}</div>`;
+    // arrange: "top" = 요점 카드를 시각 자료 위에(목표 → 표 순서로 읽히게)
+    if (sl.layout === 'full' || variant.stack || !points.length) {
+      const cards = ncards(points, { row: true, num: sl.layout !== 'full' });
+      return `<div class="dk dk-stack${tight}">${sl.arrange === 'top' ? cards + vis(vs) : vis(vs) + cards}</div>`;
+    }
+    // arrange: "split" = 위 줄에 첫 시각 자료(왼쪽) + 요점 카드(오른쪽), 아래 줄에 나머지 시각 자료(표 등)를 가로 전체로
+    //  (카드가 적을 때 오른쪽이 비지 않게)
+    if (sl.arrange === 'split' && vs.length >= 2) {
+      return `<div class="dk dk-stack${tight}"><div class="dk dk-side" style="--vw:${variant.vw}fr;min-height:0">${vis([vs[0]])}${ncards(points, { num: true })}</div>${vis(vs.slice(1))}</div>`;
+    }
     return `<div class="dk dk-side${tight}" style="--vw:${variant.vw}fr">${vis(vs)}${ncards(points, { num: true })}</div>`;
   }
 
@@ -255,7 +265,9 @@
   //   codeChunk(v) = 그 코드의 이번 줄 범위 · tsplit = { v, rows: [a, b) } 행을 나누는 표 하나(다른 표는 그대로 둠)
   function fitSlide(sl, vis, sid, part, codeChunk, meta, tsplit = null, depth = 0) {
     const vs = vis.map((v) => vboxHtml(v, v.ref.kind === 'code' ? codeChunk(v) : v.ref.kind === 'table' && tsplit && tsplit.v === v ? tsplit.rows : null));
+    // arrange: "side" = 그림(위아래로 쌓음)은 왼쪽, 요점은 오른쪽으로 고정 — 위아래 배치(stack)를 고르지 않음
     const V = sl.layout === 'full' || sl.layout === 'screens' ? [{}, { tight: true }]
+      : sl.arrange === 'side' || sl.arrange === 'split' ? [{ vw: 1.4 }, { vw: 1.7 }, { vw: 1.15 }, { vw: 1.4, tight: true }]
       : [{ vw: 1.4 }, { vw: 1.7 }, { vw: 1.15 }, { vw: 1.4, tight: true }, { stack: true }, { stack: true, tight: true }];
     const build = (v) => {
       const s = PF.scene({ id: sid, tpl: 'D', eyebrow: meta.chapter, rlabel: meta.rlabel, title: txt(sl.title) || meta.chapter, sub: part, lead: part && part !== `1/${part.split('/')[1]}` ? '' : txt(sl.lead), foot: meta.foot, sec: meta.chapter, group: meta.chapter, stitle: txt(sl.title) });
