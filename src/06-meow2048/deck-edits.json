@@ -45,6 +45,16 @@
             "text": "4×4 플레이 — 타일이 함께 미끄러지고, 합쳐질 때 톡 튀며 파티클이 터짐",
             "verbatim": true
           }
+        },
+        {
+          "kind": "image",
+          "src": "images/play_8x8.jpg",
+          "w": 404,
+          "h": 720,
+          "caption": {
+            "text": "8×8 보드 (시작 직후)",
+            "verbatim": true
+          }
         }
       ],
       "from": {
@@ -58,7 +68,8 @@
           "1.1 게임 소개|mermaid|1|flowchart TB"
         ]
       },
-      "group": "split-flow"
+      "group": "split-flow",
+      "arrange": "row"
     },
     {
       "key": "flow",
@@ -103,66 +114,6 @@
       ],
       "after": "what",
       "group": "split-flow"
-    },
-    {
-      "key": "play",
-      "chapter": "overview",
-      "layout": "screens",
-      "tab": "결과",
-      "title": {
-        "text": "1.1 게임 소개",
-        "verbatim": true
-      },
-      "lead": null,
-      "sectionPath": [
-        "1. 개요",
-        "1.1 게임 소개"
-      ],
-      "points": [
-        {
-          "label": "타이틀",
-          "text": "타이틀 화면을 닫으면 보드가 만들어지고 게임이 시작됩니다.",
-          "verbatim": false
-        },
-        {
-          "label": "8×8",
-          "text": "8×8 보드는 칸 · 타일 · 글자를 4×4의 절반 크기로 맞췄습니다.",
-          "verbatim": false
-        }
-      ],
-      "visuals": [
-        {
-          "kind": "image",
-          "src": "images/title.jpg",
-          "w": 540,
-          "h": 960,
-          "caption": {
-            "text": "Meow2048 타이틀 화면",
-            "verbatim": true
-          }
-        },
-        {
-          "kind": "image",
-          "src": "images/play_8x8.jpg",
-          "w": 404,
-          "h": 720,
-          "caption": {
-            "text": "8×8 보드 (시작 직후)",
-            "verbatim": true
-          }
-        }
-      ],
-      "from": {
-        "key": "play",
-        "sectionPath": [
-          "1. 개요",
-          "1.1 게임 소개"
-        ],
-        "sig": [
-          "1.1 게임 소개|image|images/play_8x8.jpg|1",
-          "1.1 게임 소개|image|images/title.jpg|1"
-        ]
-      }
     },
     {
       "key": "rules",
@@ -1422,6 +1373,7 @@
     }
   ],
   "hide": [
-    "state"
+    "state",
+    "play"
   ]
 }

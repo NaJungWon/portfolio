@@ -4,7 +4,7 @@
   "doc": "기술문서.md",
   "title": "Meow2048",
   "tagline": "동물 이미지 타일로 만든 모바일 2D 캐주얼 퍼즐 2048",
-  "cover": "images/play_4x4.gif",
+  "cover": "images/title.jpg",
   "team": {
     "type": "solo",
     "size": "1인",
@@ -150,16 +150,14 @@
       "트윈 라이브러리 없이 병렬 이동, 탄성 스케일, 파티클·동물 소리 피드백"
     ],
     "regrets": [
-      "`Game_System` 1,167줄 한 클래스",
-      "칸 조회가 매번 전체 순회",
-      "시작 버튼 전부터 Game 상태",
-      "프리팹 자식 순서에 의존"
+      "시작 버튼 전부터 Game 상태 — 보드를 만드는 InitializeSlots()가 상태를 바꿔, 리셋하면 시작 전에 인게임 BGM이 나옴",
+      "`Game_System` 1,167줄 한 클래스 — 상태 · 입력 · 판정 · 연출 · 점수가 한 곳에",
+      "칸 조회 비용 (8×8) — GetSlotAt 전체 순회가 한 칸씩 반복하는 판정에서 곱해지고, 8×8은 측정하지 않음"
     ],
     "plans": [
-      "입력 / 보드 판정(순수 C#) / 연출로 분리. 판정을 순수 클래스로 빼면 단위 테스트도 가능",
-      "판정 시작 때 `Move_Slot[,]` 배열을 만들어 바로 조회",
       "상태 변경을 `StartGame()` 한 곳으로 모으고, 보드 생성은 상태를 건드리지 않게 분리. 리셋은 Main으로 돌아가게",
-      "`[SerializeField]` 직접 참조로 교체"
+      "입력 / 보드 판정(순수 C#) / 연출로 분리. 판정을 순수 클래스로 빼면 단위 테스트도 가능",
+      "8×8 한 판을 측정하고, 판정 시작 때 `Move_Slot[,]` 배열을 만들어 바로 조회"
     ],
     "section": "5. 회고"
   },
@@ -191,8 +189,16 @@
             "w": 360,
             "h": 642,
             "caption": {"text": "4×4 플레이 — 타일이 함께 미끄러지고, 합쳐질 때 톡 튀며 파티클이 터짐", "verbatim": true}
+          },
+          {
+            "kind": "image",
+            "src": "images/play_8x8.jpg",
+            "w": 404,
+            "h": 720,
+            "caption": {"text": "8×8 보드 (시작 직후)", "verbatim": true}
           }
         ],
+        "arrange": "row",
         "edited": true
       },
       {
@@ -209,36 +215,6 @@
           {"label": "끝", "text": "빈칸이 없고 네 방향 모두 막히면 게임 오버이고, 리셋하면 보드를 다시 만듭니다.", "verbatim": false}
         ],
         "visuals": [{"kind": "mermaid", "n": 1, "fp": "flowchart TB"}],
-        "edited": true
-      },
-      {
-        "key": "play",
-        "chapter": "overview",
-        "layout": "screens",
-        "tab": "결과",
-        "title": {"text": "1.1 게임 소개", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["1. 개요", "1.1 게임 소개"],
-        "points": [
-          {"label": "타이틀", "text": "타이틀 화면을 닫으면 보드가 만들어지고 게임이 시작됩니다.", "verbatim": false},
-          {"label": "8×8", "text": "8×8 보드는 칸 · 타일 · 글자를 4×4의 절반 크기로 맞췄습니다.", "verbatim": false}
-        ],
-        "visuals": [
-          {
-            "kind": "image",
-            "src": "images/title.jpg",
-            "w": 540,
-            "h": 960,
-            "caption": {"text": "Meow2048 타이틀 화면", "verbatim": true}
-          },
-          {
-            "kind": "image",
-            "src": "images/play_8x8.jpg",
-            "w": 404,
-            "h": 720,
-            "caption": {"text": "8×8 보드 (시작 직후)", "verbatim": true}
-          }
-        ],
         "edited": true
       },
       {
@@ -1147,6 +1123,6 @@
         "visuals": [{"kind": "table", "n": 1, "fp": "단계|내용"}]
       }
     ],
-    "applied": "973ed7accc593d22"
+    "applied": "29cd669ee20b7fbd"
   }
 }
