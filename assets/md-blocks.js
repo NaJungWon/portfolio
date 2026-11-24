@@ -38,7 +38,7 @@
   function index(P) {
     if (P.index) return P.index;
     const map = new Map();
-    const bucket = () => ({ mermaid: [], code: [], table: [], image: [] });
+    const bucket = () => ({ mermaid: [], code: [], table: [], image: [], timage: [] });   // timage: 표 칸 안 그림 [수강생 변경 11-25]
     let cur = bucket();
     map.set(null, cur);
     const byEl = new Map(P.headings.map((h) => [h.el, h]));
@@ -49,7 +49,7 @@
         const code = el.querySelector(':scope > code');
         if (code && /\blanguage-mermaid\b/.test(code.className)) cur.mermaid.push(el); else cur.code.push(el);
       } else if (el.tagName === 'TABLE') cur.table.push(el);
-      else if (el.tagName === 'IMG' && !el.closest('table')) cur.image.push(el);
+      else if (el.tagName === 'IMG') (el.closest('table') ? cur.timage : cur.image).push(el);
     }
     return (P.index = map);
   }
@@ -94,6 +94,8 @@
     let list = b[kind];
     if (kind === 'image') {
       list = list.filter((i) => normSrc(i.dataset.mdSrc || i.getAttribute('src')) === normSrc(ref.src));
+      // [수강생 변경 11-25] 표 밖에 없으면 표 칸 안 그림에서도 이름(src)으로 찾음 — 자동 구성(firstVisual)은 그대로 표 밖 그림만
+      if (!list.length) list = (b.timage || []).filter((i) => normSrc(i.dataset.mdSrc || i.getAttribute('src')) === normSrc(ref.src));
       if (list.length > 1 && !ref.n) return { status: 'ambiguous', heading: h, detail: `이미지 ${ref.src} ${list.length}곳` };
     }
     const el = list[(ref.n || 1) - 1];

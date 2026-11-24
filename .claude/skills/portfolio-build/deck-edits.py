@@ -424,7 +424,11 @@ def validate(p, chapters, doc):
     if not key_ok(k):
         errs.append('key "%s"가 규칙(영문 소문자로 시작, 소문자·숫자·하이픈 2~32자, s-숫자 금지)에 맞지 않음' % k)
     if p.get('chapter') not in chapters:
-        errs.append('장 "%s"가 슬라이드에 없음(%s)' % (p.get('chapter'), ', '.join(str(c) for c in chapters)))
+        # [수강생 변경 11-25] 빌드 장 목록에 없는 장(예: 회고 장 결과 장면)은 렌더러가 끝(결과와 회고 앞)에 새 장으로 붙이므로 알리기만
+        if key_ok(p.get('chapter')) and len(p.get('sectionPath') or []) >= 2:
+            warns.append('의 장 "%s"는 빌드 장 목록에 없어 슬라이드 끝(결과와 회고 앞)에 새 장으로 붙습니다(장 제목 = 문서 장 제목)' % p.get('chapter'))
+        else:
+            errs.append('장 "%s"가 슬라이드에 없음(%s)' % (p.get('chapter'), ', '.join(str(c) for c in chapters)))
     lay = p.get('layout')
     if lay not in LAYOUTS:
         errs.append('layout "%s"는 %s 중 하나여야 함' % (lay, ' · '.join(LAYOUTS)))

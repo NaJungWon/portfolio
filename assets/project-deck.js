@@ -81,7 +81,8 @@
       const byKey = new Map(chapters.map((c) => [c.key, c]));
       p.deck.slides.forEach((sl) => {
         let c = byKey.get(sl.chapter);
-        if (!c) { c = { key: sl.chapter || 'etc', title: '', sectionPath: [], slides: [] }; byKey.set(c.key, c); chapters.push(c); }
+        // [수강생 변경 11-25] 빌드 장 목록에 없는 장(회고 장의 결과 장면 등)은 장면의 문서 장 제목(sectionPath 둘째 칸, 번호 뗌)으로 새 장
+        if (!c) { const h2 = (sl.sectionPath || [])[1] || ''; c = { key: sl.chapter || 'etc', title: h2.replace(/^(?:\d+|[A-Z])\.?\s+/, ''), sectionPath: h2 ? [h2] : [], slides: [] }; byKey.set(c.key, c); chapters.push(c); }
         c.slides.push(sl);
       });
       return chapters.filter((c) => c.slides.length);
@@ -330,6 +331,10 @@
     // 장 → 장 표지 + 장면들
     const chapterScenes = [];
     const tocItems = [];
+    const retro = buildRetro(p.retro || {}, p, foot, auto);
+    // [수강생 변경 11-25] 회고 장(문서 회고 H2의 장면을 모은 장)이 마지막 장이면 「결과와 회고」를 그 장에 붙임 — 목차 줄을 따로 두지 않고 장 설명 · 장 표지 목록에 넣음
+    const rIdx = retro.length && p.retro?.section ? model.findIndex((c) => PF.normTitle((c.sectionPath || [])[0] || '') === PF.normTitle(p.retro.section)) : -1;
+    const retroCh = rIdx >= 0 && rIdx === model.length - 1 ? rIdx : -1;
     model.forEach((c, ci) => {
       const ckey = PF.keyOk(c.key) ? c.key : `c${ci + 1}`;
       let chId = `ch-${ckey}`; if (used.has(chId)) chId = `ch-c${ci + 1}`; used.add(chId);
@@ -344,11 +349,11 @@
         scenes.forEach((s) => used.add(s.id));
         slides.push({ sl, scenes });
       });
-      const chs = chapterScene(c, ci, chId, slides, foot, auto, p.title);
+      const withRetro = ci === retroCh;
+      const chs = chapterScene(c, ci, chId, slides, foot, auto, p.title, withRetro ? retro : null);
       chapterScenes.push(chs, ...slides.flatMap((x) => x.scenes));
-      tocItems.push({ c, chId, n: slides.reduce((a, x) => a + x.scenes.length, 0) });
+      tocItems.push({ c, chId, n: slides.reduce((a, x) => a + x.scenes.length, 0) + (withRetro ? retro.length : 0), withRetro });
     });
-    const retro = buildRetro(p.retro || {}, p, foot, auto);
     const end = endScene(p, foot, ext, auto);
     const toc = tocScene(p, foot, tocItems, retro, auto);
     const all = [cover, toc, ...chapterScenes, ...retro, end];
@@ -395,7 +400,7 @@
 
   // 장 표지: 장면이 적으면(4개 이하) 넉넉한 변형 — 목차 크기 목록 + 장면마다 도입(결정 I7). 안 들어가면 보통 → 촘촘
   const ROOMY_MAX = 4;
-  function chapterScene(c, ci, chId, slides, foot, auto, ptitle) {
+  function chapterScene(c, ci, chId, slides, foot, auto, ptitle, retro = null) {
     const make = (mode) => {
       const s = PF.scene({ id: chId, tpl: 'CH', kind: 'bare', cls: mode === 'compact' ? 'compact' : '', foot, sec: c.title, group: c.title, stitle: c.title });
       const roomy = mode === 'roomy';
@@ -414,8 +419,8 @@
         const lastX = g.xs[g.xs.length - 1];
         const shown = (plain(g.t) === chT || plain(g.t) === plain(c.title)) ? '장 소개' : plain(g.t);
         return item(String(i + 1), shown, tabs, g.xs[0].scenes[0].id, roomy ? txt(g.xs[0].sl.lead) : '', lastX.scenes[lastX.scenes.length - 1].id);
-      }).join('');
-      PF.body(s).innerHTML = `<div class="toprow"><span class="pf-eyebrow long">${esc(ptitle)}</span><span class="rl">${esc(PF.t('deck.ch-count', { n: slides.length }))}</span></div>
+      }).join('') + (retro && retro.length ? item(String(groups.length + 1), PF.t('deck.retro'), '', retro[0].id, roomy ? PF.t('deck.retro-desc') : '', retro[retro.length - 1].id) : '');   // [수강생 변경 11-25] 회고 장에 「결과와 회고」
+      PF.body(s).innerHTML = `<div class="toprow"><span class="pf-eyebrow long">${esc(ptitle)}</span><span class="rl">${esc(PF.t('deck.ch-count', { n: slides.length + (retro && retro.length ? 1 : 0) }))}</span></div>
         <div class="ch-mid"><div><p class="ch-no">${esc(PF.t('en.chapter'))} ${String(ci + 1).padStart(2, '0')}</p><h2 class="ch-t">${esc(c.title)}</h2>${DOT}</div>
         <div class="ch-list t-P2${mode === 'normal' ? '' : ' ' + mode}"><ol class="toc-list${roomy ? '' : ' sub'}">${list}</ol></div></div>`;
       return band(s, auto);
@@ -426,9 +431,12 @@
   }
 
   function tocScene(p, foot, items, retro, auto) {
-    const rows = [...items.map((x, i) => [String(i + 1).padStart(2, '0'), x.c.title, PF.t('deck.toc-count', { n: x.n }), x.chId]),
-      retro.length && [String(items.length + 1).padStart(2, '0'), PF.t('deck.retro'), PF.t('deck.retro-desc'), retro[0].id],
-      [String(items.length + (retro.length ? 2 : 1)).padStart(2, '0'), PF.t('deck.more'), PF.t('deck.more-desc'), 'end']].filter(Boolean);
+    // [수강생 변경 11-25] 「결과와 회고」가 회고 장에 붙었으면 따로 줄을 만들지 않고 그 장 설명에 「결과와 회고」를 넣음
+    const merged = items.some((x) => x.withRetro);
+    const ownRetro = retro.length && !merged;
+    const rows = [...items.map((x, i) => [String(i + 1).padStart(2, '0'), x.c.title, x.withRetro ? `${PF.t('deck.toc-count', { n: x.n })} · ${PF.t('deck.retro')}` : PF.t('deck.toc-count', { n: x.n }), x.chId]),
+      ownRetro && [String(items.length + 1).padStart(2, '0'), PF.t('deck.retro'), PF.t('deck.retro-desc'), retro[0].id],
+      [String(items.length + (ownRetro ? 2 : 1)).padStart(2, '0'), PF.t('deck.more'), PF.t('deck.more-desc'), 'end']].filter(Boolean);
     const make = (compact) => {
       const s = PF.scene({ id: 'toc', tpl: 'P2', kind: 'bare', cls: compact ? 'compact' : '', foot, sec: PF.t('name.toc'), stitle: PF.t('name.toc') });
       // [수강생 변경 11-23] 목차가 6줄 이상이면 두 칸으로 나눔(Meow2048 6줄 → 3/3). 예전 기준은 8줄 이상
