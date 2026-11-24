@@ -1,0 +1,40 @@
+/* ─────────────────────────────────────────────────────────────
+   다크 테마 (theme/theme-dark.css) — 2026-11-24
+   예전 슬라이드 · 상세 문서의 기본 테마(어두운 바탕 · profile.md 강조색 #2F6FEB → 보랏빛 그러데이션)를 그대로 옮긴 값입니다.
+   슬라이드 · 상세 문서의 [다크 모드] 버튼을 누르면 theme/theme.css(밝은 테마) 위에 이 파일이 덮여 씌워집니다.
+   손잡이(--t-*)만 씁니다 — 형식은 theme/theme.css와 같음(점검: python .claude/skills/portfolio-theme/check-theme.py theme/theme-dark.css)
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  /* ① 바탕과 글자 — 렌더러 기본값 */
+  --t-scheme: dark;
+  --t-bg: #0A0A0D;
+  --t-surface: #131318;
+  --t-ink: #F4F4F6;
+  --t-body: #BDBDC7;
+  --t-muted: #9A9AA6;
+  --t-line: #24242C;
+  --t-line-2: #3D3D48;
+
+  /* ② 강조색 — profile.md 강조색과, 페이지가 거기서 만들던 짝 색(보라 쪽 50° · 95°) */
+  --t-accent: #2F6FEB;
+  --t-accent-2: #8C2FEB;
+  --t-accent-3: #EB2FBD;
+
+  /* ③ 모양 */
+  --t-radius: 20px;
+  --t-pill: 999px;
+  --t-shadow: rgb(0 0 0 / .8);
+
+  /* ④ 영문 라벨 글꼴 — 밝은 테마와 같게(바꾸면 슬라이드 배치를 다시 재야 함) */
+  --t-display: 'Montserrat';
+
+  /* ⑤ 효과 — 렌더러 기본값(2색 라벨 · 광채 배지 · 광채 바탕) */
+  --t-grad: linear-gradient(90deg, var(--accent-ink), var(--accent-2-ink));
+  --t-badge: linear-gradient(160deg, var(--accent-fill) 0%, var(--accent-2-fill) 62%, var(--accent-3) 130%);
+  --t-glow: 1;
+  --t-mark: 1;
+
+  /* ⑥ 다이어그램 판 — 렌더러 기본(밝은 회청색 판). 밝은 테마의 값을 덮어쓰려고 적어 둠 */
+  --t-diagram: #F4F5FA;
+}

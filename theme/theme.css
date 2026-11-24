@@ -1,10 +1,43 @@
 /* ─────────────────────────────────────────────────────────────
-   테마 (theme/theme.css) — 포트폴리오 문서·발표 덱·상세 문서가 마지막에 싣는 파일
-   지금은 비어 있어 기본 테마(어두운 바탕 · profile.md 강조색 → 보랏빛 그러데이션)를 씁니다.
-
-   바꾸려면: Claude Code에서 마음에 드는 웹페이지 스크린샷을 첨부하고
-     /portfolio-theme
-   를 입력하세요. Claude가 색·모양·영문 글꼴·효과를 정해진 규칙으로 뽑아 이 파일을 채웁니다.
-   손잡이(--t-*) 설명: .claude/skills/portfolio-theme/rules.md
-   이 파일은 /portfolio-update가 건드리지 않습니다(템플릿을 업데이트해도 내 테마가 남음).
+   테마 (theme/theme.css) — /portfolio-theme가 만듦 · 2026-11-24
+   참고한 화면: 내 포트폴리오 페이지(index.html 3패널 — 흰 바탕 · 주황 강조)
+   뽑은 인상: 흰 바탕 · 옅은 회색 카드 · 검은 제목 · 주황 강조(노랑 → 주황) · 평평한 화면(광채 없음)
+   색만 맞췄습니다. 모양(카드 모서리 20px · 알약 버튼)과 영문 라벨 글꼴(Montserrat)은 예전 그대로입니다.
+   이 파일 = 밝은 테마(기본). 다크 테마는 theme/theme-dark.css — 슬라이드 · 상세 문서의 [다크 모드] 버튼으로 바꿈
+   값을 고쳐도 됩니다(저장 → 새로고침). 손잡이 설명: .claude/skills/portfolio-theme/rules.md
+   이 파일은 /portfolio-update가 건드리지 않습니다. 기본 테마로 되돌리기: /portfolio-theme 되돌리기
    ───────────────────────────────────────────────────────────── */
+
+:root {
+  /* ① 바탕과 글자 — 포트폴리오 페이지(index.html)의 --bg · --surface · --ink · --body · --muted · --line 그대로 */
+  --t-scheme: light;
+  --t-bg: #FFFFFF;
+  --t-surface: #F7F7F7;
+  --t-ink: #0A0A0A;
+  --t-body: #2B2B2B;
+  --t-muted: #6E6E6E;
+  --t-line: #EBEBEB;
+  --t-line-2: #D1D1D1;
+
+  /* ② 강조색 — 포트폴리오 페이지의 주황(#FF9800)과 그러데이션(#FFC200 → #FFAC00 → #FF9800). 글자용 진하기·흰 글자 칠은 페이지가 자동으로 맞춤 */
+  --t-accent: #FF9800;
+  --t-accent-2: #FFAC00;
+  --t-accent-3: #FFC200;
+
+  /* ③ 모양 — 예전 그대로(색만 바꿈) */
+  --t-radius: 20px;
+  --t-pill: 999px;
+  --t-shadow: rgb(20 22 30 / .10);
+
+  /* ④ 영문 라벨 글꼴 — 예전 그대로(슬라이드 배치가 글꼴 폭으로 재어져 있음) */
+  --t-display: 'Montserrat';
+
+  /* ⑤ 효과 — 포트폴리오 페이지처럼 단색 라벨 · 평평한 바탕 */
+  --t-grad: linear-gradient(var(--accent-ink), var(--accent-ink));
+  --t-badge: var(--accent-fill);
+  --t-glow: 0;
+  --t-mark: 0;
+
+  /* ⑥ 다이어그램 판 — 밝은 바탕이라 카드 색과 같게 */
+  --t-diagram: #F7F7F7;
+}

@@ -287,7 +287,46 @@ dialog[open]{animation:pop .3s ease}
   h2.title{font-size:25px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* [수강생 변경 11-24] 다크 모드 — 오른쪽 위 버튼(assets/theme-switch.js)이 <html data-pf-theme="dark">를 켬.
+   색은 슬라이드 · 상세 문서의 다크 테마(theme/theme-dark.css)와 같음. 고른 모드는 세 페이지가 함께 기억(localStorage pf-theme).
+   화면에서만 — 인쇄는 밝은 색 그대로 */
+.top-links .theme-btn{font-size:12px;font-weight:600;padding:6px 12px;border-radius:var(--pill);color:var(--muted);transition:all .2s}
+.top-links .theme-btn:hover{color:var(--ink);background:var(--surface)}
+.theme-btn .l::before{content:"\263E\00A0"}
+.theme-btn .s{display:none}
+@media (max-width:620px){.theme-btn .l{display:none}.theme-btn .s{display:inline}}
+@media screen{
+  :root[data-pf-theme="dark"]{
+    --bg:#0A0A0D; --surface:#131318; --ink:#F4F4F6; --body:#BDBDC7; --muted:#9A9AA6;
+    --line:#24242C; --line-2:#3D3D48;
+    --accent:#2F6FEB; --accent-ink:#6D9AF1; --accent-soft:#101A30;
+    --grad:linear-gradient(160deg,#2F6FEB 0%,#8C2FEB 62%,#EB2FBD 130%);
+    --shadow:0 10px 30px rgb(0 0 0 / .6);
+    --raise:#1B1B22; --hl:rgb(47 111 235 / .45);
+    color-scheme:dark;
+  }
+  [data-pf-theme="dark"] .theme-btn .l::before{content:"\2600\00A0"}
+  [data-pf-theme="dark"] .top{background:rgb(10 10 13 / .88)}
+  [data-pf-theme="dark"] .toggle .thumb{background:var(--raise);box-shadow:0 2px 8px rgb(0 0 0 / .5)}
+  [data-pf-theme="dark"] .edge{background:var(--surface)}
+  [data-pf-theme="dark"] .hero h1 .hl{background:linear-gradient(transparent 62%,var(--hl) 62%)}
+  [data-pf-theme="dark"] .page b{background:linear-gradient(transparent 64%,var(--hl) 64%)}
+  [data-pf-theme="dark"] .btn:not(.primary):not(.accent){background:var(--surface)}
+  [data-pf-theme="dark"] .btn.primary{color:var(--bg)}
+  [data-pf-theme="dark"] .btn.primary:hover{background:#D8D8DE}
+  [data-pf-theme="dark"] .btn.accent,[data-pf-theme="dark"] .card .no,[data-pf-theme="dark"] .m-cta a.doc{color:#fff}
+  [data-pf-theme="dark"] .stack button:hover,[data-pf-theme="dark"] .stack button[aria-selected="true"],
+  [data-pf-theme="dark"] .evi-tabs button[aria-selected="true"]{background:var(--raise)}
+  [data-pf-theme="dark"] .chapters button[aria-selected="true"]{color:var(--bg)}
+  [data-pf-theme="dark"] .page,[data-pf-theme="dark"] .card,[data-pf-theme="dark"] dialog{background:var(--surface)}
+  [data-pf-theme="dark"] .ico,[data-pf-theme="dark"] .m-close{color:#0A0A0A}
+  [data-pf-theme="dark"] a.ico.github:hover{background:#0A0A0A;color:#fff}
+  [data-pf-theme="dark"] .m-cta a.deck{color:var(--bg)}
+  [data-pf-theme="dark"] .m-cta a.deck:hover{background:#D8D8DE}
+}
 </style>
+<script src="assets/theme-switch.js"></script><!-- [수강생 변경 11-24] 밝은 ↔ 다크 전환(슬라이드 · 상세 문서와 같은 기억). 첫 화면 전에 적용하려고 <head>에서 실행 -->
 </head>
 <body>
 
@@ -301,7 +340,7 @@ dialog[open]{animation:pop .3s ease}
   </nav>
   <div class="top-links">
     <a href="https://github.com/NaJungWon" target="_blank" rel="noopener">GitHub</a>
-    <a class="hide-sm" href="https://www.notion.so/Unity-2d74d365888f806daec7f2226b332938" target="_blank" rel="noopener">Notion</a>
+    <button type="button" class="theme-btn" data-pf-theme-btn><span class="l"></span><span class="s"></span></button><!-- [수강생 변경 11-24] 다크 모드 버튼(오른쪽 위, GitHub 옆) -->
   </div>
 </header>
 
@@ -323,7 +362,6 @@ dialog[open]{animation:pop .3s ease}
             <div class="contact">
               <a class="btn primary" href="mailto:njw3458@gmail.com"><small>EMAIL</small>njw3458@gmail.com</a>
               <a class="btn" href="https://github.com/NaJungWon" target="_blank" rel="noopener"><small>GITHUB</small>NaJungWon</a>
-              <a class="btn" href="https://www.notion.so/Unity-2d74d365888f806daec7f2226b332938" target="_blank" rel="noopener"><small>NOTION</small>Unity 기술노트</a>
               <button class="btn accent" data-go="2">프로젝트 보기 →</button>
             </div>
           </div>
@@ -464,7 +502,7 @@ const LETTER = [
   { n: '04', t: '맺음', h: '경계를 넘는 개발자', en: 'NEXT', p: [
     '앞으로 3~5년은 클라이언트 개발자로서 게임 전체의 시스템과 전투를 설계하는 일에 집중하고 싶습니다. 플레이어가 손으로 느끼는 재미는 결국 그 구조 위에서 만들어진다고 생각하기 때문입니다. 그다음으로는 많은 오브젝트가 동시에 움직여도 흔들리지 않는 최적화까지 넓히고 싶습니다.',
     'AI가 등장하면서 클라이언트, 서버, 기획의 경계는 점점 허물어질 것이라고 생각합니다. 저는 기술을 중심에 두되, 그 위에서 기획과 리드까지 천천히 넓혀 가는 개발자가 되고 싶습니다. 어떤 자리에서든 먼저 기반을 다지고, 그 위에 기능을 쌓는 방식은 그대로 가져가겠습니다.',
-    '자세한 구현 과정과 문제 해결 경험은 <a href="#portfolio">포트폴리오</a>와 <a href="https://github.com/NaJungWon" target="_blank" rel="noopener">GitHub</a> · <a href="https://www.notion.so/Unity-2d74d365888f806daec7f2226b332938" target="_blank" rel="noopener">Notion</a>에 정리했습니다.' ] },
+    '자세한 구현 과정과 문제 해결 경험은 <a href="#portfolio">포트폴리오</a>와 <a href="https://github.com/NaJungWon" target="_blank" rel="noopener">GitHub</a>에 정리했습니다.' ] },
 ];
 let ch = 0;
 $('#chapters').innerHTML = LETTER.map((c, i) =>
