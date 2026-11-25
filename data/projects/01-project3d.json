@@ -70,7 +70,7 @@
       "what": "무기 · 스킬 · 몹 공격이 날아가서 맞히는 방식을 논타겟(직진) · 타겟팅(추적) · 범위(지정 위치) 세 가지로 나누고, 종류마다 언제 판정하고 언제 사라지는지를 정했습니다.",
       "how": "모든 공격은 UnitAttack.FireHit 입구 하나로 HitUnit을 꺼내 쏘고, 자식(NonTargetHit · TargetingHit · SummonHit)은 움직이는 방식(Launch)만 override합니다. 플레이어와 몹이 같은 투사체를 쓰고, 주인(Owner)으로 맞힐 대상을 가립니다.",
       "why": "투사체 구조가 다섯 번 바뀌는 동안 코드가 무거워져, \"생성된 뒤 어떻게 움직이는가\"를 기준으로 셋으로 나누고 입구를 하나로 모으자고 제가 제안했습니다. 새 종류가 생기면 자식만 추가하면 됩니다. 몹 공격은 피할 수 있도록 전부 논타겟입니다.",
-      "section": "3.4 공격을 어떻게 나눌 것인가: 타겟팅 · 논타겟 · 범위 🔍",
+      "section": "3.4 논타겟 · 타겟팅 · 범위 🔍",
       "image": {
         "src": "images/range_attack.gif",
         "w": 560,
@@ -83,7 +83,7 @@
       "what": "모든 유닛은 피격 원통(반경 · 반높이)을 갖고, 공격은 모양(구 · 기둥 · 직육면체)과 크기만 들고 와서 IsHitBy 하나로 판정합니다.",
       "how": "후보는 공간 격자로 좁히고(몹이 쏜 것은 플레이어 최대 4명을 전부 검사), 정밀 판정만 피격 원통까지의 거리 계산으로 합니다.",
       "why": "몹 1000마리 · 최대 4인이 목표라, 개발 속도를 내주더라도 몹 수만큼 쌓이는 물리 비용을 없애려고 콜라이더 대신 직접 계산하는 판정을 골랐습니다.",
-      "section": "3.5 무엇을 맞혔는지 찾기",
+      "section": "3.6 피격 판정을 어떤 모양으로 할 것인가 🧭",
       "image": {
         "src": "images/enemy_hit_cylinder_tilt.png",
         "w": 601,
@@ -113,7 +113,7 @@
       "solution": "칸을 옮길 때는 이전 칸 리스트에서만 빼고 몹 수는 건드리지 않음",
       "result": "생존 수가 실제와 같아져 최대 · 최소 생존 수 규칙이 동작",
       "lesson": "같은 함수(Unregister)를 \"완전히 빼기\"와 \"칸만 옮기기\"에 같이 쓰면, 함수가 하는 부수 효과(몹 수 감소)까지 따라옵니다. 이름이 같은 일을 하는지 확인하고 재사용해야 합니다.",
-      "section": "5.5 트러블슈팅: 최대 몹 수가 적용되지 않고 상시 소환이 끝없이 나온 문제"
+      "section": "5.2 몹을 어떤 방식으로 소환할 것인가 🤝"
     },
     {
       "title": "몹 원거리 공격이 플레이어에게 안 맞은 문제",
@@ -122,7 +122,7 @@
       "solution": "부모 Awake를 virtual로 열고 base.Awake() 호출, 이어서 체력을 채우는 일을 Awake에서 빼서 Player.Init → StatHandler.Init으로 옮김",
       "result": "플레이어가 살아 있는 상태로 시작해 몹 원거리 공격이 정상적으로 맞음",
       "lesson": "판정을 옮겨서 생긴 버그가 아니라, 옮기면서 추가한 검사(사망 여부)가 숨어 있던 버그를 드러낸 것이었습니다. 초기화는 Unity 생명주기 함수가 아니라 순서가 보이는 Init에 두는 편이 안전했습니다.",
-      "section": "3.7 트러블슈팅: 몹 원거리 공격이 플레이어에게 안 맞은 문제"
+      "section": "3.2 어떤 공격과 판정 대상이 있나"
     },
     {
       "title": "플레이어가 비탈 위에 있으면 몹이 멈춘 문제",
@@ -131,7 +131,7 @@
       "solution": "장애물 위에서 쓰던 \"근처로 모이기\"를 재사용 — 플레이어 주변 10칸 안에서 아직 길이 없는 칸 중 가장 가까운 칸을 보조 목표로 추가(AddUnreachedTargets)",
       "result": "몹이 멈추지 않고, 오를 수 없는 비탈 아래 · 플레이어 근처로 모여듦",
       "lesson": "예외 상황마다 새 규칙을 만들기보다, 이미 있는 규칙이 왜 이 경우를 못 잡는지를 먼저 보면 코드가 늘지 않습니다",
-      "section": "2.5 트러블슈팅: 플레이어가 비탈 위에 있으면 몹이 멈춘 문제"
+      "section": "2.2 흐름장(Flow Field)이란"
     }
   ],
   "screenshots": [
@@ -198,8 +198,8 @@
       {"key": "overview", "title": "개요", "sectionPath": ["1. 개요"]},
       {"key": "map", "title": "몬스터 무리의 이동 제어", "sectionPath": ["2. 몬스터 무리의 이동 제어"]},
       {"key": "combat", "title": "공격이 맞았는지 판정하기", "sectionPath": ["3. 공격이 맞았는지 판정하기"]},
-      {"key": "augment", "title": "증강 카드 및 능력치 적용을 어떻게 할 것인가", "sectionPath": ["4. 증강 카드 및 능력치 적용을 어떻게 할 것인가"]},
-      {"key": "wave", "title": "몹 스폰 및 경험치 규칙", "sectionPath": ["5. 몹 스폰 및 경험치 규칙"]},
+      {"key": "augment", "title": "증강 카드와 스탯", "sectionPath": ["4. 증강 카드와 스탯"]},
+      {"key": "wave", "title": "몹 소환과 경험치", "sectionPath": ["5. 몹 소환과 경험치"]},
       {"key": "extra", "title": "그 밖의 기능", "sectionPath": ["6. 그 밖의 기능"]}
     ],
     "slides": [
@@ -210,97 +210,81 @@
         "tab": "개요",
         "title": {"text": "1.1 게임 소개", "verbatim": true},
         "lead": null,
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "1. 개요", "1.1 게임 소개"],
+        "sectionPath": ["1. 개요", "1.1 게임 소개"],
         "points": [
-          {"label": "시점", "text": "메가봉크처럼 캐릭터 뒤에서 보는 3인칭 시점입니다.", "verbatim": true},
           {
-            "label": "맵",
-            "text": "맵은 고원 · 비탈 · 장애물이 있는 3D 지형이라, 플레이어는 점프로 오르내리고 높은 곳에서 뛰어내리면 낙하 데미지를 받습니다.",
-            "verbatim": true
+            "label": "게임",
+            "text": "몰려오는 몹 무리를 증강 카드로 버티는 PC용 3인칭 3D 뱀서라이크로, 집중포화 모드와 메가봉크를 모티브로 했습니다.",
+            "verbatim": false
           },
-          {"label": "조작", "text": "기본 무기는 자동으로 공격하고, 플레이어는 움직이며 스킬을 씁니다.", "verbatim": false}
+          {"label": "지형", "text": "고원 · 비탈 · 장애물이 있는 3D 지형이라, 점프로 오르내리며 지형을 보고 피할 길을 골라야 합니다.", "verbatim": false},
+          {
+            "label": "다시 설계",
+            "text": "이전 팀 프로젝트 DGS를 몹 1000마리 · 최대 4인을 버티도록 구조부터 다시 설계해 1인으로 만들고 있습니다.",
+            "verbatim": false
+          }
         ],
         "visuals": [
-          {"kind": "image", "src": "images/play_summary.gif", "w": 480, "h": 270},
-          {"kind": "table", "n": 2, "fp": "레퍼런스|가져온 것|내 프로젝트에서 다른 점"}
+          {
+            "kind": "image",
+            "src": "images/play_summary.gif",
+            "w": 480,
+            "h": 270,
+            "caption": {"text": "마법사로 몹 무리와 싸우는 장면 — 4분 30초 · 6분 무렵", "verbatim": true}
+          }
         ],
-        "arrange": "split",
         "edited": true
       },
       {
         "key": "what",
         "chapter": "overview",
         "layout": "visual",
-        "tab": "개요",
-        "title": {"text": "1.1 게임 소개", "verbatim": true},
-        "lead": {"text": "PROJECT3D는 리그 오브 레전드 '집중포화' 모드와 '메가봉크'를 모티브로 한 PC용 3인칭 3D 뱀서라이크입니다.", "verbatim": true},
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "1. 개요", "1.1 게임 소개"],
+        "tab": "흐름",
+        "title": {"text": "1.1 게임 소개 — 게임 루프", "verbatim": false},
+        "lead": null,
+        "sectionPath": ["1. 개요", "1.1 게임 소개"],
         "points": [
-          {"label": "목표한 경험", "text": "4명이 지형을 읽으며 협동해 살아남고, 보스를 토벌해 클리어하는 경험입니다.", "verbatim": true},
-          {"label": "", "text": "총 5주 계획 중 2주 프로토타입이라 멀티와 보스는 아직 없고, 끝은 무한런으로 임시 구현해 두었습니다.", "verbatim": true},
-          {
-            "label": "",
-            "text": "지형을 보고 움직여야 살아남는 부분은 지금도 들어가 있습니다 — 몹이 흐름장으로 경사를 따라 쫓아오고, 공중 몹과 기믹이 한곳에서 버티지 못하게 막습니다.",
-            "verbatim": false
-          }
+          {"label": "인게임", "text": "몹을 처치해 경험치 구 · 골드를 얻고, 레벨업마다 증강 카드를 골라 무기와 능력치를 키웁니다.", "verbatim": false},
+          {"label": "로비", "text": "게임이 끝나면 로비로 돌아와 판에서 얻은 골드로 능력치를 업그레이드하고 다시 도전합니다.", "verbatim": false}
         ],
         "visuals": [{"kind": "mermaid", "n": 1, "fp": "flowchart LR"}],
         "edited": true
       },
       {
-        "key": "rebuild",
+        "key": "why",
         "chapter": "overview",
-        "layout": "visual",
+        "layout": "full",
         "tab": "개요",
-        "title": {"text": "1.2 목표", "verbatim": true},
-        "lead": {"text": "처음 기획할 때는 DGS 코드를 고쳐서 쓸 생각이었습니다.", "verbatim": true},
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "1. 개요", "1.2 목표"],
+        "title": {"text": "1.2 목표 — 몹 1000마리 기준으로 바꾼 것", "verbatim": false},
+        "lead": null,
+        "sectionPath": ["1. 개요", "1.2 목표"],
         "points": [
           {
-            "label": "문제",
-            "text": "완성 후 빌드를 측정해 보니 몬스터 100마리 이상 · 경험치 구가 쌓이는 후반에 최저 20.7 FPS까지 떨어졌습니다.",
+            "label": "출발점",
+            "text": "DGS는 완성 후 빌드에서 몹 141마리일 때 23.6 FPS까지 떨어졌고, 병목은 살아 있는 몹마다 매 프레임 드는 경로 · 물리 비용이었습니다.",
             "verbatim": false
           },
           {
-            "label": "원인",
-            "text": "원인은 몹을 만드는 비용이 아니라 살아 있는 몹 하나하나가 매 프레임 길을 찾고 충돌을 검사하는 비용이었습니다(몹마다 NavMeshAgent 경로 · Rigidbody · 트리거 Collider).",
-            "verbatim": true
-          },
-          {
-            "label": "이유",
-            "text": "DGS는 몹 이동이 NavMesh + Collider 기반이고, 경사가 없는 평지 · 탑다운 시점이라 모든 공격이 수평으로만 나갔으며, 공격을 묶는 디자인 패턴이나 상속 구조도 없었습니다.",
+            "label": "이 덱을 보는 기준",
+            "text": "기능마다 몹 1000마리 · 4인일 때 매 프레임 무엇이 비용이 되는지, 그래서 DGS의 무엇을 바꿨는지를 보여 드립니다.",
             "verbatim": false
-          },
-          {
-            "label": "해결 방향",
-            "text": "높이가 있는 3D 지형으로 옮기려면 고칠 곳이 너무 많아, 몹 이동 · 공격 같은 전체 시스템을 먼저 짜고 그 기준으로 다시 만들기로 했습니다.",
-            "verbatim": true
           }
         ],
-        "visuals": [
-          {
-            "kind": "image",
-            "src": "images/dgs_latewave_24fps.jpg",
-            "w": 1280,
-            "h": 720,
-            "caption": {"text": "DGS 후반 — 몬스터 141마리, 23.6 FPS (빌드)", "verbatim": true}
-          },
-          {"kind": "table", "n": 1, "fp": "목표|기준|지금 상태"}
-        ],
-        "arrange": "side",
+        "visuals": [{"kind": "table", "n": 2, "fp": "시스템 (장)|DGS에서 들던 비용|여기서 바꾼 방식|1000마리 기준 근거"}],
+        "arrange": "top",
         "edited": true
       },
       {
         "key": "horde-chase",
         "chapter": "map",
-        "layout": "full",
-        "tab": "결과",
+        "layout": "visual",
+        "tab": "개요",
         "title": {"text": "2. 몬스터 무리의 이동 제어", "verbatim": true},
-        "lead": {"text": "몹 무리가 고원 · 비탈을 따라 플레이어를 쫓아오는 움직임입니다.", "verbatim": true},
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "2. 몬스터 무리의 이동 제어"],
+        "lead": null,
+        "sectionPath": ["2. 몬스터 무리의 이동 제어"],
         "points": [
-          {"label": "흐름장 공유", "text": "DGS처럼 몹마다 길을 찾게 하지 않고, 맵을 한 번 굽고 흐름장 하나를 모든 몹이 함께 읽게 만들었습니다.", "verbatim": true},
-          {"label": "지형", "text": "땅 몹 무리는 비탈을 따라 오르내리고, 절벽처럼 높이차가 큰 곳은 흐름장이 가리키는 길로 돌아서 옵니다.", "verbatim": false}
+          {"label": "무리 추적", "text": "몹 무리가 고원 · 비탈을 따라 플레이어를 쫓아옵니다.", "verbatim": false},
+          {"label": "공유", "text": "몹마다 길을 찾게 하지 않고, 맵을 한 번 굽고 흐름장 하나를 모든 몹이 함께 읽습니다.", "verbatim": false}
         ],
         "visuals": [
           {
@@ -309,44 +293,27 @@
             "w": 560,
             "h": 316,
             "caption": {"text": "몹 무리가 흐름장을 따라 언덕 위 플레이어를 쫓아옴 (전사)", "verbatim": true}
-          },
-          {
-            "kind": "image",
-            "src": "images/map_overview_height.jpg",
-            "w": 1919,
-            "h": 882,
-            "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "1. 개요", "1.1 게임 소개"]
           }
         ],
-        "arrange": "row",
         "edited": true
       },
       {
         "key": "track-choice",
         "chapter": "map",
-        "layout": "visual",
+        "layout": "full",
         "tab": "선택",
-        "title": {"text": "2.1 몹들을 어떻게 이동시킬 것인가", "verbatim": true},
-        "lead": {"text": "추적 방식은 세 번 바뀌었습니다.", "verbatim": true},
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "2. 몬스터 무리의 이동 제어", "2.1 몹들을 어떻게 이동시킬 것인가"],
+        "title": {"text": "2.1 몹들을 어떻게 이동시킬 것인가? 🧭", "verbatim": false},
+        "lead": null,
+        "sectionPath": ["2. 몬스터 무리의 이동 제어", "2.1 몹들을 어떻게 이동시킬 것인가"],
         "points": [
           {
-            "label": "최종 결정 [C]",
-            "text": "DGS 빌드 측정에서 병목이 \"살아 있는 몹마다 드는 비용\"이었기 때문에, 몹 하나하나가 길을 찾지도, 물리로 주변을 감지하지도 않게 하는 쪽을 골랐습니다.",
-            "verbatim": true
-          }
-        ],
-        "visuals": [
-          {
-            "kind": "image",
-            "src": "images/flowfield_gizmo.png",
-            "w": 1139,
-            "h": 330,
-            "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "2. 몬스터 무리의 이동 제어", "2.2 흐름장(Flow Field)이란"]
+            "label": "선택 이유",
+            "text": "DGS의 병목이 살아 있는 몹마다 드는 비용이라, 몹 하나하나가 길을 찾지도 물리로 감지하지도 않는 [C]를 골랐습니다.",
+            "verbatim": false
           },
-          {"kind": "table", "n": 1, "fp": "|[A] 몹마다 NavMeshAgent (DGS)|[B] 콜라이더 · 레이 기반 추적|[C] MapGrid + 흐름장 하나 공유 ✓"}
+          {"label": "1000마리 기준", "text": "경로 계산이 몹 수만큼에서 0.2초마다 한 번으로 줄어듭니다.", "verbatim": false}
         ],
-        "arrange": "split",
+        "visuals": [{"kind": "table", "n": 1, "fp": "|[A] 몹마다 NavMeshAgent (DGS)|[B] 콜라이더 · 레이 기반 추적|[C] MapGrid + 흐름장 하나 공유 ✓"}],
         "edited": true
       },
       {
@@ -355,23 +322,26 @@
         "layout": "visual",
         "tab": "구조",
         "title": {"text": "2.2 흐름장(Flow Field)이란", "verbatim": true},
-        "lead": {"text": "흐름장은 맵의 모든 칸에 \"목표(플레이어)에 가려면 어느 쪽으로 가야 하는지\"를 미리 적어 둔 지도입니다.", "verbatim": true},
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "2. 몬스터 무리의 이동 제어", "2.2 흐름장(Flow Field)이란"],
+        "lead": null,
+        "sectionPath": ["2. 몬스터 무리의 이동 제어", "2.2 흐름장(Flow Field)이란"],
         "points": [
+          {"label": "거리 채우기", "text": "플레이어 칸을 0으로 두고 이웃 칸으로 퍼져 나가며 거리를 적습니다(BFS).", "verbatim": false},
+          {"label": "방향 적기", "text": "각 칸은 이웃 중 거리가 가장 작은 칸을 가리키고, 몹은 자기 칸의 화살표만 따라갑니다.", "verbatim": false},
           {
-            "label": "거리 채우기",
-            "text": "플레이어가 선 칸을 0으로 두고, 이웃 칸으로 한 칸씩 퍼져 나가며 거리를 1, 2, 3… 적습니다(BFS).",
-            "verbatim": false
-          },
-          {"label": "방향 적기", "text": "각 칸은 이웃 중 거리가 가장 작은 칸을 가리킵니다.", "verbatim": true},
-          {
-            "label": "결과",
-            "text": "몹은 길을 찾지 않고 자기가 선 칸의 화살표만 따라가면 플레이어에게 도착합니다. 몹이 1000마리여도 계산은 0.2초마다 한 번입니다.",
+            "label": "비탈 위 플레이어",
+            "text": "몹이 오를 수 없는 곳에 플레이어가 서면 멈추던 문제를, 장애물 위에서 쓰던 \"근처로 모이기\"를 재사용해 풀었습니다.",
             "verbatim": false
           }
         ],
-        "visuals": [{"kind": "image", "src": "images/flowfield_example.png", "w": 560, "h": 600}],
-        "arrange": "side",
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/flowfield_example.png",
+            "w": 560,
+            "h": 600,
+            "caption": {"text": "이동 방향 지도 예시 — P는 플레이어, 숫자는 플레이어까지의 거리, 화살표는 각 칸이 가리키는 방향(이웃 중 거리가 가장 작은 칸)", "verbatim": true}
+          }
+        ],
         "edited": true
       },
       {
@@ -379,39 +349,50 @@
         "chapter": "map",
         "layout": "visual",
         "tab": "선택",
-        "title": {"text": "2.4 몹의 추적을 어떻게 자연스럽게 할 것인가 🧭", "verbatim": true},
-        "lead": {"text": "몹 무리가 한 점에 겹치지 않고 자연스럽게 쫓아오도록, 흐름장 방향에 분리(Separate) 를 더했습니다.", "verbatim": true},
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "2. 몬스터 무리의 이동 제어", "2.4 몹의 추적을 어떻게 자연스럽게 할 것인가 🧭"],
+        "title": {"text": "2.4 몹끼리 겹치지 않게 하려면? 🧭", "verbatim": false},
+        "lead": null,
+        "sectionPath": ["2. 몬스터 무리의 이동 제어", "2.4 몹의 추적을 어떻게 자연스럽게 할 것인가 🧭"],
         "points": [
-          {"label": "분리", "text": "분리는 1.5m 안에 있는 몹에게서 멀어지는 방향을 이동 방향에 더하는 방식입니다.", "verbatim": false},
-          {"label": "공간 격자", "text": "주변 몹은 공간 격자에서 내 주변 9칸만 가져옵니다.", "verbatim": false},
+          {"label": "분리", "text": "1.5m 안의 몹에게서 멀어지는 방향을 흐름장 방향에 더합니다.", "verbatim": false},
           {
-            "label": "고른 이유",
-            "text": "몹마다 Collider를 붙이면 물리 비용이 몹 수만큼 쌓이고, 몰리면 서로 밀어내며 진동하기 쉬워서 Collider 없는 분리를 골랐습니다.",
+            "label": "공간 격자",
+            "text": "모든 몹끼리 비교하면 1000마리일 때 약 100만 번이라, 2m 격자에서 주변 9칸 몹만 가져옵니다(계산상 수천 번).",
             "verbatim": false
+          },
+          {"label": "콜라이더 없이", "text": "몹마다 Collider를 붙이면 물리 비용이 몹 수만큼 쌓이고 몰리면 진동하기 쉬워 쓰지 않았습니다.", "verbatim": false}
+        ],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/separate_example.png",
+            "w": 1350,
+            "h": 840,
+            "caption": {
+              "text": "분리 예시 — ① 1.5m 안의 몹에게서 멀어지는 방향을 흐름장 방향에 더해 최종 이동 방향을 정함, 1.5m 밖의 몹은 무시 ② 2m 칸 중 내 주변 9칸의 몹만 검사",
+              "verbatim": true
+            }
           }
         ],
-        "visuals": [{"kind": "image", "src": "images/separate_example.png", "w": 1350, "h": 840}],
         "edited": true
       },
       {
         "key": "air-mob",
         "chapter": "map",
         "layout": "visual",
-        "tab": "구현",
-        "title": {"text": "2.5 몹 높이를 어떻게 정할 것인가", "verbatim": true},
-        "lead": {"text": "땅 몹과 공중 몹은 높이를 다르게 정합니다.", "verbatim": false},
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "2. 몬스터 무리의 이동 제어", "2.5 몹 높이를 어떻게 정할 것인가"],
+        "tab": "선택",
+        "title": {"text": "2.5 몹 높이를 어떻게 정할 것인가?", "verbatim": false},
+        "lead": null,
+        "sectionPath": ["2. 몬스터 무리의 이동 제어", "2.5 몹 높이를 어떻게 정할 것인가"],
         "points": [
+          {"label": "땅 · 공중", "text": "땅 몹은 흐름장을 따라 비탈을 오르내리고, 공중 몹은 장애물 위로 고도를 올려 넘어옵니다.", "verbatim": false},
           {
-            "label": "땅 몹",
-            "text": "흐름장이 가리키는 방향으로 움직이고, 높이는 발밑 GroundHeight를 주변 4칸으로 보간합니다. 경사 40°까지 따라 오르내리고, 절벽처럼 높이차가 큰 곳은 흐름장을 따라 돌아갑니다.",
+            "label": "레이 대신 격자",
+            "text": "몹마다 매 프레임 레이를 쏘는 대신, 처음 구울 때 저장한 칸 높이 4개를 보간합니다(레이 1000번 → 배열 읽기 4 × 1000, 계산상).",
             "verbatim": false
           },
-          {"label": "공중 몹", "text": "흐름장을 쓰지 않고 플레이어에게 직진하고, 앞이 높으면 수평 이동을 멈추고 먼저 올라갑니다.", "verbatim": false},
           {
-            "label": "공중 몹을 바꾼 점",
-            "text": "처음 코드는 장애물을 옆으로 돌아가는 방식이었는데, 지그재그로 움직이는 원인이라 \"높으면 올라가서 넘는다\"로 바꿨습니다.",
+            "label": "AI와",
+            "text": "AI가 \"1000마리 레이는 비싸다\"고 말을 바꿨을 때, 제가 처음 목표를 다시 짚어 몹별 레이만 격자 값으로 바꿨습니다.",
             "verbatim": false
           }
         ],
@@ -424,231 +405,250 @@
             "caption": {"text": "공중 몹 무리가 지형 위로 날아옴 (위쪽 보라색)", "verbatim": true}
           }
         ],
-        "arrange": "side",
         "edited": true
       },
       {
         "key": "combat-overview",
         "chapter": "combat",
-        "layout": "overview",
+        "layout": "visual",
         "tab": "개요",
         "title": {"text": "3. 공격이 맞았는지 판정하기", "verbatim": true},
-        "lead": {"text": "플레이어의 무기 · 스킬과 몹의 공격은 모두 같은 흐름으로 맞았는지를 판정합니다.", "verbatim": true},
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "3. 공격이 맞았는지 판정하기"],
+        "lead": null,
+        "sectionPath": ["3. 공격이 맞았는지 판정하기"],
         "points": [
+          {"label": "콜라이더 없이", "text": "몹에는 물리 콜라이더가 없고, 모든 유닛이 피격 원통을 가지며 공격은 모양과 크기만 들고 와서 판정합니다.", "verbatim": false},
+          {"label": "두 단계", "text": "후보는 공간 격자로 좁히고, 정밀 판정만 수학으로 합니다.", "verbatim": false}
+        ],
+        "visuals": [
           {
-            "label": "피격 원통",
-            "text": "몹에는 물리 콜라이더가 없어서, 모든 유닛이 피격 원통(반경 · 반높이 · 기울기)을 갖고, 공격은 모양과 크기만 들고 와서 판정합니다.",
-            "verbatim": false
-          },
-          {"label": "두 단계", "text": "후보는 공간 격자로 좁히고(2.4), 정밀 판정만 수학으로 합니다.", "verbatim": true},
-          {
-            "label": "높이가 있는 전투",
-            "text": "판정이 높이까지 보기 때문에 수평으로 쏜 기본 공격은 공중 몹을 맞히지 못하고, 이것을 일부러 남겨 증강을 고를 이유로 삼았습니다.",
-            "verbatim": false
+            "kind": "image",
+            "src": "images/hit_obb_vs_cylinder.jpg",
+            "w": 1666,
+            "h": 850,
+            "caption": {"text": "전사 베기의 직육면체 판정(노란 상자)과 몹의 피격 원통(빨간 원통)이 겹치는 순간 (Play 중 씬 뷰)", "verbatim": true}
           }
         ],
-        "visuals": [{"kind": "image", "src": "images/hit_obb_vs_cylinder.jpg", "w": 1666, "h": 850}],
         "edited": true
       },
       {
         "key": "combat-arch",
         "chapter": "combat",
-        "layout": "full",
-        "tab": "구조",
+        "layout": "visual",
+        "tab": "흐름",
         "title": {"text": "3.1 공격 하나가 데미지가 되기까지", "verbatim": true},
-        "lead": {"text": "몹의 공격 하나는 아래 다섯 단계를 거쳐 데미지가 됩니다.", "verbatim": true},
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "3. 공격이 맞았는지 판정하기", "3.1 공격 하나가 데미지가 되기까지"],
-        "points": [{"label": "플레이어도", "text": "플레이어의 무기 · 스킬도 ②부터는 같은 흐름입니다.", "verbatim": true}],
-        "visuals": [{"kind": "mermaid", "n": 1, "fp": "flowchart LR"}],
-        "edited": true
-      },
-      {
-        "key": "mob-attack",
-        "chapter": "combat",
-        "layout": "full",
-        "tab": "구조",
-        "title": {"text": "3.3 몹의 공격은 어디에 둘 것인가 🧭", "verbatim": true},
-        "lead": {"text": "몹의 공격은 컨트롤러와 공격 컴포넌트 두 곳으로 나눴고, 나누는 기준은 \"언제 쏠지\"와 \"무엇을 쏠지\" 입니다.", "verbatim": true},
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "3. 공격이 맞았는지 판정하기", "3.3 몹의 공격은 어디에 둘 것인가 🧭"],
+        "lead": null,
+        "sectionPath": ["3. 공격이 맞았는지 판정하기", "3.1 공격 하나가 데미지가 되기까지"],
         "points": [
-          {"label": "컨트롤러", "text": "컨트롤러는 사거리 안에 들어오면 멈춰서 공속마다 \"쏴라\"만 전합니다.", "verbatim": false},
-          {"label": "공격 컴포넌트", "text": "공격 컴포넌트는 애니메이션 시점에 맞춰 쏘기만 합니다.", "verbatim": false},
-          {"label": "포격", "text": "포격은 대상 발밑에 범위 투사체를 떨어뜨리고, 예고 원과 판정은 그 투사체가 맡습니다.", "verbatim": false}
+          {"label": "다섯 단계", "text": "찾는다 → 쏜다 → 날아간다 → 판정 → 데미지 순서이고, 플레이어의 무기 · 스킬도 쏘는 단계부터 같습니다.", "verbatim": false},
+          {"label": "한 줄로", "text": "쏘는 방법은 합치고, 언제 · 왜 쏘는지는 나눕니다.", "verbatim": false}
         ],
-        "visuals": [
-          {"kind": "image", "src": "images/enemy_artillery_range.png", "w": 772, "h": 403},
-          {
-            "kind": "image",
-            "src": "images/enemy_groundnormal_inspector.png",
-            "w": 514,
-            "h": 492,
-            "caption": {"text": "컨트롤러 — GroundNormal (언제 쏠지)", "verbatim": true}
-          },
-          {
-            "kind": "image",
-            "src": "images/enemy_artillery_attack_inspector.png",
-            "w": 514,
-            "h": 334,
-            "caption": {"text": "공격 컴포넌트 — Artillery (무엇을 쏠지)", "verbatim": true}
-          }
-        ],
-        "arrange": "row",
+        "visuals": [{"kind": "mermaid", "n": 1, "fp": "flowchart LR"}],
         "edited": true
       },
       {
         "key": "shot-gallery",
         "chapter": "combat",
-        "layout": "screens",
+        "layout": "visual",
         "tab": "구조",
-        "title": {"text": "3.4 공격을 어떻게 나눌 것인가: 타겟팅 · 논타겟 · 범위 🔍", "verbatim": true},
-        "lead": {"text": "공격이 날아가서 맞히는 방식은 논타겟 · 타겟팅 · 범위 세 가지로 나눴고, 나누는 기준은 \"생성된 뒤 어떻게 움직이는가\" 입니다.", "verbatim": true},
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "3. 공격이 맞았는지 판정하기", "3.4 공격을 어떻게 나눌 것인가: 타겟팅 · 논타겟 · 범위 🔍"],
+        "title": {"text": "3.4 논타겟 · 타겟팅 · 범위 🔍", "verbatim": true},
+        "lead": null,
+        "sectionPath": ["3. 공격이 맞았는지 판정하기", "3.4 논타겟 · 타겟팅 · 범위 🔍"],
         "points": [
           {"label": "논타겟", "text": "직진하다가 지형 · 장애물에 닿으면 사라지고, 관통이 아니면 첫 대상에서 사라집니다.", "verbatim": false},
-          {"label": "타겟팅", "text": "대상의 몸 중심으로 날아가고, 대상이 죽으면 범위 안에서 가장 가까운 적을 다시 찾습니다.", "verbatim": false},
-          {"label": "범위", "text": "정한 자리에 생겨 예고 시간 뒤에 한 번, 또는 지속시간 동안 일정 간격(틱)마다 판정합니다.", "verbatim": false}
-        ],
-        "visuals": [
-          {"kind": "image", "src": "images/hit_nontarget_gizmo.png", "w": 723, "h": 370},
-          {"kind": "image", "src": "images/hit_targeting_gizmo.png", "w": 648, "h": 362},
-          {"kind": "image", "src": "images/hit_summon_gizmo.png", "w": 725, "h": 399}
-        ],
-        "edited": true
-      },
-      {
-        "key": "shot-types",
-        "chapter": "combat",
-        "layout": "full",
-        "tab": "구조",
-        "title": {"text": "3.4 공격을 어떻게 나눌 것인가: 타겟팅 · 논타겟 · 범위 🔍", "verbatim": true},
-        "lead": {"text": "공격이 날아가서 맞히는 방식은 논타겟 · 타겟팅 · 범위 세 가지로 나눴고, 종류마다 언제 판정하고 언제 사라지는지를 직접 정했습니다.", "verbatim": false},
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "3. 공격이 맞았는지 판정하기", "3.4 공격을 어떻게 나눌 것인가: 타겟팅 · 논타겟 · 범위 🔍"],
-        "points": [
+          {"label": "타겟팅", "text": "대상을 쫓아가고, 대상이 죽으면 범위 안에서 가장 가까운 적을 다시 찾습니다(플레이어 전용).", "verbatim": false},
           {
-            "label": "AI 첫 구현",
-            "text": "투사체 하나에 관통 수 · 유도를 켜고 끄거나, 한 클래스 안에서 enum으로 분기해 논타겟 · 타겟팅 · 범위를 모두 처리했습니다.",
-            "verbatim": false
-          },
-          {
-            "label": "제 판단",
-            "text": "\"코드가 너무 무거워진다\"고 보고, 생성된 뒤 어떻게 움직이는가에 따라 타겟팅 / 논타겟 / 지정 소환으로 나누자고 했습니다.",
-            "verbatim": false
-          },
-          {
-            "label": "분리",
-            "text": "부모 HitUnit 아래 직진(NonTargetHit) · 추적(TargetingHit) · 범위(SummonHit) 자식 셋으로 나눴습니다.",
-            "verbatim": false
-          },
-          {
-            "label": "입구 하나",
-            "text": "공격마다 따로 있던 생성 입구를 UnitAttack.FireHit 하나로 모으고(풀 → Launch → 보너스 → 켜기), 자식은 Launch만 override하게 했습니다.",
+            "label": "범위",
+            "text": "정한 자리에 생겨 예고 뒤 한 번, 또는 틱마다 판정합니다. 투사체 구조는 다섯 번 바뀌었고 마지막 두 번은 제 제안이었습니다.",
             "verbatim": false
           }
         ],
-        "visuals": [{"kind": "table", "n": 4, "fp": "종류|클래스|움직임|판정 · 사라지는 때"}],
-        "edited": true
-      },
-      {
-        "key": "range-attack",
-        "chapter": "combat",
-        "layout": "visual",
-        "tab": "결과",
-        "title": {"text": "3.5 무엇을 맞혔는지 찾기", "verbatim": true},
-        "lead": null,
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "3. 공격이 맞았는지 판정하기", "3.5 무엇을 맞혔는지 찾기"],
-        "points": [{"label": "판정 후보 찾기", "text": "몹이 쏜 것은 플레이어(최대 4명)를 전부 검사하고, 플레이어가 쏜 것은 공간 격자로 좁힙니다.", "verbatim": false}],
         "visuals": [
           {
             "kind": "image",
-            "src": "images/range_attack.gif",
-            "w": 560,
-            "h": 316,
-            "caption": {"text": "마법사 범위 공격 — 몹 무리에 범위 판정 · 맞은 몹마다 이펙트", "verbatim": true}
+            "src": "images/hit_nontarget_gizmo.png",
+            "w": 723,
+            "h": 370,
+            "caption": {"text": "논타겟 투사체(얼음 마법)의 판정 구 기즈모", "verbatim": true}
           },
-          {"kind": "table", "n": 1, "fp": "공격 모양|쓰는 공격|판정 함수|검사"}
+          {
+            "kind": "image",
+            "src": "images/hit_targeting_gizmo.png",
+            "w": 648,
+            "h": 362,
+            "caption": {"text": "빛의 화살 투사체와 판정 구 기즈모(노란 선)", "verbatim": true}
+          },
+          {
+            "kind": "image",
+            "src": "images/hit_summon_gizmo.png",
+            "w": 725,
+            "h": 399,
+            "caption": {"text": "범위 공격의 판정 구 기즈모(노란 선)", "verbatim": true}
+          }
         ],
-        "arrange": "split",
+        "edited": true
+      },
+      {
+        "key": "hit-shape",
+        "chapter": "combat",
+        "layout": "visual",
+        "tab": "선택",
+        "title": {"text": "3.6 피격 판정을 어떤 모양으로 할 것인가? 🧭", "verbatim": false},
+        "lead": null,
+        "sectionPath": ["3. 공격이 맞았는지 판정하기", "3.6 피격 판정을 어떤 모양으로 할 것인가 🧭"],
+        "points": [
+          {
+            "label": "직접 계산",
+            "text": "콜라이더는 개발이 빠르지만, 몹 1000마리 · 4인 기준이라 물리 시스템보다 가벼운 직접 계산 판정을 골랐습니다.",
+            "verbatim": false
+          },
+          {
+            "label": "구 → 원통 → 회전 원통 + OBB",
+            "text": "반경 하나뿐인 구는 몸과 어긋났고, 세운 원통은 회전 · 기울기를 못 따라가 몸에 맞게 돌리고 눕힌 원통으로 바꿨습니다.",
+            "verbatim": false
+          },
+          {"label": "캡슐은", "text": "원통과 양 끝 모양만 달라 정확도 차이가 작고 계산은 더 복잡해져 원통을 유지했습니다.", "verbatim": false}
+        ],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/enemy_hit_cylinder.png",
+            "w": 399,
+            "h": 401,
+            "caption": {"text": "세운 원통 — 회전 · 기울기를 반영하지 않아, 긴 몸을 감싸려면 반경을 키워야 해 옆구리가 넉넉함", "verbatim": true}
+          },
+          {
+            "kind": "image",
+            "src": "images/enemy_hit_cylinder_tilt.png",
+            "w": 399,
+            "h": 401,
+            "caption": {"text": "몸 방향 · 기울기에 맞춰 80° 눕혀 머리부터 꼬리까지 감싼 원통 (빨간 선)", "verbatim": true}
+          }
+        ],
         "edited": true
       },
       {
         "key": "card-pick",
         "chapter": "augment",
         "layout": "visual",
-        "tab": "결과",
-        "title": {"text": "4.2 레벨업 카드를 어떻게 만들 것인가 🤝", "verbatim": true},
-        "lead": {
-          "text": "카드 한 장은 보여 줄 내용만 담은 데이터(AugmentOffer)이고, 카드 UI(AugmentCardUI)는 받은 AugmentOffer를 그리기만 합니다.",
-          "verbatim": true
-        },
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "4. 증강 카드 및 능력치 적용을 어떻게 할 것인가", "4.2 레벨업 카드를 어떻게 만들 것인가 🤝"],
-        "points": [{"label": "DGS와 다른 점", "text": "DGS는 카드 스크립트 안에서 무기 생성 · 강화 · 진화까지 처리했습니다.", "verbatim": false}],
+        "tab": "개요",
+        "title": {"text": "4. 증강 카드와 스탯", "verbatim": true},
+        "lead": null,
+        "sectionPath": ["4. 증강 카드와 스탯"],
+        "points": [
+          {"label": "레벨업", "text": "레벨업하면 게임이 멈추고 카드 3장 중 1장을 고릅니다.", "verbatim": false},
+          {"label": "구조만", "text": "무기 5칸 · 능력치 6칸 슬롯과 진화 규칙은 DGS 그대로 두고 구조만 바꿨습니다.", "verbatim": false}
+        ],
         "visuals": [
           {
             "kind": "image",
             "src": "images/card_pick.gif",
             "w": 640,
             "h": 360,
-            "caption": {"text": "레벨업 — 게임이 멈추고 카드 3장 중 1장 선택, 오른쪽은 지금 스탯 창", "verbatim": true},
-            "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "4. 증강 카드 및 능력치 적용을 어떻게 할 것인가"]
-          },
-          {"kind": "code", "n": 1, "fp": "// AugmentManager.cs:17 — 카드 한 장에 담길 정보", "lines": [1, 7]}
+            "caption": {"text": "레벨업 — 게임이 멈추고 카드 3장 중 1장 선택, 오른쪽은 지금 스탯 창", "verbatim": true}
+          }
         ],
         "edited": true
       },
       {
-        "key": "card-code",
+        "key": "augment-table",
         "chapter": "augment",
-        "layout": "code",
-        "tab": "구현",
-        "title": {"text": "4.2 레벨업 카드를 어떻게 만들 것인가 🤝", "verbatim": true},
+        "layout": "visual",
+        "tab": "선택",
+        "title": {"text": "4.1 레벨 수치를 어떻게 적을 것인가? 🤝", "verbatim": false},
         "lead": null,
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "4. 증강 카드 및 능력치 적용을 어떻게 할 것인가", "4.2 레벨업 카드를 어떻게 만들 것인가 🤝"],
+        "sectionPath": ["4. 증강 카드와 스탯", "4.1 증강 데이터는 어디서 오나"],
         "points": [
-          {"label": "후보 고르기", "text": "레벨업 후보 + 새 증강 후보를 한 목록에 모아 겹치지 않게 뽑습니다.", "verbatim": false},
-          {"label": "후보가 없을 때", "text": "무기 · 능력치 증강을 전부 고르고 만렙까지 찍었으면 특수 카드만 보여 줍니다.", "verbatim": false},
-          {"label": "진화 카드", "text": "진화 카드는 레벨업 후보와 분리해 상자 카드로만 나옵니다.", "verbatim": false}
+          {
+            "label": "레벨마다 한 줄",
+            "text": "제가 레벨마다 한 줄씩 두자고 제안했고, AI가 증가량이 아니라 그 레벨의 최종 수치를 적자고 보완했습니다.",
+            "verbatim": false
+          }
         ],
-        "visuals": [{"kind": "code", "n": 1, "fp": "// AugmentManager.cs:17 — 카드 한 장에 담길 정보", "lines": [9, 25]}],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/augment_levels_tsv.png",
+            "w": 1336,
+            "h": 474,
+            "caption": {
+              "text": "augmentLevels.tsv — 증강마다 레벨당 한 줄, 그 레벨의 최종 수치 (검기 ID 0 · 전격 ID 1, 값이 모두 0인 열은 뺌)",
+              "verbatim": true
+            }
+          },
+          {"kind": "table", "n": 1, "fp": "|[A] ScriptableObject (DGS)|[B] TSV 표 ✓"}
+        ],
+        "arrange": "split",
+        "edited": true
+      },
+      {
+        "key": "stat-inspector",
+        "chapter": "augment",
+        "layout": "visual",
+        "tab": "구조",
+        "title": {"text": "4.4 스탯을 어떻게 합칠 것인가", "verbatim": true},
+        "lead": null,
+        "sectionPath": ["4. 증강 카드와 스탯", "4.4 스탯을 어떻게 합칠 것인가"],
+        "points": [
+          {"label": "출처별로", "text": "캐릭터 · 능력치 증강 · 스킬 · 상점 · 버프 스탯을 따로 보관하고, 바뀔 때마다 처음부터 다시 계산합니다.", "verbatim": false},
+          {"label": "곱할지 더할지", "text": "체력 · 공격력 · 공속 · 이속 · 방어력은 상점 배율을 곱하고, % 스탯 · 재생 · 개수는 더합니다.", "verbatim": false},
+          {"label": "4인 대비", "text": "스탯 계산기를 싱글톤이 아니라 플레이어 프리팹의 컴포넌트로 두었습니다.", "verbatim": false}
+        ],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/stat_handler_inspector.png",
+            "w": 373,
+            "h": 671,
+            "caption": {
+              "text": "플레이 중 `PlayerStatHandler` — 캐릭터(`ChrStat`) · 능력치 증강(`AbilityStat`) · 스킬(`SkillStat`) · 상점(`ShopStat`) 스탯을 출처별로 따로 보관",
+              "verbatim": true
+            }
+          }
+        ],
         "edited": true
       },
       {
         "key": "aim",
         "chapter": "extra",
         "layout": "visual",
-        "tab": "구조",
+        "tab": "구현",
         "title": {"text": "6.2 3인칭 조작과 화면 중앙 조준", "verbatim": true},
-        "lead": {"text": "캐릭터 뒤에서 보는 3인칭 시점이고, 점프로 고원을 오르내리며, 모든 공격 · 스킬은 화면 정중앙을 기준으로 조준합니다.", "verbatim": true},
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "6. 그 밖의 기능", "6.2 3인칭 조작과 화면 중앙 조준"],
+        "lead": null,
+        "sectionPath": ["6. 그 밖의 기능", "6.2 3인칭 조작과 화면 중앙 조준"],
         "points": [
           {
-            "label": "조준 카메라",
-            "text": "조준 카메라를 켜고 끄는 대신 카메라 2대의 Priority만 바꿔, 시점 전환이 자동으로 부드럽게 이어지게 했습니다.",
+            "label": "카메라 전환",
+            "text": "조준 스킬을 누르고 있는 동안 Cinemachine Priority로 어깨 너머 시점으로 바뀌고, 쓴 순간의 화면 중앙 레이를 저장해 발사합니다.",
             "verbatim": false
           },
+          {"label": "콜라이더 없는 몹 조준", "text": "레이를 따라 두께 0인 직육면체를 공간 격자 판정에 넣어, 가장 가까운 몹의 몸 중심을 노립니다.", "verbatim": false}
+        ],
+        "visuals": [
           {
-            "label": "몹 조준",
-            "text": "콜라이더가 없는 몹도 화면 중앙으로 조준되게, 레이를 따라 두께 0인 직육면체를 공간 격자 판정에 넣어 가장 가까운 몹을 노립니다.",
-            "verbatim": false
+            "kind": "image",
+            "src": "images/aim_camera_switch.gif",
+            "w": 640,
+            "h": 360,
+            "caption": {"text": "조준 스킬을 쓰는 동안 어깨 너머 조준 시점(화면 중앙 조준점)으로 바뀌었다가, 발사 뒤 3인칭 시점으로 돌아오는 장면", "verbatim": true}
           }
         ],
-        "visuals": [{"kind": "image", "src": "images/aim_camera_switch.gif", "w": 640, "h": 360}],
         "edited": true
       },
       {
         "key": "map-tool",
         "chapter": "extra",
-        "layout": "full",
-        "tab": "결과",
+        "layout": "visual",
+        "tab": "구현",
         "title": {"text": "6.3 맵 제작을 AI와 어떻게 나눌 것인가 🧭🤝", "verbatim": true},
         "lead": null,
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "6. 그 밖의 기능", "6.3 맵 제작을 AI와 어떻게 나눌 것인가 🧭🤝"],
+        "sectionPath": ["6. 그 밖의 기능", "6.3 맵 제작을 AI와 어떻게 나눌 것인가 🧭🤝"],
         "points": [
           {
-            "label": "",
-            "text": "AI는 화이트박스 콜라이더 위에 아트만 덮자고 제안했지만, 저는 \"기존 배치를 그대로 가져가지 말고 컨셉만\" 가져가 에셋 메쉬로 바닥부터 다시 만들기로 했습니다",
+            "label": "나눈 방식",
+            "text": "제가 컨셉과 규칙(수치)을 정하면 AI가 빌더 코드를 고치고, 저는 에디터 메뉴로 다시 만들어 결과를 확인했습니다.",
             "verbatim": false
-          }
+          },
+          {"label": "규칙", "text": "지형 자체가 장애물이 되지 않게 하고, 레이가 닿지 않는 터널이 생기지 않게 경사 아래 빈 곳은 반드시 채웠습니다.", "verbatim": false}
         ],
         "visuals": [
           {
@@ -667,15 +667,15 @@
         "layout": "visual",
         "tab": "구조",
         "title": {"text": "5.2 몹을 어떤 방식으로 소환할 것인가 🤝", "verbatim": true},
-        "lead": {"text": "몹 소환은 표 두 개로 정합니다.", "verbatim": true},
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "5. 몹 스폰 및 경험치 규칙", "5.2 몹을 어떤 방식으로 소환할 것인가 🤝"],
+        "lead": null,
+        "sectionPath": ["5. 몹 소환과 경험치", "5.2 몹을 어떤 방식으로 소환할 것인가 🤝"],
         "points": [
           {
-            "label": "상시 소환",
-            "text": "시간 구간마다 spawnRules.tsv에 적힌 몹 종류를 정해진 주기로 계속 소환하고, 살아 있는 몹 수를 최소 ~ 최대 사이로 유지합니다.",
+            "label": "두 표",
+            "text": "상시 소환은 시간 구간마다 주기 · 최소 / 최대 생존 수를 맞추고, 이벤트 소환은 정한 시각에 무리를 한꺼번에 내보냅니다.",
             "verbatim": false
           },
-          {"label": "이벤트 소환", "text": "waves.tsv에 적힌 시각이 되면 여러 종류의 몹 무리를 한꺼번에 소환합니다.", "verbatim": false}
+          {"label": "최대 몹 수 버그", "text": "칸을 옮길 때마다 몹 수가 줄어 끝없이 소환되던 문제를, 칸만 옮기고 수는 건드리지 않게 고쳤습니다.", "verbatim": false}
         ],
         "visuals": [
           {
@@ -683,73 +683,133 @@
             "src": "images/spawn_rules_table.png",
             "w": 1040,
             "h": 1039,
-            "caption": {"text": "상시 소환", "verbatim": true}
+            "caption": {
+              "text": "spawnRules.tsv — 상시 소환: 시간 구간(StartTime ~ EndTime)마다 몹 종류(EnemyID) · 주기(Interval) · 한 번에 나오는 수(Count) · 최소 / 최대 생존 수(MinAlive / MaxAlive)",
+              "verbatim": true
+            }
           },
           {
             "kind": "image",
             "src": "images/waves_table.png",
             "w": 552,
             "h": 1264,
-            "caption": {"text": "이벤트 소환", "verbatim": true}
+            "caption": {
+              "text": "waves.tsv — 이벤트 소환: 정한 시각(SpawnTimer)에 몹 종류(EnemyID)를 정한 수(Count)만큼 (예: 600초에 150 · 40 · 40 · 15마리)",
+              "verbatim": true
+            }
           }
         ],
-        "arrange": "row",
         "edited": true
       },
       {
         "key": "exp-orb",
         "chapter": "wave",
         "layout": "visual",
-        "tab": "구조",
+        "tab": "구현",
         "title": {"text": "5.3 경험치 구를 어떻게 떨굴 것인가", "verbatim": true},
-        "lead": {"text": "이번에는 물리 없이 코드로 직접 떨어뜨리고 끌어당겼습니다.", "verbatim": false},
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "5. 몹 스폰 및 경험치 규칙", "5.3 경험치 구를 어떻게 떨굴 것인가"],
+        "lead": null,
+        "sectionPath": ["5. 몹 소환과 경험치", "5.3 경험치 구를 어떻게 떨굴 것인가"],
         "points": [
-          {"label": "물리 없이", "text": "경험치 구는 바닥에 떨어졌다가 플레이어에게 끌려오기만 하면 되므로 물리가 필요 없다고 봤습니다.", "verbatim": false},
-          {"label": "바닥은 격자 높이로", "text": "공중 몹이 죽어도 구가 공중에 뜨지 않게, 레이 없이 격자에 구워 둔 바닥 높이까지 떨어뜨립니다.", "verbatim": false}
+          {
+            "label": "물리 없이",
+            "text": "DGS에서는 구마다 Rigidbody + 트리거였지만, 이번에는 바닥 높이(격자)까지 떨어진 뒤 점점 빨라지며 플레이어에게 직접 이동합니다.",
+            "verbatim": false
+          },
+          {"label": "값 초기화", "text": "꺼낼 때마다 경험치 값을 새로 넣어, 풀에서 재사용한 구에 배율이 쌓이던 DGS의 버그가 생기지 않습니다.", "verbatim": false}
         ],
-        "visuals": [{"kind": "image", "src": "images/exporb_collect.gif", "w": 640, "h": 360}],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/exporb_collect.gif",
+            "w": 640,
+            "h": 360,
+            "caption": {"text": "몹을 처치해 떨어진 경험치 구가 캐릭터에게 빨려 들어오고, 위쪽 경험치 바가 차서 레벨업 카드 창이 뜨는 장면", "verbatim": true}
+          }
+        ],
         "edited": true
       },
       {
         "key": "perf-compare",
         "chapter": "result",
-        "layout": "full",
+        "layout": "visual",
         "tab": "결과",
         "title": {"text": "7.2 DGS와 같은 PC에서 잰 프레임 비교", "verbatim": true},
-        "lead": {"text": "비슷한 FPS(약 24 ~ 28)를 낼 때 DGS는 몹 141마리, PROJECT3D는 1000마리 이상이었습니다.", "verbatim": true},
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "7. 회고", "7.2 DGS와 같은 PC에서 잰 프레임 비교"],
-        "points": [],
-        "visuals": [{"kind": "image", "src": "images/perf_graph_mobs_fps.png", "w": 1600, "h": 1096}],
+        "lead": null,
+        "sectionPath": ["7. 회고", "7.2 DGS와 같은 PC에서 잰 프레임 비교"],
+        "points": [
+          {"label": "7배", "text": "비슷한 FPS(약 24 ~ 28)를 낼 때 DGS는 몹 141마리, PROJECT3D는 1000마리 이상이었습니다.", "verbatim": false},
+          {"label": "1000마리", "text": "1000마리 이상은 232초 동안 평균 27.2 FPS였습니다.", "verbatim": false}
+        ],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/perf_graph_mobs_fps.png",
+            "w": 1600,
+            "h": 1096,
+            "caption": {
+              "text": "같은 PC에서 몹 수에 따른 FPS — 주황은 DGS 측정 6점, 파랑은 PROJECT3D 몹 수 구간 평균(0 ~ 200마리: 11-16 기록 파일의 5초 평균, 600마리 이상: 11-23 기록 파일의 1초 평균), 점선은 측정하지 않은 200 ~ 600마리, 회색 파선은 DGS 141마리의 FPS",
+              "verbatim": true
+            }
+          }
+        ],
         "edited": true
       },
       {
-        "key": "perf-timeline",
+        "key": "perf-pair",
         "chapter": "result",
-        "layout": "full",
+        "layout": "visual",
         "tab": "결과",
-        "title": {"text": "7.2 DGS와 같은 PC에서 잰 프레임 비교", "verbatim": true},
-        "lead": {"text": "몹이 많이 있을 때보다 한꺼번에 죽을 때(사망 처리 · 경험치 구 생성 · 데미지 숫자)가 더 무거웠습니다.", "verbatim": true},
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "7. 회고", "7.2 DGS와 같은 PC에서 잰 프레임 비교"],
-        "points": [],
-        "visuals": [{"kind": "image", "src": "images/perf_graph_timeline.png", "w": 1760, "h": 1000}],
+        "title": {"text": "7.2 몹이 많이 있을 때와 한꺼번에 죽을 때", "verbatim": false},
+        "lead": null,
+        "sectionPath": ["7. 회고", "7.2 DGS와 같은 PC에서 잰 프레임 비교"],
+        "points": [
+          {"label": "있을 때", "text": "1001마리가 살아 있을 때는 27.7 FPS였습니다.", "verbatim": false},
+          {"label": "죽을 때", "text": "가장 낮았던 순간은 범위 공격으로 2초 사이 655마리가 한꺼번에 죽은 5.6 FPS로, 다음 과제입니다.", "verbatim": false}
+        ],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/perf_samepc_1000.jpg",
+            "w": 1920,
+            "h": 1080,
+            "caption": {"text": "1000마리 — 몹 1001마리, 27.7 FPS (DGS와 같은 PC, 빌드)", "verbatim": true}
+          },
+          {
+            "kind": "image",
+            "src": "images/perf_samepc_mass_death.jpg",
+            "w": 1920,
+            "h": 1080,
+            "caption": {"text": "대량 사망 — 범위 공격으로 몹이 한꺼번에 죽는 순간, 몹 604마리 · 5.6 FPS", "verbatim": true}
+          }
+        ],
         "edited": true
       },
       {
         "key": "ai-way",
         "chapter": "result",
         "layout": "visual",
-        "tab": "",
+        "tab": "흐름",
         "title": {"text": "7.3 AI와 일한 방식", "verbatim": true},
-        "lead": {"text": "고르는 일(③ · ④)과 검수(⑥)는 제가, 대안 비교와 구현(② · ⑤)은 AI와 함께 했습니다.", "verbatim": true},
-        "sectionPath": ["PROJECT3D — 몹 1000마리를 위한 3D 뱀서라이크 구조 재설계 기술 문서", "7. 회고", "7.3 AI와 일한 방식"],
+        "lead": null,
+        "sectionPath": ["7. 회고", "7.3 AI와 일한 방식"],
         "points": [
-          {"label": "기준", "text": "\"몹 1000마리 · 최대 4인\", \"설명할 수 있는 코드\"라는 기준을 먼저 세웠습니다.", "verbatim": false},
-          {"label": "대안 비교", "text": "구조마다 AI와 대안을 주고받으며 더 나은 구조가 있는지 시스템 단위로 따져 본 뒤 골랐습니다 (2~6장)", "verbatim": false},
-          {"label": "규칙", "text": "\"AI가 짜 준 코드를 내가 설명할 수 있는가\"를 지키려고 과설계 금지 같은 규칙을 먼저 정했습니다.", "verbatim": false},
-          {"label": "아이콘", "text": "🧭 : 제가 정한 것\n🤝 : AI와 주고받으며 정한 것\n🔍 : AI의 처음 제안을 제가 바꾼 것", "verbatim": false}
+          {"label": "나눈 일", "text": "고르는 일과 검수는 제가, 대안 비교와 구현은 AI와 함께 했습니다.", "verbatim": false},
+          {"label": "규칙", "text": "제가 읽고 설명할 수 있는 코드만 쓰도록 규칙을 먼저 정했고, 직접 재지 않은 효과는 결과로 쓰지 않았습니다.", "verbatim": false}
         ],
         "visuals": [{"kind": "mermaid", "n": 1, "fp": "flowchart LR"}],
+        "edited": true
+      },
+      {
+        "key": "lesson",
+        "chapter": "result",
+        "layout": "full",
+        "tab": "결과",
+        "title": {"text": "7.5 배운 점 — 몹 1000마리 기준으로 다시 보면", "verbatim": false},
+        "lead": null,
+        "sectionPath": ["7. 회고", "7.5 배운 점"],
+        "points": [{"label": "정리", "text": "최적화는 측정에서 시작하고, 직접 잰 값과 계산상 추정을 나눠 말해야 다음 과제를 정할 수 있었습니다.", "verbatim": false}],
+        "visuals": [{"kind": "table", "n": 1, "fp": "결정|매 프레임 비용 (1000마리)|근거"}],
+        "arrange": "top",
         "edited": true
       }
     ],
@@ -1460,6 +1520,6 @@
         "visuals": [{"kind": "code", "n": 1, "fp": "// UnitAttack.cs:34 — 공격마다 갖는 애니메이션 설정 칸"}]
       }
     ],
-    "applied": "cceee341a1b5dbdb"
+    "applied": "a221e9c1c4810f9c"
   }
 }
