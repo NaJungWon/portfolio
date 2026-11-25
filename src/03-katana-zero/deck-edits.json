@@ -6,247 +6,122 @@
       "chapter": "overview",
       "layout": "visual",
       "tab": "개요",
-      "title": {
-        "text": "1.1 게임 소개",
-        "verbatim": true
-      },
-      "lead": {
-        "text": "플레이어와 적 모두 한 번 맞으면 죽고, 죽으면 그 판을 되감아(역재생) 처음부터 다시 시작합니다.",
-        "verbatim": true
-      },
-      "sectionPath": [
-        "1. 개요",
-        "1.1 게임 소개"
-      ],
+      "title": {"text": "1.1 게임 소개", "verbatim": true},
+      "lead": null,
+      "sectionPath": ["1. 개요", "1.1 게임 소개"],
       "points": [
-        {
-          "label": "모작",
-          "text": "원작 Katana ZERO의 핵심 플레이를 따라 만든 2D 액션 플랫포머입니다.",
-          "verbatim": true
-        },
-        {
-          "label": "클리어",
-          "text": "스테이지의 모든 적을 처치하면 방금 플레이를 CCTV 리플레이처럼 정방향 재생한 뒤 다음 스테이지로 넘어갑니다.",
-          "verbatim": true
-        },
-        {
-          "label": "크로노스",
-          "text": "Left Shift를 누르고 있는 동안 게임 시간이 0.25배로 느려집니다.",
-          "verbatim": false
-        },
-        {
-          "label": "원작과 다른 점",
-          "text": "원작 규칙을 거의 그대로 따랐고, 차이는 대부분 일정 안에 만들지 못한 부분(보스 · 던지기 · 장애물 · 재생 연출)입니다.",
-          "verbatim": false
-        }
+        {"label": "한 방 사망", "text": "플레이어와 적 모두 한 번 맞으면 죽고, 죽으면 그 판을 되감아 처음부터 다시 시작합니다.", "verbatim": false},
+        {"label": "리플레이", "text": "스테이지의 모든 적을 처치하면 방금 플레이를 CCTV 리플레이처럼 정방향 재생한 뒤 다음 스테이지로 넘어갑니다.", "verbatim": true},
+        {"label": "목표한 경험", "text": "원작의 핵심 루프인 한 방 사망 → 되감기 → 재도전 → 클리어 리플레이의 손맛을 그대로 옮기는 것입니다.", "verbatim": true}
       ],
       "visuals": [
         {
           "kind": "image",
-          "src": "images/title.jpg",
-          "w": 1270,
-          "h": 720,
-          "caption": {
-            "text": "타이틀 화면",
-            "verbatim": true
-          }
+          "src": "images/play_intro.gif",
+          "w": 640,
+          "h": 364,
+          "caption": {"text": "타이틀 → 스테이지 시작 → 계단을 올라 크로노스로 감속하며 적 처치 (11-12 빌드 녹화)", "verbatim": true}
         }
       ],
       "from": {
         "key": "what",
-        "sectionPath": [
-          "1. 개요",
-          "1.1 게임 소개"
-        ],
-        "sig": [
-          "1.1 게임 소개|image|images/title.jpg|1",
-          "1.1 게임 소개|mermaid|1|flowchart TB"
-        ]
-      },
-      "group": "split-game-flow"
+        "sectionPath": ["1. 개요", "1.1 게임 소개"],
+        "sig": ["1.1 게임 소개|image|images/title.jpg|1", "1.1 게임 소개|mermaid|1|flowchart TB"]
+      }
+    },
+    {
+      "key": "controls",
+      "chapter": "overview",
+      "layout": "full",
+      "tab": "개요",
+      "title": {"text": "1.1 게임 소개 — 조작", "verbatim": false},
+      "lead": null,
+      "sectionPath": ["1. 개요", "1.1 게임 소개"],
+      "points": [],
+      "visuals": [{"kind": "table", "n": 1, "fp": "입력|결과"}],
+      "after": "what"
+    },
+    {
+      "key": "game-flow",
+      "chapter": "overview",
+      "layout": "visual",
+      "tab": "흐름",
+      "title": {"text": "1.1 게임 소개 — 게임 흐름", "verbatim": false},
+      "lead": null,
+      "sectionPath": ["1. 개요", "1.1 게임 소개"],
+      "points": [],
+      "visuals": [{"kind": "mermaid", "n": 1, "fp": "flowchart TB"}],
+      "after": "controls"
     },
     {
       "key": "goal",
       "chapter": "overview",
       "layout": "full",
       "tab": "개요",
-      "title": {
-        "text": "1.2 목표",
-        "verbatim": true
-      },
-      "lead": {
-        "text": "만들면서 부딪힌 문제와 해결 방향은 아래와 같습니다.",
-        "verbatim": true
-      },
-      "sectionPath": [
-        "1. 개요",
-        "1.2 목표"
-      ],
+      "title": {"text": "1.2 목표", "verbatim": true},
+      "lead": null,
+      "sectionPath": ["1. 개요", "1.2 목표"],
       "points": [
+        {"label": "개인 목표", "text": "모작이지만 물리(이동 · 충돌)를 처음부터 끝까지 직접 작성해 보는 것을 목표로 했습니다.", "verbatim": false},
         {
-          "label": "목표",
-          "text": "Rigidbody2D를 Dynamic이 아닌 Kinematic 상태로 두고, 물리(이동 · 충돌)를 처음부터 끝까지 직접 작성해 보는 것",
+          "label": "이 덱을 보는 기준",
+          "text": "기능마다 직접 만들지, 엔진이나 이미 있는 코드에 맡길지를 정했고, 그 선택(🧭)과 이유를 함께 보여 드립니다.",
           "verbatim": false
         }
       ],
-      "visuals": [
-        {
-          "kind": "table",
-          "n": 1,
-          "fp": "문제 상황 (Before)|결과적으로 생기는 비용|해결 방향"
-        }
-      ],
-      "from": {
-        "key": "goal",
-        "sectionPath": [
-          "1. 개요",
-          "1.2 목표"
-        ],
-        "sig": [
-          "1.2 목표|table|1|문제 상황 (Before)|결과적으로 생기는 비용|해결 방향"
-        ]
-      },
-      "arrange": "top"
-    },
-    {
-      "key": "state-flow",
-      "chapter": "base",
-      "layout": "visual",
-      "tab": "흐름",
-      "title": {
-        "text": "2.1 게임 상태마다 시간과 녹화기를 함께 바꾸기",
-        "verbatim": true
-      },
-      "lead": {
-        "text": "GameManager가 GameState 하나로 스테이지 흐름을 관리하고, 상태마다 Time.timeScale과 녹화기 모드를 함께 바꿉니다.",
-        "verbatim": true
-      },
-      "sectionPath": [
-        "2. 시간을 다루는 기능들이 서로 깨지지 않게 하려면",
-        "2.1 게임 상태마다 시간과 녹화기를 함께 바꾸기"
-      ],
-      "points": [
-        {
-          "label": "문제",
-          "text": "크로노스 · 히트스탑 · 일시정지 · 재생이 모두 Time.timeScale을 바꿔, 하나를 고치면 다른 것이 깨졌습니다.",
-          "verbatim": false
-        },
-        {
-          "label": "해결",
-          "text": "게임 상태마다 timeScale과 녹화기 모드를 함께 정했습니다.",
-          "verbatim": false
-        }
-      ],
-      "visuals": [
-        {
-          "kind": "mermaid",
-          "n": 1,
-          "fp": "stateDiagram-v2"
-        }
-      ],
-      "from": {
-        "key": "state-flow",
-        "sectionPath": [
-          "2. 시간을 다루는 기능들이 서로 깨지지 않게 하려면",
-          "2.1 게임 상태마다 시간과 녹화기를 함께 바꾸기"
-        ],
-        "sig": [
-          "2.1 게임 상태마다 시간과 녹화기를 함께 바꾸기|mermaid|1|stateDiagram-v2"
-        ]
-      }
+      "visuals": [{"kind": "table", "n": 1, "fp": "목표|기준|지금 상태"}],
+      "arrange": "top",
+      "after": "game-flow",
+      "from": {"key": "goal", "sectionPath": ["1. 개요", "1.2 목표"], "sig": ["1.2 목표|table|1|문제 상황 (Before)|결과적으로 생기는 비용|해결 방향"]}
     },
     {
       "key": "time-axis",
       "chapter": "base",
       "layout": "full",
       "tab": "구조",
-      "title": {
-        "text": "2.2 느려져야 할 것과 느려지면 안 되는 것 나누기",
-        "verbatim": true
-      },
+      "title": {"text": "2. 시간축부터 정하기 — 느려질 것과 그대로 갈 것", "verbatim": false},
       "lead": null,
-      "sectionPath": [
-        "2. 시간을 다루는 기능들이 서로 깨지지 않게 하려면",
-        "2.2 느려져야 할 것과 느려지면 안 되는 것 나누기"
-      ],
+      "sectionPath": ["2. 시간축부터 정하기", "2.2 느려질 것과 그대로 갈 것"],
       "points": [
         {
-          "label": "기준",
-          "text": "크로노스가 걸리면 같이 느려져야 하는 것은 scaled 시간, timeScale이 0이어도 진행돼야 하는 것은 unscaled 시간을 씁니다.",
+          "label": "문제",
+          "text": "크로노스 · 히트스탑 · 일시정지 · 녹화 재생과 역재생이 모두 Time.timeScale을 바꿔서, 처음에는 하나를 고치면 다른 것이 깨졌습니다.",
           "verbatim": false
         },
         {
-          "label": "리플레이",
-          "text": "기록은 FixedUpdate라 크로노스 구간이 적은 틱으로 남아, 리플레이에서는 정상 속도로 재생됩니다. 원작과 같은 느낌을 내려고 의도한 동작입니다.",
+          "label": "해결",
+          "text": "게임 상태마다 timeScale과 녹화기 모드를 함께 정하고, 재생 중에는 세계를 멈추고 녹화기만 실제 시간으로 움직입니다.",
           "verbatim": false
         }
       ],
-      "visuals": [
-        {
-          "kind": "table",
-          "n": 1,
-          "fp": "대상|사용하는 시간|이유"
-        }
-      ],
+      "visuals": [{"kind": "table", "n": 1, "fp": "대상|사용하는 시간|이유"}],
       "from": {
         "key": "time-axis",
-        "sectionPath": [
-          "2. 시간을 다루는 기능들이 서로 깨지지 않게 하려면",
-          "2.2 느려져야 할 것과 느려지면 안 되는 것 나누기"
-        ],
-        "sig": [
-          "2.2 느려져야 할 것과 느려지면 안 되는 것 나누기|table|1|대상|사용하는 시간|이유"
-        ]
+        "sectionPath": ["2. 시간을 다루는 기능들이 서로 깨지지 않게 하려면", "2.2 느려져야 할 것과 느려지면 안 되는 것 나누기"],
+        "sig": ["2.2 느려져야 할 것과 느려지면 안 되는 것 나누기|table|1|대상|사용하는 시간|이유"]
       }
     },
     {
-      "key": "move-struct",
+      "key": "move-choice",
       "chapter": "move",
-      "layout": "visual",
-      "tab": "구조",
-      "title": {
-        "text": "3. 플레이어의 이동을 어떻게 구현할 것인가",
-        "verbatim": true
-      },
-      "lead": {
-        "text": "입력과 이동을 분리했습니다.",
-        "verbatim": true
-      },
-      "sectionPath": [
-        "3. 플레이어의 이동을 어떻게 구현할 것인가"
-      ],
+      "layout": "full",
+      "tab": "선택",
+      "title": {"text": "3. 플레이어 조작 — 물리 엔진 대신 Kinematic + BoxCast 🧭", "verbatim": false},
+      "lead": {"text": "원작 같은 \"딱 떨어지는\" 조작감을 내려고 계단 · 플랫폼 · 벽 · 구르기를 물리 엔진에 맡기지 않고 직접 계산했습니다.", "verbatim": true},
+      "sectionPath": ["3. 플레이어 조작"],
       "points": [
         {
-          "label": "입력",
-          "text": "PlayerController는 입력을 판단해 요청만 보냅니다.",
+          "label": "구조",
+          "text": "입력(PlayerController)은 요청만 넣고, 실제 이동 · 충돌은 CharacterController2D가 FixedUpdate에서 한 번에 처리합니다.",
           "verbatim": false
         },
-        {
-          "label": "이동",
-          "text": "실제 이동 · 충돌은 CharacterController2D가 FixedUpdate에서 한 번에 처리합니다.",
-          "verbatim": false
-        },
-        {
-          "label": "이동 방식",
-          "text": "구르기 · 계단 앞 · 그 외 세 가지로 나눠 이동을 계산합니다.",
-          "verbatim": false
-        }
+        {"label": "다음 프로젝트", "text": "이렇게 만든 컨트롤러는 다음 팀 프로젝트 「시장에 가면」에서 3D 캐릭터 이동에 다시 썼습니다.", "verbatim": false}
       ],
-      "visuals": [
-        {
-          "kind": "mermaid",
-          "n": 1,
-          "fp": "flowchart TB"
-        }
-      ],
+      "visuals": [{"kind": "table", "n": 2, "fp": "|[A] Dynamic Rigidbody2D|[B] Kinematic + BoxCast 직접 구현 ✓"}],
       "from": {
-        "key": "move-struct",
-        "sectionPath": [
-          "3. 플레이어의 이동을 어떻게 구현할 것인가"
-        ],
-        "sig": [
-          "3. 플레이어의 이동을 어떻게 구현할 것인가|mermaid|1|flowchart TB"
-        ]
+        "key": "move-choice",
+        "sectionPath": ["3. 플레이어의 이동을 어떻게 구현할 것인가", "3.1.1 이동을 무엇으로 구현할 것인가"],
+        "sig": ["3.1.1 이동을 무엇으로 구현할 것인가|table|1||[A] Dynamic Rigidbody2D|[B] Kinematic + BoxCast 직접 구현 ✓"]
       }
     },
     {
@@ -254,27 +129,15 @@
       "chapter": "move",
       "layout": "visual",
       "tab": "구현",
-      "title": {
-        "text": "3.1 기본 이동: x축 먼저, y축 나중",
-        "verbatim": true
-      },
-      "lead": {
-        "text": "대각선 이동에서 플랫폼 모서리에 끼는 문제를 막습니다 (3.6).",
-        "verbatim": true
-      },
-      "sectionPath": [
-        "3. 플레이어의 이동을 어떻게 구현할 것인가",
-        "3.1 기본 이동: x축 먼저, y축 나중"
-      ],
+      "title": {"text": "3.1 좌우 이동: x축 먼저, y축 나중", "verbatim": true},
+      "lead": null,
+      "sectionPath": ["3. 플레이어 조작", "3.1 좌우 이동: x축 먼저, y축 나중"],
       "points": [
+        {"label": "축별 검사", "text": "이동할 양을 x · y 두 축으로 나눠 BoxCast로 검사하고, y는 x만큼 옮긴 박스에서 검사합니다.", "verbatim": true},
+        {"label": "멈추기", "text": "막힌 축은 벽까지 남은 거리에서 skinWidth만큼 덜 가서 멈춥니다.", "verbatim": true},
         {
-          "label": "축 나누기",
-          "text": "x를 먼저 이동한 위치에서 y를 따로 검사해, 대각선 이동에서 모서리에 끼지 않습니다(3.6).",
-          "verbatim": false
-        },
-        {
-          "label": "시각화",
-          "text": "박스는 BoxCast 시각화입니다. 초록은 끝까지 비어 있는 방향, 빨강은 걸린 자리입니다.",
+          "label": "모서리 끼임",
+          "text": "x · y를 모두 출발 위치에서 검사하던 때는 대각선 이동 중 플랫폼 모서리에 끼었고, x를 먼저 옮긴 박스에서 y를 검사해 해결했습니다.",
           "verbatim": false
         }
       ],
@@ -284,102 +147,31 @@
           "src": "images/move_axis_cast.gif",
           "w": 600,
           "h": 355,
-          "caption": {
-            "text": "축마다 따로 쏘는 BoxCast — 바닥 위에서는 아래만 걸리고(빨강) 좌우 · 위는 비어 있음(초록)",
-            "verbatim": true
-          }
-        },
-        {
-          "kind": "code",
-          "n": 1,
-          "fp": "// CharacterController2D.cs:185 — 기본 이동: x를 먼저 이동한 위치에서 y를 검"
+          "caption": {"text": "축마다 따로 쏘는 BoxCast — 바닥 위에서는 아래만 걸리고(빨강) 좌우 · 위는 비어 있음(초록)", "verbatim": true}
         }
       ],
+      "after": "move-choice",
       "from": {
         "key": "move-axis",
-        "sectionPath": [
-          "3. 플레이어의 이동을 어떻게 구현할 것인가",
-          "3.1 기본 이동: x축 먼저, y축 나중"
-        ],
-        "sig": [
-          "3.1 기본 이동: x축 먼저, y축 나중|code|1|// CharacterController2D.cs:185 — 기본 이동: x를 먼저 이동한 위치에서 y를 검"
-        ]
-      },
-      "arrange": "split"
-    },
-    {
-      "key": "move-choice",
-      "chapter": "move",
-      "layout": "full",
-      "tab": "선택",
-      "title": {
-        "text": "3.1.1 이동을 무엇으로 구현할 것인가",
-        "verbatim": true
-      },
-      "lead": null,
-      "sectionPath": [
-        "3. 플레이어의 이동을 어떻게 구현할 것인가",
-        "3.1.1 이동을 무엇으로 구현할 것인가"
-      ],
-      "points": [
-        {
-          "label": "이유",
-          "text": "원작 같은 딱 떨어지는 조작감을 Dynamic으로 만들려면 마찰 · 중력 · 속도 보정이 많이 필요했습니다.",
-          "verbatim": false
-        },
-        {
-          "label": "결정",
-          "text": "CharacterController2D(Kinematic + skinWidth + 축별 BoxCast)를 기반으로 계단 · 플랫폼 · 벽 · 구르기를 추가했습니다.",
-          "verbatim": true
-        },
-        {
-          "label": "의미",
-          "text": "이 프로젝트가 물리 커스텀의 첫 시도였습니다.",
-          "verbatim": true
-        }
-      ],
-      "visuals": [
-        {
-          "kind": "table",
-          "n": 1,
-          "fp": "|[A] Dynamic Rigidbody2D|[B] Kinematic + BoxCast 직접 구현 ✓"
-        }
-      ],
-      "from": {
-        "key": "move-choice",
-        "sectionPath": [
-          "3. 플레이어의 이동을 어떻게 구현할 것인가",
-          "3.1.1 이동을 무엇으로 구현할 것인가"
-        ],
-        "sig": [
-          "3.1.1 이동을 무엇으로 구현할 것인가|table|1||[A] Dynamic Rigidbody2D|[B] Kinematic + BoxCast 직접 구현 ✓"
-        ]
+        "sectionPath": ["3. 플레이어의 이동을 어떻게 구현할 것인가", "3.1 기본 이동: x축 먼저, y축 나중"],
+        "sig": ["3.1 기본 이동: x축 먼저, y축 나중|code|1|// CharacterController2D.cs:185 — 기본 이동: x를 먼저 이동한 위치에서 y를 검"]
       }
     },
     {
       "key": "move-intro",
       "chapter": "move",
       "layout": "screens",
-      "tab": "개요",
-      "title": {
-        "text": "3.2 계단 step",
-        "verbatim": true
-      },
-      "sectionPath": [
-        "3. 플레이어의 이동을 어떻게 구현할 것인가",
-        "3.2 계단 step"
-      ],
+      "tab": "구현",
+      "title": {"text": "3.2 계단: step으로 오르내리기", "verbatim": true},
+      "lead": null,
+      "sectionPath": ["3. 플레이어 조작", "3.2 계단: step으로 오르내리기"],
       "points": [
         {
-          "label": "대각선 계단",
-          "text": "맵의 대각선 계단을 걸어서 자연스럽게 오르내립니다.",
-          "verbatim": false
+          "label": "step",
+          "text": "정면이 계단이면 maxStepHeight(0.1)를 10번 나눠 올려 보고, 올린 위치에서 앞으로 갈 수 있으면 그 높이로 이동합니다.",
+          "verbatim": true
         },
-        {
-          "label": "BoxCast로 보면",
-          "text": "계단 칸에 박스가 걸려도(빨강) 조금씩 올려 보며 step으로 올라갑니다.",
-          "verbatim": false
-        }
+        {"label": "선택 🧭", "text": "경사면 normal 기준 이동 대신, 일정 안에 제가 이해하고 고칠 수 있는 step 방식을 골랐습니다.", "verbatim": false}
       ],
       "visuals": [
         {
@@ -387,120 +179,81 @@
           "src": "images/stairs.gif",
           "w": 800,
           "h": 450,
-          "caption": {
-            "text": "계단 대각선 이동 (Step 높이 보정)",
-            "verbatim": true
-          }
+          "caption": {"text": "계단 대각선 이동 (Step 높이 보정)", "verbatim": true}
         },
         {
           "kind": "image",
           "src": "images/stair_step_cast.gif",
           "w": 600,
           "h": 355,
-          "caption": {
-            "text": "계단을 걸어 오르내리기 — 계단 칸에 박스가 걸려도(빨강) step으로 올라감",
-            "verbatim": true
-          }
+          "caption": {"text": "계단을 걸어 오르내리기 — 계단 칸에 박스가 걸려도(빨강) step으로 올라감", "verbatim": true}
         }
       ],
+      "after": "move-axis",
       "from": {
         "key": "move-intro",
-        "sectionPath": [
-          "3. 플레이어의 이동을 어떻게 구현할 것인가",
-          "3.2 계단 step"
-        ],
-        "sig": [
-          "3.2 계단 step|image|images/stairs.gif|1"
-        ]
-      },
-      "lead": {
-        "text": "정면이 계단이면 maxStepHeight(0.1)를 10번 나눠 올려 보고, 올린 위치에서 앞으로 갈 수 있으면 그 높이로 이동합니다.",
-        "verbatim": true
+        "sectionPath": ["3. 플레이어의 이동을 어떻게 구현할 것인가", "3.2 계단 step"],
+        "sig": ["3.2 계단 step|image|images/stairs.gif|1"]
       }
     },
     {
-      "key": "stair-code",
+      "key": "jump",
       "chapter": "move",
-      "layout": "full",
+      "layout": "visual",
       "tab": "구현",
-      "title": {
-        "text": "3.2 계단 step",
-        "verbatim": true
-      },
-      "lead": {
-        "text": "위로 올릴 공간이 없으면 다음 높이를 시도하고, 올린 위치에서 앞이 비면 그 높이로 이동합니다.",
-        "verbatim": false
-      },
-      "sectionPath": [
-        "3. 플레이어의 이동을 어떻게 구현할 것인가",
-        "3.2 계단 step"
+      "title": {"text": "3.3 점프", "verbatim": true},
+      "lead": null,
+      "sectionPath": ["3. 플레이어 조작", "3.3 점프"],
+      "points": [
+        {"label": "땅에서만", "text": "w를 누르면 점프를 요청하고, 다음 FixedUpdate에서 땅에 있을 때만 위쪽 속도 6을 줍니다.", "verbatim": true},
+        {"label": "1번만", "text": "점프 횟수는 최대 1번이고 착지하면 다시 채워져, 공중 점프는 없습니다.", "verbatim": true},
+        {"label": "플랫폼 통과", "text": "올라가는 동안에는 플랫폼을 빼고 검사해서, 아래층에서 뛰어 위 플랫폼을 뚫고 올라설 수 있습니다.", "verbatim": false}
       ],
-      "points": [],
       "visuals": [
         {
-          "kind": "code",
-          "n": 1,
-          "fp": "// CharacterController2D.cs:467 — 위로 조금씩 올려 보며 앞이 비는 높이를 찾음"
+          "kind": "image",
+          "src": "images/jump.gif",
+          "w": 640,
+          "h": 359,
+          "caption": {"text": "위층 바닥에서 제자리 점프 → 착지 — BoxCast 박스가 캐릭터와 함께 오르내림", "verbatim": true}
         }
       ],
-      "from": {
-        "key": "stair-code",
-        "sectionPath": [
-          "3. 플레이어의 이동을 어떻게 구현할 것인가",
-          "3.2 계단 step"
-        ],
-        "sig": [
-          "3.2 계단 step|code|1|// CharacterController2D.cs:467 — 위로 조금씩 올려 보며 앞이 비는 높이를 찾음"
-        ]
-      }
+      "after": "move-intro"
     },
     {
-      "key": "stair-choice",
+      "key": "platform",
       "chapter": "move",
-      "layout": "full",
-      "tab": "선택",
-      "title": {
-        "text": "3.2.1 대각선(계단) 이동을 어떻게 처리할 것인가",
-        "verbatim": true
-      },
+      "layout": "visual",
+      "tab": "구현",
+      "title": {"text": "3.4 `s` ① 급하강 · ② 플랫폼 내려가기", "verbatim": true},
       "lead": null,
-      "sectionPath": [
-        "3. 플레이어의 이동을 어떻게 구현할 것인가",
-        "3.2.1 대각선(계단) 이동을 어떻게 처리할 것인가"
-      ],
+      "sectionPath": ["3. 플레이어 조작", "3.4 `s` ① 급하강 · ② 플랫폼 내려가기"],
       "points": [
         {
-          "label": "처음",
-          "text": "[A]를 먼저 시도했지만, 당시 경사면 normal 기준 이동을 충분히 이해하지 못해 원하는 대로 다루지 못했습니다.",
-          "verbatim": true
-        },
-        {
-          "label": "결정",
-          "text": "일정 안에 내가 이해하고 고칠 수 있는 방식으로 만드는 것을 우선해 step으로 선택했습니다.",
+          "label": "s 하나에 네 동작",
+          "text": "s를 누르고 있는 동안 공중이면 급하강, 발밑이 플랫폼이면 내려가기, 아니면 앉기 · 구르기 중 하나만 고릅니다.",
           "verbatim": false
         },
         {
-          "label": "남은 과제",
-          "text": "normal 기준 경사 이동은 다시 공부해 볼 과제로 남았습니다.",
+          "label": "내 LayerMask 🧭",
+          "text": "플랫폼 콜라이더를 끄지 않고 플레이어가 검사하는 LayerMask를 바꿔, 플레이어와 적이 같은 방식으로 플랫폼을 오르내립니다.",
           "verbatim": false
         }
       ],
       "visuals": [
         {
-          "kind": "table",
-          "n": 1,
-          "fp": "|[A] 충돌 normal 방향으로 이동|[B] step 방식 ✓"
+          "kind": "image",
+          "src": "images/s_drop.gif",
+          "w": 640,
+          "h": 359,
+          "caption": {"text": "위층 바닥에서 `s`로 플랫폼을 통과해 아래 계단으로 내려간 뒤, 계단을 따라 다시 오름", "verbatim": true}
         }
       ],
+      "after": "jump",
       "from": {
-        "key": "stair-choice",
-        "sectionPath": [
-          "3. 플레이어의 이동을 어떻게 구현할 것인가",
-          "3.2.1 대각선(계단) 이동을 어떻게 처리할 것인가"
-        ],
-        "sig": [
-          "3.2.1 대각선(계단) 이동을 어떻게 처리할 것인가|table|1||[A] 충돌 normal 방향으로 이동|[B] step 방식 ✓"
-        ]
+        "key": "platform",
+        "sectionPath": ["3. 플레이어의 이동을 어떻게 구현할 것인가", "3.4 플랫폼 통과와 `s`키 4가지 동작"],
+        "sig": ["3.4 플랫폼 통과와 s키 4가지 동작|image|images/platform.gif|1", "3.4 플랫폼 통과와 s키 4가지 동작|table|1|상황|사용하는 LayerMask"]
       }
     },
     {
@@ -508,27 +261,19 @@
       "chapter": "move",
       "layout": "visual",
       "tab": "구현",
-      "title": {
-        "text": "3.3 구르기 분할 step",
-        "verbatim": true
-      },
-      "lead": {
-        "text": "구르기는 한 틱 이동량이 커서 step이 실패합니다.",
-        "verbatim": true
-      },
-      "sectionPath": [
-        "3. 플레이어의 이동을 어떻게 구현할 것인가",
-        "3.3 구르기 분할 step"
-      ],
+      "title": {"text": "3.5 `s` ③ 앉기 · ④ 구르기", "verbatim": true},
+      "lead": null,
+      "sectionPath": ["3. 플레이어 조작", "3.5 `s` ③ 앉기 · ④ 구르기"],
       "points": [
         {
-          "label": "분할",
-          "text": "이동량을 계단 높이 단위로 쪼개 올라가는 step → 수평 이동 → 내려가는 step 순서로 처리합니다.",
-          "verbatim": false
+          "label": "구르기",
+          "text": "땅에서 s를 누르고 있으면 앉고, 앉은 채 좌우를 새로 누르거나 좌우로 가는 중에 s를 새로 누르면 입력한 쪽으로 구릅니다.",
+          "verbatim": true
         },
+        {"label": "입력 순서", "text": "구르기 판정을 한 곳에서만 해서, s → a/d로 누르든 a/d → s로 누르든 같은 조건으로 구릅니다.", "verbatim": false},
         {
-          "label": "과정",
-          "text": "단순 while 반복은 제자리 이동 · 무한 루프가 생겨, 구르기만 나눠서 처리했습니다(3.7).",
+          "label": "계단",
+          "text": "한 번에 크게 움직여 계단 step이 실패하므로, 이동량을 쪼개 올라가는 step → 수평 이동 → 내려가는 step 순서로 처리합니다.",
           "verbatim": false
         }
       ],
@@ -538,166 +283,74 @@
           "src": "images/roll_step_cast.gif",
           "w": 600,
           "h": 355,
-          "caption": {
-            "text": "구르기로 계단 오르기 — 한 번에 크게 움직여도 나눠 처리해 계단을 타고 올라감",
-            "verbatim": true
-          }
+          "caption": {"text": "구르기로 계단 오르기 — 한 번에 크게 움직여도 나눠 처리해 계단을 타고 올라감", "verbatim": true}
         }
       ],
+      "after": "platform",
       "from": {
         "key": "roll-code",
-        "sectionPath": [
-          "3. 플레이어의 이동을 어떻게 구현할 것인가",
-          "3.3 구르기 분할 step"
-        ],
-        "sig": [
-          "3.3 구르기 분할 step|code|1|// CharacterController2D.cs:519 — 한 틱 이동량을 계단 높이 단위로 분할"
-        ]
-      },
-      "group": "split-roll-steps"
+        "sectionPath": ["3. 플레이어의 이동을 어떻게 구현할 것인가", "3.3 구르기 분할 step"],
+        "sig": ["3.3 구르기 분할 step|code|1|// CharacterController2D.cs:519 — 한 틱 이동량을 계단 높이 단위로 분할"]
+      }
     },
     {
-      "key": "platform",
+      "key": "attack-dash",
       "chapter": "move",
-      "layout": "full",
+      "layout": "visual",
       "tab": "구현",
-      "title": {
-        "text": "3.4 플랫폼 통과와 `s`키 4가지 동작",
-        "verbatim": true
-      },
-      "lead": {
-        "text": "플랫폼의 콜라이더를 끄지 않고, 플레이어가 검사하는 LayerMask를 상황에 따라 바꿉니다.\ns키 하나로 급하강 · 플랫폼 내려가기 · 앉기 · 구르기를 이전 상태에 따라 순서대로 분기합니다.",
-        "verbatim": false
-      },
-      "sectionPath": [
-        "3. 플레이어의 이동을 어떻게 구현할 것인가",
-        "3.4 플랫폼 통과와 `s`키 4가지 동작"
-      ],
-      "points": [],
-      "visuals": [
-        {
-          "kind": "image",
-          "src": "images/platform.gif",
-          "w": 800,
-          "h": 450,
-          "caption": {
-            "text": "플랫폼 통과: 점프 · 계단 위에서 LayerMask의 Platform 제외 (씬 뷰)",
-            "verbatim": true
-          }
-        },
-        {
-          "kind": "table",
-          "n": 1,
-          "fp": "상황|사용하는 LayerMask"
-        }
-      ],
-      "from": {
-        "key": "platform",
-        "sectionPath": [
-          "3. 플레이어의 이동을 어떻게 구현할 것인가",
-          "3.4 플랫폼 통과와 `s`키 4가지 동작"
-        ],
-        "sig": [
-          "3.4 플랫폼 통과와 s키 4가지 동작|image|images/platform.gif|1",
-          "3.4 플랫폼 통과와 s키 4가지 동작|table|1|상황|사용하는 LayerMask"
-        ]
-      },
-      "arrange": "row"
-    },
-    {
-      "key": "platform-choice",
-      "chapter": "move",
-      "layout": "full",
-      "tab": "선택",
-      "title": {
-        "text": "3.4.1 플랫폼 통과를 어떻게 할 것인가",
-        "verbatim": true
-      },
+      "title": {"text": "3.6 공격 대시", "verbatim": true},
       "lead": null,
-      "sectionPath": [
-        "3. 플레이어의 이동을 어떻게 구현할 것인가",
-        "3.4.1 플랫폼 통과를 어떻게 할 것인가"
-      ],
+      "sectionPath": ["3. 플레이어 조작", "3.6 공격 대시"],
       "points": [
+        {"label": "돌진", "text": "마우스 좌클릭 순간 캐릭터에서 커서로 향하는 방향으로 짧게 돌진하며 공격합니다.", "verbatim": false},
         {
-          "label": "결정",
-          "text": "플레이어와 적이 같은 방식으로 플랫폼을 오르내리게 하려고 B를 선택했습니다.",
-          "verbatim": true
-        },
-        {
-          "label": "이유",
-          "text": "콜라이더를 끄는 방식이면 한 캐릭터가 내려갈 때 그 플랫폼 위의 다른 캐릭터까지 떨어져 이 추적을 만들 수 없습니다.",
-          "verbatim": true
-        },
-        {
-          "label": "부작용",
-          "text": "대각선 이동 중 통과하지 못하는 부작용은 계단 위 · 점프 상승 중에 플랫폼 제외 레이어를 쓰는 규칙으로 해결했습니다.",
+          "label": "거리 / 시간 🧭",
+          "text": "맞고 밀리는 넉백은 서서히 줄이고, 내가 누른 대시 · 구르기는 매번 같은 거리를 같은 시간에 가도록 거리 ÷ 시간으로 속도를 정했습니다.",
           "verbatim": false
         }
       ],
       "visuals": [
         {
-          "kind": "table",
-          "n": 1,
-          "fp": "|[A] 플랫폼 콜라이더를 잠깐 끄기|[B] 플레이어의 충돌 LayerMask 교체 ✓"
+          "kind": "image",
+          "src": "images/attack_dash.gif",
+          "w": 640,
+          "h": 360,
+          "caption": {"text": "커서 방향으로 공격 대시 — 대각선 위 · 오른쪽 · 왼쪽, 공격마다 슬래시가 나감", "verbatim": true}
         }
       ],
-      "from": {
-        "key": "platform-choice",
-        "sectionPath": [
-          "3. 플레이어의 이동을 어떻게 구현할 것인가",
-          "3.4.1 플랫폼 통과를 어떻게 할 것인가"
-        ],
-        "sig": [
-          "3.4.1 플랫폼 통과를 어떻게 할 것인가|table|1||[A] 플랫폼 콜라이더를 잠깐 끄기|[B] 플레이어의 충돌 LayerMask 교체 ✓"
-        ]
-      }
+      "after": "roll-code"
     },
     {
       "key": "wall-flip",
       "chapter": "move",
       "layout": "visual",
-      "tab": "결과",
-      "title": {
-        "text": "3.5 벽 붙기 · 공중제비",
-        "verbatim": true
-      },
-      "lead": {
-        "text": "공중에서 부착 가능한 벽(레이어 9) 방향으로 입력하면 붙고, w를 누르면 벽 반대 방향으로 공중제비합니다.",
-        "verbatim": true
-      },
-      "sectionPath": [
-        "3. 플레이어의 이동을 어떻게 구현할 것인가",
-        "3.5 벽 붙기 · 공중제비"
-      ],
+      "tab": "구현",
+      "title": {"text": "3.7 벽 붙기 · 공중제비", "verbatim": true},
+      "lead": null,
+      "sectionPath": ["3. 플레이어 조작", "3.7 벽 붙기 · 공중제비"],
       "points": [
+        {"label": "붙기", "text": "공중에서 입력한 방향의 벽에 닿으면 붙고, 땅에 닿거나 반대 방향을 누르거나 벽이 끝나면 떨어집니다.", "verbatim": false},
+        {"label": "공중제비", "text": "붙어 있을 때 w를 누르면 점프 대신 벽 반대쪽으로 튕겨 나갑니다.", "verbatim": false},
         {
-          "label": "다시 붙지 않게",
-          "text": "공중제비 직후 같은 벽에 다시 붙지 않도록 0.03초 동안 부착 검사를 막습니다.",
+          "label": "이어 붙기",
+          "text": "공중제비 중에는 입력이 없어도 좌우 벽을 검사해 반대쪽 벽에 바로 붙어, 양쪽 벽을 번갈아 차며 올라갈 수 있습니다.",
           "verbatim": false
         }
       ],
       "visuals": [
         {
           "kind": "image",
-          "src": "images/wall_flip.gif",
-          "w": 800,
-          "h": 450,
-          "caption": {
-            "text": "벽 붙기 → 공중제비",
-            "verbatim": true
-          }
+          "src": "images/wall_climb.gif",
+          "w": 480,
+          "h": 408,
+          "caption": {"text": "좁은 통로의 양쪽 벽에 번갈아 붙었다가 공중제비로 위층까지 오르기 (다른 스테이지)", "verbatim": true}
         }
       ],
+      "after": "attack-dash",
       "from": {
         "key": "wall-flip",
-        "sectionPath": [
-          "3. 플레이어의 이동을 어떻게 구현할 것인가",
-          "3.5 벽 붙기 · 공중제비"
-        ],
-        "sig": [
-          "3.5 벽 붙기 · 공중제비|image|images/wall_flip.gif|1"
-        ]
+        "sectionPath": ["3. 플레이어의 이동을 어떻게 구현할 것인가", "3.5 벽 붙기 · 공중제비"],
+        "sig": ["3.5 벽 붙기 · 공중제비|image|images/wall_flip.gif|1"]
       }
     },
     {
@@ -705,27 +358,19 @@
       "chapter": "chronos",
       "layout": "visual",
       "tab": "개요",
-      "title": {
-        "text": "4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가",
-        "verbatim": true
-      },
-      "lead": {
-        "text": "lShift를 누르고 있는 동안 게임 시간이 0.25배로 느려집니다.",
-        "verbatim": true
-      },
-      "sectionPath": [
-        "4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가"
-      ],
+      "title": {"text": "4. 크로노스와 히트스탑", "verbatim": true},
+      "lead": null,
+      "sectionPath": ["4. 크로노스와 히트스탑"],
       "points": [
         {
-          "label": "게이지",
-          "text": "게이지(최대 11초)를 쓰고, 다 쓰거나 키를 떼면 풀립니다.",
+          "label": "크로노스",
+          "text": "lShift를 누르고 있는 동안 게임 시간이 0.25배로 느려지고, 공격이 맞으면 히트스탑(0.08초 정지) + 화면 흔들림 + 슬래시가 같이 나옵니다.",
           "verbatim": true
         },
         {
-          "label": "타격",
-          "text": "공격이 맞으면 히트스탑(0.08초 정지) + 화면 흔들림 + 슬래시가 같이 나옵니다.",
-          "verbatim": true
+          "label": "timeScale 하나로 🧭",
+          "text": "감속에서 빠져야 할 것이 UI뿐이라, 엔진의 Time.timeScale 하나로 세계 전체를 늦췄습니다.",
+          "verbatim": false
         }
       ],
       "visuals": [
@@ -734,44 +379,51 @@
           "src": "images/chronos_hitstop_combo.gif",
           "w": 640,
           "h": 364,
-          "caption": {
-            "text": "크로노스: lShift로 ×0.25 감속 → 총알을 피해 공격 → 적중 시 히트스탑 · 카메라 쉐이크 (시연 4:36)",
-            "verbatim": true
-          }
+          "caption": {"text": "크로노스: lShift로 ×0.25 감속 → 총알을 피해 공격 → 적중 시 히트스탑 · 카메라 쉐이크 (시연 4:36)", "verbatim": true}
         }
       ],
       "from": {
         "key": "chronos-intro",
-        "sectionPath": [
-          "4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가"
-        ],
-        "sig": [
-          "4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가|image|images/chronos_hitstop_combo.gif|1"
-        ]
+        "sectionPath": ["4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가"],
+        "sig": ["4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가|image|images/chronos_hitstop_combo.gif|1"]
+      }
+    },
+    {
+      "key": "chronos-flow",
+      "chapter": "chronos",
+      "layout": "visual",
+      "tab": "흐름",
+      "title": {"text": "4. 크로노스와 히트스탑 — 겹칠 때", "verbatim": false},
+      "lead": null,
+      "sectionPath": ["4. 크로노스와 히트스탑"],
+      "points": [
+        {
+          "label": "복귀 규칙",
+          "text": "히트스탑은 끝날 때 저장해 둔 값이 아니라 크로노스의 현재 목표 값으로 돌아가, 둘이 겹쳐도 감속이나 정지 상태로 굳지 않습니다.",
+          "verbatim": false
+        }
+      ],
+      "visuals": [{"kind": "mermaid", "n": 1, "fp": "sequenceDiagram"}],
+      "after": "chronos-intro",
+      "from": {
+        "key": "chronos-flow",
+        "sectionPath": ["4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가"],
+        "sig": ["4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가|mermaid|1|sequenceDiagram"]
       }
     },
     {
       "key": "chronos-gauge",
       "chapter": "chronos",
       "layout": "visual",
-      "tab": "결과",
-      "title": {
-        "text": "4.2 크로노스: 느려진 세계에서도 게이지는 실제 시간으로",
-        "verbatim": true
-      },
-      "lead": {
-        "text": "감속 중에도 실제 1초에 1씩 줄고, 꺼져 있을 때 초당 0.5씩 찹니다.",
-        "verbatim": true
-      },
-      "sectionPath": [
-        "4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가",
-        "4.2 크로노스: 느려진 세계에서도 게이지는 실제 시간으로"
-      ],
+      "tab": "구현",
+      "title": {"text": "4.2 크로노스 게이지는 실제 시간으로", "verbatim": true},
+      "lead": null,
+      "sectionPath": ["4. 크로노스와 히트스탑", "4.2 크로노스 게이지는 실제 시간으로"],
       "points": [
         {
           "label": "실제 시간",
-          "text": "게이지는 unscaledDeltaTime으로 계산해, 느려진 세계에서도 실제 시간만큼 줄어듭니다.",
-          "verbatim": false
+          "text": "게이지는 감속 중에도 실제 시간대로 줄어야 해서 Time.unscaledDeltaTime으로 계산하고, 라운드를 새로 시작할 때마다 가득 채웁니다.",
+          "verbatim": true
         }
       ],
       "visuals": [
@@ -780,215 +432,22 @@
           "src": "images/chronos_gauge.png",
           "w": 1390,
           "h": 300,
-          "caption": {
-            "text": "크로노스 게이지와 lShift 키 UI",
-            "verbatim": true
-          },
-          "sectionPath": [
-            "4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가"
-          ]
+          "caption": {"text": "크로노스 게이지와 lShift 키 UI", "verbatim": true}
         },
         {
-          "kind": "code",
-          "n": 1,
-          "fp": "// ChronosSystem.cs:106"
+          "kind": "image",
+          "src": "images/chronos_inspector.png",
+          "w": 654,
+          "h": 217,
+          "caption": {"text": "`Stage_1`의 `ChronosSystem` 인스펙터 — 감속 0.25배 · 게이지 최대 11 · 초당 소모 1 · 초당 회복 0.5", "verbatim": true}
         }
       ],
+      "arrange": "row",
+      "after": "chronos-flow",
       "from": {
         "key": "chronos-gauge",
-        "sectionPath": [
-          "4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가"
-        ],
-        "sig": [
-          "4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가|image|images/chronos_gauge.png|1"
-        ]
-      },
-      "arrange": "side",
-      "after": "chronos-choice"
-    },
-    {
-      "key": "chronos-flow",
-      "chapter": "chronos",
-      "layout": "visual",
-      "tab": "흐름",
-      "title": {
-        "text": "4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가",
-        "verbatim": true
-      },
-      "lead": null,
-      "sectionPath": [
-        "4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가"
-      ],
-      "points": [
-        {
-          "label": "전환",
-          "text": "lShift를 누르면 0.15초에 걸쳐 0.25배로, 떼면 0.2초에 걸쳐 1배로 돌아갑니다.",
-          "verbatim": false
-        },
-        {
-          "label": "히트스탑과 겹칠 때",
-          "text": "히트스탑 중(timeScale = 0)에는 크로노스가 timeScale을 건드리지 않습니다.",
-          "verbatim": false
-        }
-      ],
-      "visuals": [
-        {
-          "kind": "mermaid",
-          "n": 1,
-          "fp": "sequenceDiagram"
-        }
-      ],
-      "from": {
-        "key": "chronos-flow",
-        "sectionPath": [
-          "4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가"
-        ],
-        "sig": [
-          "4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가|mermaid|1|sequenceDiagram"
-        ]
-      },
-      "after": "chronos-intro"
-    },
-    {
-      "key": "chronos-choice",
-      "chapter": "chronos",
-      "layout": "full",
-      "tab": "선택",
-      "title": {
-        "text": "4.1 시간 감속을 어떻게 구현할 것인가",
-        "verbatim": true
-      },
-      "lead": null,
-      "sectionPath": [
-        "4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가",
-        "4.1 시간 감속을 어떻게 구현할 것인가"
-      ],
-      "points": [
-        {
-          "label": "결정",
-          "text": "바꿔야 할 곳이 너무 많아 B를 골랐습니다.",
-          "verbatim": true
-        },
-        {
-          "label": "대신",
-          "text": "대신 2.2의 시간축 분리 표를 기준으로 unscaled 대상을 정리했습니다.",
-          "verbatim": true
-        },
-        {
-          "label": "설계 의도",
-          "text": "원작처럼 플레이어 입력도 같이 느려지므로, 감속은 신중하게 써야 하는 자원이라는 의도와도 맞습니다.",
-          "verbatim": false
-        }
-      ],
-      "visuals": [
-        {
-          "kind": "table",
-          "n": 1,
-          "fp": "|[A] 대상마다 속도 배율 적용|[B] Time.timeScale 변경 ✓"
-        }
-      ],
-      "from": {
-        "key": "chronos-choice",
-        "sectionPath": [
-          "4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가",
-          "4.1.1 시간 감속을 어떻게 구현할 것인가"
-        ],
-        "sig": [
-          "4.1.1 시간 감속을 어떻게 구현할 것인가|table|1||[A] 대상마다 속도 배율 적용|[B] Time.timeScale 변경 ✓"
-        ]
-      },
-      "after": "chronos-flow"
-    },
-    {
-      "key": "hitstop-code",
-      "chapter": "chronos",
-      "layout": "code",
-      "tab": "구현",
-      "title": {
-        "text": "4.3 히트스탑: 멈췄다가 크로노스 상태로 돌아오기",
-        "verbatim": true
-      },
-      "lead": {
-        "text": "크로노스는 히트스탑 중(timeScale = 0)에는 timeScale을 바꾸지 않고, 히트스탑은 끝날 때 저장해 둔 값이 아니라 크로노스의 현재 목표 값으로 돌아갑니다.",
-        "verbatim": true
-      },
-      "sectionPath": [
-        "4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가",
-        "4.3 히트스탑: 멈췄다가 크로노스 상태로 돌아오기"
-      ],
-      "points": [
-        {
-          "label": "복귀 값",
-          "text": "히트스탑이 끝나면 저장해 둔 값을 버리고, 크로노스에게 지금 돌아갈 값(GetTargetTimeScale)을 묻습니다.",
-          "verbatim": false
-        },
-        {
-          "label": "실제 시간",
-          "text": "WaitForSecondsRealtime으로 기다려 timeScale이 0이어도 끝납니다.",
-          "verbatim": false
-        }
-      ],
-      "visuals": [
-        {
-          "kind": "code",
-          "n": 2,
-          "fp": "// ScreenEffectManager.cs:248"
-        }
-      ],
-      "from": {
-        "key": "hitstop-code",
-        "sectionPath": [
-          "4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가",
-          "4.2 히트스탑: 멈췄다가 크로노스 상태로 돌아오기"
-        ],
-        "sig": [
-          "4.2 히트스탑: 멈췄다가 크로노스 상태로 돌아오기|code|2|// ScreenEffectManager.cs:248"
-        ]
-      }
-    },
-    {
-      "key": "hitstop-choice",
-      "chapter": "chronos",
-      "layout": "full",
-      "tab": "선택",
-      "title": {
-        "text": "4.3.1 히트스탑이 끝나면 어떤 값으로 돌아갈 것인가",
-        "verbatim": true
-      },
-      "lead": null,
-      "sectionPath": [
-        "4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가",
-        "4.3 히트스탑: 멈췄다가 크로노스 상태로 돌아오기",
-        "4.3.1 히트스탑이 끝나면 어떤 값으로 돌아갈 것인가"
-      ],
-      "points": [
-        {
-          "label": "문제",
-          "text": "저장해 둔 값으로 돌아가면, 히트스탑 도중 lShift를 떼거나 눌렀을 때 히트스탑 전 상태로 되돌아가는 문제가 생깁니다.",
-          "verbatim": true
-        },
-        {
-          "label": "결정",
-          "text": "그래서 복귀 시점의 크로노스 상태를 다시 묻습니다.",
-          "verbatim": true
-        }
-      ],
-      "visuals": [
-        {
-          "kind": "table",
-          "n": 1,
-          "fp": "|[A] 히트스탑 전에 저장해 둔 값|[B] 그 순간 크로노스의 목표 값 ✓"
-        }
-      ],
-      "from": {
-        "key": "hitstop-choice",
-        "sectionPath": [
-          "4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가",
-          "4.2.1 히트스탑이 끝나면 어떤 값으로 돌아갈 것인가"
-        ],
-        "sig": [
-          "4.2.1 히트스탑이 끝나면 어떤 값으로 돌아갈 것인가|table|1||[A] 히트스탑 전에 저장해 둔 값|[B] 그 순간 크로노스의 목표 값 ✓"
-        ]
+        "sectionPath": ["4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가"],
+        "sig": ["4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가|image|images/chronos_gauge.png|1"]
       }
     },
     {
@@ -996,60 +455,37 @@
       "chapter": "record",
       "layout": "screens",
       "tab": "개요",
-      "title": {
-        "text": "5. 플레이를 어떻게 기록하고 되감을 것인가",
-        "verbatim": true
-      },
-      "lead": {
-        "text": "플레이하는 동안 매 틱 플레이어 · 적 · 오브젝트(총알, 카메라) · 이펙트의 상태를 기록합니다.",
-        "verbatim": true
-      },
-      "sectionPath": [
-        "5. 플레이를 어떻게 기록하고 되감을 것인가"
-      ],
+      "title": {"text": "5. 녹화 · 역재생 · 리플레이", "verbatim": true},
+      "lead": null,
+      "sectionPath": ["5. 녹화 · 역재생 · 리플레이"],
       "points": [
+        {"label": "기록", "text": "플레이하는 동안 매 틱 플레이어 · 적 · 오브젝트(총알, 카메라) · 이펙트의 상태를 기록해 둡니다.", "verbatim": false},
         {
-          "label": "역재생",
-          "text": "사망 / 시간 초과 → 기록을 9배속 역방향으로 되감은 뒤 재시작",
-          "verbatim": true
-        },
-        {
-          "label": "리플레이",
-          "text": "클리어 → 기록을 정방향으로 재생(CCTV 리플레이)한 뒤 다음 스테이지",
-          "verbatim": true
+          "label": "되감기 · 리플레이",
+          "text": "죽으면 9배속으로 되감은 뒤 바로 다시 시작하고, 클리어하면 정방향으로 다시 보여 준 뒤 다음 스테이지로 넘어갑니다.",
+          "verbatim": false
         }
       ],
       "visuals": [
         {
           "kind": "image",
-          "src": "images/rewind.gif",
-          "w": 640,
-          "h": 364,
-          "caption": {
-            "text": "사망 후 역재생 — 공격 · 점프가 9배속으로 거꾸로 감긴 뒤 같은 스테이지 처음으로",
-            "verbatim": true
-          }
-        },
-        {
-          "kind": "image",
           "src": "images/replay.gif",
           "w": 800,
           "h": 450,
-          "caption": {
-            "text": "클리어 후 CCTV 리플레이 (정방향 재생)",
-            "verbatim": true
-          }
+          "caption": {"text": "클리어 후 CCTV 리플레이 (정방향 재생)", "verbatim": true}
+        },
+        {
+          "kind": "image",
+          "src": "images/rewind.gif",
+          "w": 640,
+          "h": 364,
+          "caption": {"text": "사망 후 역재생 — 공격 · 점프가 9배속으로 거꾸로 감긴 뒤 같은 스테이지 처음으로", "verbatim": true}
         }
       ],
       "from": {
         "key": "record-intro",
-        "sectionPath": [
-          "5. 플레이를 어떻게 기록하고 되감을 것인가"
-        ],
-        "sig": [
-          "5. 플레이를 어떻게 기록하고 되감을 것인가|image|images/replay.gif|1",
-          "5. 플레이를 어떻게 기록하고 되감을 것인가|image|images/rewind.gif|1"
-        ]
+        "sectionPath": ["5. 플레이를 어떻게 기록하고 되감을 것인가"],
+        "sig": ["5. 플레이를 어떻게 기록하고 되감을 것인가|image|images/replay.gif|1", "5. 플레이를 어떻게 기록하고 되감을 것인가|image|images/rewind.gif|1"]
       }
     },
     {
@@ -1057,279 +493,48 @@
       "chapter": "record",
       "layout": "visual",
       "tab": "구조",
-      "title": {
-        "text": "5. 플레이를 어떻게 기록하고 되감을 것인가",
-        "verbatim": true
-      },
+      "title": {"text": "5. 녹화 · 역재생 · 리플레이 — 데이터 구조", "verbatim": false},
       "lead": null,
-      "sectionPath": [
-        "5. 플레이를 어떻게 기록하고 되감을 것인가"
-      ],
+      "sectionPath": ["5. 녹화 · 역재생 · 리플레이"],
       "points": [
+        {"label": "한 틱", "text": "한 틱 = TimelineFrame 1개 = 플레이어 1명 + 적 n + 오브젝트 n + 이펙트 n (직접 설계)", "verbatim": false},
         {
-          "label": "한 틱",
-          "text": "한 틱 = TimelineFrame 1개 = 플레이어 1명 + 적 n + 오브젝트 n + 이펙트 n",
-          "verbatim": true
-        },
-        {
-          "label": "등록",
-          "text": "녹화 대상은 TimelineTrackable만 붙이면 켜질 때 자동으로 등록됩니다.",
-          "verbatim": false
-        },
-        {
-          "label": "AI 활용",
-          "text": "초기 데이터 작업(상태 스냅샷 방식)을 AI와 함께 시작하고, 오류가 생길 때마다 AI와 주고받으며 고쳤습니다.",
+          "label": "스냅샷 🧭",
+          "text": "입력만 기록해 다시 계산하는 대신, 매 틱 위치 · 방향 · 애니메이션 상태를 저장해 그대로 다시 적용하므로 역재생이 쉽습니다.",
           "verbatim": false
         }
       ],
-      "visuals": [
-        {
-          "kind": "mermaid",
-          "n": 1,
-          "fp": "classDiagram"
-        }
-      ],
+      "visuals": [{"kind": "mermaid", "n": 1, "fp": "classDiagram"}],
+      "after": "record-intro",
       "from": {
         "key": "record-struct",
-        "sectionPath": [
-          "5. 플레이를 어떻게 기록하고 되감을 것인가"
-        ],
-        "sig": [
-          "5. 플레이를 어떻게 기록하고 되감을 것인가|mermaid|1|classDiagram"
-        ]
+        "sectionPath": ["5. 플레이를 어떻게 기록하고 되감을 것인가"],
+        "sig": ["5. 플레이를 어떻게 기록하고 되감을 것인가|mermaid|1|classDiagram"]
       }
     },
     {
-      "key": "record-code",
+      "key": "ts-pause",
       "chapter": "record",
-      "layout": "code",
-      "tab": "구현",
-      "title": {
-        "text": "5.1 기록: 등록된 대상만 매 틱 상태를 저장하기",
-        "verbatim": true
-      },
-      "lead": {
-        "text": "전체 씬을 기록하면 무거우므로, 플레이어 외에는 TimelineTrackable이 붙은 오브젝트만 기록합니다.",
-        "verbatim": true
-      },
-      "sectionPath": [
-        "5. 플레이를 어떻게 기록하고 되감을 것인가",
-        "5.1 기록: 등록된 대상만 매 틱 상태를 저장하기"
-      ],
+      "layout": "overview",
+      "tab": "문제 해결",
+      "title": {"text": "5.2 만들며 생긴 문제 — 세 번 바꾸기까지", "verbatim": false},
+      "lead": {"text": "단계마다 원인을 AI와 주고받으며 찾았습니다.", "verbatim": true},
+      "sectionPath": ["5. 녹화 · 역재생 · 리플레이", "5.2 틱 사이 보간"],
       "points": [
+        {"label": "① 끊김", "text": "틱 단위로만 적용해 리플레이가 뚝뚝 끊김 → 재생 위치를 float로 들고 두 틱 사이를 보간", "verbatim": false},
         {
-          "label": "시간 초과",
-          "text": "5,000틱(100초)을 넘기면 시간 초과로 사망 처리합니다.",
+          "label": "② 단발 모션 반복",
+          "text": "애니메이션 시간을 0 ~ 1로 잘라 기록해 공격 · 사망 모션이 반복 → 원래 값을 기록하고 루프 판단은 Animator에",
           "verbatim": false
         },
-        {
-          "label": "종류별 기록",
-          "text": "TrackType에 따라 적 · 이펙트 · 오브젝트 기록으로 나눠 담습니다.",
-          "verbatim": false
-        }
+        {"label": "③ 일시정지", "text": "재생을 실제 시간으로 돌리자 일시정지해도 애니메이션이 계속 돎 → 일시정지할 때만 Animator 모드를 되돌림", "verbatim": false}
       ],
-      "visuals": [
-        {
-          "kind": "code",
-          "n": 1,
-          "fp": "// TimeLineRecorder.cs:438",
-          "lines": [
-            1,
-            20
-          ]
-        }
-      ],
+      "visuals": [],
+      "after": "record-struct",
       "from": {
-        "key": "record-code",
-        "sectionPath": [
-          "5. 플레이를 어떻게 기록하고 되감을 것인가",
-          "5.1 기록: 등록된 대상만 매 틱 상태를 저장하기"
-        ],
-        "sig": [
-          "5.1 기록: 등록된 대상만 매 틱 상태를 저장하기|code|1|// TimeLineRecorder.cs:438"
-        ]
-      }
-    },
-    {
-      "key": "record-choice",
-      "chapter": "record",
-      "layout": "full",
-      "tab": "선택",
-      "title": {
-        "text": "5.1.1 무엇을 기록할 것인가",
-        "verbatim": true
-      },
-      "lead": null,
-      "sectionPath": [
-        "5. 플레이를 어떻게 기록하고 되감을 것인가",
-        "5.1.1 무엇을 기록할 것인가"
-      ],
-      "points": [
-        {
-          "label": "결정",
-          "text": "재생 · 역재생 초기 데이터 작업을 AI와 함께 하며 B로 정했습니다.",
-          "verbatim": true
-        },
-        {
-          "label": "이유",
-          "text": "역재생이 핵심 연출이라 \"되돌릴 수 있는가\"가 가장 중요했습니다.",
-          "verbatim": true
-        }
-      ],
-      "visuals": [
-        {
-          "kind": "table",
-          "n": 1,
-          "fp": "|[A] 입력만 기록하고 재시뮬레이션|[B] 매 틱 상태(위치 · 방향 · 애니메이션) 스냅샷 ✓"
-        }
-      ],
-      "from": {
-        "key": "record-choice",
-        "sectionPath": [
-          "5. 플레이를 어떻게 기록하고 되감을 것인가",
-          "5.1.1 무엇을 기록할 것인가"
-        ],
-        "sig": [
-          "5.1.1 무엇을 기록할 것인가|table|1||[A] 입력만 기록하고 재시뮬레이션|[B] 매 틱 상태(위치 · 방향 · 애니메이션) 스냅샷 ✓"
-        ]
-      }
-    },
-    {
-      "key": "interp-code",
-      "chapter": "record",
-      "layout": "code",
-      "tab": "구현",
-      "title": {
-        "text": "5.2 재생: 틱 사이를 보간해 부드럽게",
-        "verbatim": true
-      },
-      "lead": {
-        "text": "재생 위치를 정수 틱이 아니라 float로 들고, 앞뒤 두 프레임 사이를 t로 보간합니다.",
-        "verbatim": true
-      },
-      "sectionPath": [
-        "5. 플레이를 어떻게 기록하고 되감을 것인가",
-        "5.2 재생: 틱 사이를 보간해 부드럽게"
-      ],
-      "points": [
-        {
-          "label": "섞을 수 없는 값",
-          "text": "방향 · 활성 여부처럼 섞을 수 없는 값은 t < 0.5 기준으로 고릅니다.",
-          "verbatim": false
-        }
-      ],
-      "visuals": [
-        {
-          "kind": "code",
-          "n": 1,
-          "fp": "// TimeLineRecorder.cs:669"
-        }
-      ],
-      "from": {
-        "key": "interp-code",
-        "sectionPath": [
-          "5. 플레이를 어떻게 기록하고 되감을 것인가",
-          "5.2 재생: 틱 사이를 보간해 부드럽게"
-        ],
-        "sig": [
-          "5.2 재생: 틱 사이를 보간해 부드럽게|code|1|// TimeLineRecorder.cs:669"
-        ]
-      }
-    },
-    {
-      "key": "tick-choice",
-      "chapter": "record",
-      "layout": "full",
-      "tab": "선택",
-      "title": {
-        "text": "5.2.1 기록 단위와 재생 단위를 같게 할 것인가",
-        "verbatim": true
-      },
-      "lead": null,
-      "sectionPath": [
-        "5. 플레이를 어떻게 기록하고 되감을 것인가",
-        "5.2.1 기록 단위와 재생 단위를 같게 할 것인가"
-      ],
-      "points": [
-        {
-          "label": "① 끊김",
-          "text": "틱 단위로 적용하니 애니메이션이 끊겨, 틱 사이를 보간하는 방식으로 바꿨습니다.",
-          "verbatim": false
-        },
-        {
-          "label": "② 반복 모션",
-          "text": "보간하면서 루프와 단발을 구분하지 못해, 루프 판단을 Animator에 맡겼습니다.",
-          "verbatim": false
-        },
-        {
-          "label": "③ 일시정지",
-          "text": "재생을 실제 시간으로 돌리자 일시정지 중에도 애니메이션이 돌아, 일시정지 때만 Animator 모드를 되돌렸습니다.",
-          "verbatim": false
-        },
-        {
-          "label": "결론",
-          "text": "정방향 재생과 역재생을 둘 다 해야 해서, 같은 기록을 양방향으로 부드럽게 샘플링할 수 있는 B가 필요했습니다.",
-          "verbatim": false
-        }
-      ],
-      "visuals": [
-        {
-          "kind": "table",
-          "n": 1,
-          "fp": "|[A] 기록 · 재생 모두 FixedUpdate 틱 단위|[B] 기록은 틱, 재생은 Update + 보간 ✓"
-        }
-      ],
-      "from": {
-        "key": "tick-choice",
-        "sectionPath": [
-          "5. 플레이를 어떻게 기록하고 되감을 것인가",
-          "5.2.1 기록 단위와 재생 단위를 같게 할 것인가"
-        ],
-        "sig": [
-          "5.2.1 기록 단위와 재생 단위를 같게 할 것인가|table|1||[A] 기록 · 재생 모두 FixedUpdate 틱 단위|[B] 기록은 틱, 재생은 Update + 보간 "
-        ]
-      }
-    },
-    {
-      "key": "anim-code",
-      "chapter": "record",
-      "layout": "code",
-      "tab": "구현",
-      "title": {
-        "text": "5.3 애니메이션: 루프인지 단발인지는 Animator에 맡기기",
-        "verbatim": true
-      },
-      "lead": {
-        "text": "루프 애니메이션은 1을 넘어도 Animator가 알아서 순환하고, 단발 애니메이션은 클립 끝에서 멈춥니다 (7.2 문제 6).",
-        "verbatim": true
-      },
-      "sectionPath": [
-        "5. 플레이를 어떻게 기록하고 되감을 것인가",
-        "5.3 애니메이션: 루프인지 단발인지는 Animator에 맡기기"
-      ],
-      "points": [
-        {
-          "label": "기록",
-          "text": "기록할 때 normalizedTime을 0~1로 자르지 않고 그대로 저장하고, 재생할 때 animator.Play로 넣습니다.",
-          "verbatim": false
-        }
-      ],
-      "visuals": [
-        {
-          "kind": "code",
-          "n": 1,
-          "fp": "// TimeLineRecorder.cs:910 — 같은 상태면 시간 보간, 다르면 가까운 쪽 상태 사용"
-        }
-      ],
-      "from": {
-        "key": "anim-code",
-        "sectionPath": [
-          "5. 플레이를 어떻게 기록하고 되감을 것인가",
-          "5.3 애니메이션: 루프인지 단발인지는 Animator에 맡기기"
-        ],
-        "sig": [
-          "5.3 애니메이션: 루프인지 단발인지는 Animator에 맡기기|code|1|// TimeLineRecorder.cs:910 — 같은 상태면 시간 보간, 다르면 가까운 쪽 상태 사용"
-        ]
+        "key": "ts-pause",
+        "sectionPath": ["5. 플레이를 어떻게 기록하고 되감을 것인가", "5.6 트러블슈팅: 재생 중 일시정지해도 애니메이션이 계속 도는 문제"],
+        "sig": ["5.6 트러블슈팅: 재생 중 일시정지해도 애니메이션이 계속 도는 문제|table|1|단계|내용"]
       }
     },
     {
@@ -1337,28 +542,16 @@
       "chapter": "combat",
       "layout": "screens",
       "tab": "개요",
-      "title": {
-        "text": "6. 한 방의 손맛을 어떻게 살릴 것인가",
-        "verbatim": true
-      },
-      "lead": {
-        "text": "타격 연출(히트스탑 · 쉐이크 · 화면 슬래시 · 잔상)은 ScreenEffectManager 한 곳에서 호출합니다.",
-        "verbatim": true
-      },
-      "sectionPath": [
-        "6. 한 방의 손맛을 어떻게 살릴 것인가"
-      ],
+      "title": {"text": "6. 타격 연출과 카메라", "verbatim": true},
+      "lead": null,
+      "sectionPath": ["6. 타격 연출과 카메라"],
       "points": [
         {
-          "label": "처치",
-          "text": "공격이 맞으면 슬래시 · 히트스탑 · 쉐이크가 함께 나옵니다.",
-          "verbatim": false
+          "label": "한 방",
+          "text": "플레이어와 적 모두 한 번 맞으면 죽기 때문에, 맞히는 순간의 히트스탑 · 쉐이크 · 슬래시와 총알 반사로 그 한 방을 강조했습니다.",
+          "verbatim": true
         },
-        {
-          "label": "총알 반사",
-          "text": "타이밍을 맞춰 공격하면 총알의 소유자를 바꿔 되돌려 보냅니다.",
-          "verbatim": false
-        }
+        {"label": "기존 구조", "text": "판정 · 데미지는 기존 전투 구조를 그대로 쓰고, 팀킬 방지 · 무적 · 넉백 방향 · 총알 반사만 붙였습니다.", "verbatim": false}
       ],
       "visuals": [
         {
@@ -1366,164 +559,20 @@
           "src": "images/kill_slash.gif",
           "w": 800,
           "h": 450,
-          "caption": {
-            "text": "적 처치 시 슬래시 · 히트스탑 · 쉐이크",
-            "verbatim": true
-          }
+          "caption": {"text": "적 처치 시 슬래시 · 히트스탑 · 쉐이크", "verbatim": true}
         },
         {
           "kind": "image",
           "src": "images/parry.gif",
           "w": 800,
           "h": 450,
-          "caption": {
-            "text": "타이밍을 맞춰 총알 반사(패링)",
-            "verbatim": true
-          }
+          "caption": {"text": "타이밍을 맞춰 총알 반사(패링)", "verbatim": true}
         }
       ],
       "from": {
         "key": "combat-intro",
-        "sectionPath": [
-          "6. 한 방의 손맛을 어떻게 살릴 것인가"
-        ],
-        "sig": [
-          "6. 한 방의 손맛을 어떻게 살릴 것인가|image|images/kill_slash.gif|1",
-          "6. 한 방의 손맛을 어떻게 살릴 것인가|image|images/parry.gif|1"
-        ]
-      }
-    },
-    {
-      "key": "reflect",
-      "chapter": "combat",
-      "layout": "code",
-      "tab": "구현",
-      "title": {
-        "text": "6.1 총알 반사: 공격으로 총알을 되돌려 보내기",
-        "verbatim": true
-      },
-      "lead": {
-        "text": "플레이어 공격 판정에 총알이 닿으면 소유자를 플레이어로 바꾸고 방향을 반대로 돌립니다.",
-        "verbatim": true
-      },
-      "sectionPath": [
-        "6. 한 방의 손맛을 어떻게 살릴 것인가",
-        "6.1 총알 반사: 공격으로 총알을 되돌려 보내기"
-      ],
-      "points": [
-        {
-          "label": "타격감",
-          "text": "반사할 때도 히트스탑과 카메라 쉐이크를 불러 타격감을 줍니다.",
-          "verbatim": false
-        }
-      ],
-      "visuals": [
-        {
-          "kind": "code",
-          "n": 1,
-          "fp": "// Bullet.cs:110"
-        }
-      ],
-      "from": {
-        "key": "reflect",
-        "sectionPath": [
-          "6. 한 방의 손맛을 어떻게 살릴 것인가",
-          "6.1 총알 반사: 공격으로 총알을 되돌려 보내기"
-        ],
-        "sig": [
-          "6.1 총알 반사: 공격으로 총알을 되돌려 보내기|code|1|// Bullet.cs:110"
-        ]
-      }
-    },
-    {
-      "key": "hit-effect",
-      "chapter": "combat",
-      "layout": "code",
-      "tab": "구현",
-      "title": {
-        "text": "6.2 타격 연출: 한 곳에서 부르고, 재생 중에는 막기",
-        "verbatim": true
-      },
-      "lead": {
-        "text": "리플레이에서는 기록된 이펙트만 보여주고 새 연출은 만들지 않습니다.",
-        "verbatim": true
-      },
-      "sectionPath": [
-        "6. 한 방의 손맛을 어떻게 살릴 것인가",
-        "6.2 타격 연출: 한 곳에서 부르고, 재생 중에는 막기"
-      ],
-      "points": [
-        {
-          "label": "한 곳",
-          "text": "외부는 PlayAttackHitEffect 하나만 부르고, 슬래시 · 히트스탑 · 쉐이크가 한 번에 나옵니다.",
-          "verbatim": false
-        },
-        {
-          "label": "재생 중",
-          "text": "재생 · 역재생 중에는 새 연출을 만들지 않습니다.",
-          "verbatim": false
-        }
-      ],
-      "visuals": [
-        {
-          "kind": "code",
-          "n": 1,
-          "fp": "// ScreenEffectManager.cs — 외부는 이 함수 하나만 호출"
-        }
-      ],
-      "from": {
-        "key": "hit-effect",
-        "sectionPath": [
-          "6. 한 방의 손맛을 어떻게 살릴 것인가",
-          "6.2 타격 연출: 한 곳에서 부르고, 재생 중에는 막기"
-        ],
-        "sig": [
-          "6.2 타격 연출: 한 곳에서 부르고, 재생 중에는 막기|code|1|// ScreenEffectManager.cs — 외부는 이 함수 하나만 호출"
-        ]
-      }
-    },
-    {
-      "key": "effect-choice",
-      "chapter": "combat",
-      "layout": "full",
-      "tab": "선택",
-      "title": {
-        "text": "6.2.1 연출 호출을 어디에 둘 것인가",
-        "verbatim": true
-      },
-      "lead": null,
-      "sectionPath": [
-        "6. 한 방의 손맛을 어떻게 살릴 것인가",
-        "6.2.1 연출 호출을 어디에 둘 것인가"
-      ],
-      "points": [
-        {
-          "label": "이유",
-          "text": "호출하는 쪽은 한 줄이고, 재생 중 차단 같은 공통 규칙을 한 곳에서 처리합니다.",
-          "verbatim": false
-        },
-        {
-          "label": "옵서버 대신",
-          "text": "기존 옵서버는 데미지 · 회복 이벤트만 받아, 총알 반사처럼 데미지가 아닌 순간에도 연출을 부르려고 정적 API로 직접 호출했습니다.",
-          "verbatim": false
-        }
-      ],
-      "visuals": [
-        {
-          "kind": "table",
-          "n": 1,
-          "fp": "|[A] 연출마다 호출하는 쪽에서 직접 처리|[B] ScreenEffectManager 정적 API로 통합 ✓"
-        }
-      ],
-      "from": {
-        "key": "effect-choice",
-        "sectionPath": [
-          "6. 한 방의 손맛을 어떻게 살릴 것인가",
-          "6.2.1 연출 호출을 어디에 둘 것인가"
-        ],
-        "sig": [
-          "6.2.1 연출 호출을 어디에 둘 것인가|table|1||[A] 연출마다 호출하는 쪽에서 직접 처리|[B] ScreenEffectManager 정적 API로 통합 "
-        ]
+        "sectionPath": ["6. 한 방의 손맛을 어떻게 살릴 것인가"],
+        "sig": ["6. 한 방의 손맛을 어떻게 살릴 것인가|image|images/kill_slash.gif|1", "6. 한 방의 손맛을 어떻게 살릴 것인가|image|images/parry.gif|1"]
       }
     },
     {
@@ -1531,29 +580,13 @@
       "chapter": "combat",
       "layout": "visual",
       "tab": "구현",
-      "title": {
-        "text": "6.3 카메라: 데드존으로 따라가고 맵 밖은 보이지 않게",
-        "verbatim": true
-      },
-      "lead": {
-        "text": "화면 중앙 3×2 영역 안에서는 카메라가 움직이지 않고, 벗어난 만큼만 따라갑니다.",
-        "verbatim": true
-      },
-      "sectionPath": [
-        "6. 한 방의 손맛을 어떻게 살릴 것인가",
-        "6.3 카메라: 데드존으로 따라가고 맵 밖은 보이지 않게"
-      ],
+      "title": {"text": "6.2 데드존 카메라", "verbatim": true},
+      "lead": null,
+      "sectionPath": ["6. 타격 연출과 카메라", "6.2 데드존 카메라"],
       "points": [
-        {
-          "label": "맵 경계",
-          "text": "맵 타일 콜라이더 범위에서 화면 절반만큼 안쪽으로 좁혀 클램프해, 카메라 화면이 맵 밖으로 나가지 않습니다.",
-          "verbatim": false
-        },
-        {
-          "label": "튀지 않게",
-          "text": "목표점을 매번 맵 경계로 즉시 클램프해, 맵 끝에 서 있다가 반대로 움직여도 카메라가 튀지 않습니다.",
-          "verbatim": false
-        }
+        {"label": "데드존", "text": "화면 중앙 3×2 영역 안에서는 카메라가 움직이지 않고, 벗어난 만큼만 따라갑니다.", "verbatim": true},
+        {"label": "맵 경계", "text": "목표점을 매번 맵 경계 안으로 클램프해, 맵 끝에서도 맵 밖이 보이지 않게 했습니다.", "verbatim": false},
+        {"label": "직접 🧭", "text": "기존 SimpleFollowCamera는 맵 끝에서 맵 밖을 보여 줘서 직접 만들었습니다.", "verbatim": false}
       ],
       "visuals": [
         {
@@ -1567,123 +600,205 @@
           }
         }
       ],
+      "after": "combat-intro",
       "from": {
         "key": "deadzone",
-        "sectionPath": [
-          "6. 한 방의 손맛을 어떻게 살릴 것인가",
-          "6.3 카메라: 데드존으로 따라가고 맵 밖은 보이지 않게"
-        ],
-        "sig": [
-          "6.3 카메라: 데드존으로 따라가고 맵 밖은 보이지 않게|image|images/camera_bounds.png|1"
-        ]
+        "sectionPath": ["6. 한 방의 손맛을 어떻게 살릴 것인가", "6.3 카메라: 데드존으로 따라가고 맵 밖은 보이지 않게"],
+        "sig": ["6.3 카메라: 데드존으로 따라가고 맵 밖은 보이지 않게|image|images/camera_bounds.png|1"]
+      }
+    },
+    {
+      "key": "perf",
+      "chapter": "result",
+      "layout": "visual",
+      "tab": "결과",
+      "title": {"text": "7.1 결과 — 녹화 비용과 fps", "verbatim": false},
+      "lead": null,
+      "sectionPath": ["7. 회고", "7.1 결과"],
+      "points": [
+        {"label": "fps", "text": "녹화 · 역재생 · 리플레이 모두 180 fps(수직 동기화 상한) 아래로 내려가지 않았습니다.", "verbatim": false},
+        {"label": "메모리", "text": "100초(5,000틱) 녹화로 Mono 힙이 약 8.5 MB 늘었습니다.", "verbatim": false}
+      ],
+      "visuals": [
+        {
+          "kind": "image",
+          "src": "images/perf_overlay.png",
+          "w": 735,
+          "h": 264,
+          "caption": {
+            "text": "빌드 화면 왼쪽 위에 띄운 측정 표시 — 지금 fps · 녹화 틱 · Mono 메모리와, 구간이 끝날 때마다 남긴 평균 / 최저 fps · 틱 · 메모리 기록 (아래 표의 네 줄)",
+            "verbatim": true
+          }
+        },
+        {"kind": "table", "n": 2, "fp": "상황|시간|기록된 틱|Mono 메모리|평균 / 최저 fps"}
+      ],
+      "arrange": "split"
+    },
+    {
+      "key": "ai-way",
+      "chapter": "result",
+      "layout": "full",
+      "tab": "",
+      "title": {"text": "7.2 AI와 일한 방식", "verbatim": true},
+      "lead": {"text": "그 밖의 기능도 각 절의 고민과 선택(🧭)은 AI와 대안을 주고받으며 비교했고, 고르는 것은 제가 했습니다.", "verbatim": true},
+      "sectionPath": ["7. 회고", "7.2 AI와 일한 방식"],
+      "points": [],
+      "visuals": [{"kind": "table", "n": 1, "fp": "기능|AI와 함께 한 것|제가 한 것"}],
+      "after": "perf"
+    }
+  ],
+  "hide": [
+    {
+      "key": "move-struct",
+      "from": {
+        "key": "move-struct",
+        "sectionPath": ["3. 플레이어의 이동을 어떻게 구현할 것인가"],
+        "sig": ["3. 플레이어의 이동을 어떻게 구현할 것인가|mermaid|1|flowchart TB"]
+      }
+    },
+    {
+      "key": "stair-code",
+      "from": {
+        "key": "stair-code",
+        "sectionPath": ["3. 플레이어의 이동을 어떻게 구현할 것인가", "3.2 계단 step"],
+        "sig": ["3.2 계단 step|code|1|// CharacterController2D.cs:467 — 위로 조금씩 올려 보며 앞이 비는 높이를 찾음"]
+      }
+    },
+    {
+      "key": "stair-choice",
+      "from": {
+        "key": "stair-choice",
+        "sectionPath": ["3. 플레이어의 이동을 어떻게 구현할 것인가", "3.2.1 대각선(계단) 이동을 어떻게 처리할 것인가"],
+        "sig": ["3.2.1 대각선(계단) 이동을 어떻게 처리할 것인가|table|1||[A] 충돌 normal 방향으로 이동|[B] step 방식 ✓"]
+      }
+    },
+    {
+      "key": "platform-choice",
+      "from": {
+        "key": "platform-choice",
+        "sectionPath": ["3. 플레이어의 이동을 어떻게 구현할 것인가", "3.4.1 플랫폼 통과를 어떻게 할 것인가"],
+        "sig": ["3.4.1 플랫폼 통과를 어떻게 할 것인가|table|1||[A] 플랫폼 콜라이더를 잠깐 끄기|[B] 플레이어의 충돌 LayerMask 교체 ✓"]
+      }
+    },
+    {
+      "key": "chronos-choice",
+      "from": {
+        "key": "chronos-choice",
+        "sectionPath": ["4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가", "4.1.1 시간 감속을 어떻게 구현할 것인가"],
+        "sig": ["4.1.1 시간 감속을 어떻게 구현할 것인가|table|1||[A] 대상마다 속도 배율 적용|[B] Time.timeScale 변경 ✓"]
+      }
+    },
+    {
+      "key": "hitstop-code",
+      "from": {
+        "key": "hitstop-code",
+        "sectionPath": ["4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가", "4.2 히트스탑: 멈췄다가 크로노스 상태로 돌아오기"],
+        "sig": ["4.2 히트스탑: 멈췄다가 크로노스 상태로 돌아오기|code|2|// ScreenEffectManager.cs:248"]
+      }
+    },
+    {
+      "key": "hitstop-choice",
+      "from": {
+        "key": "hitstop-choice",
+        "sectionPath": ["4. 시간을 늦추고 멈추는 연출을 어떻게 만들 것인가", "4.2.1 히트스탑이 끝나면 어떤 값으로 돌아갈 것인가"],
+        "sig": ["4.2.1 히트스탑이 끝나면 어떤 값으로 돌아갈 것인가|table|1||[A] 히트스탑 전에 저장해 둔 값|[B] 그 순간 크로노스의 목표 값 ✓"]
+      }
+    },
+    {
+      "key": "record-code",
+      "from": {
+        "key": "record-code",
+        "sectionPath": ["5. 플레이를 어떻게 기록하고 되감을 것인가", "5.1 기록: 등록된 대상만 매 틱 상태를 저장하기"],
+        "sig": ["5.1 기록: 등록된 대상만 매 틱 상태를 저장하기|code|1|// TimeLineRecorder.cs:438"]
+      }
+    },
+    {
+      "key": "record-choice",
+      "from": {
+        "key": "record-choice",
+        "sectionPath": ["5. 플레이를 어떻게 기록하고 되감을 것인가", "5.1.1 무엇을 기록할 것인가"],
+        "sig": ["5.1.1 무엇을 기록할 것인가|table|1||[A] 입력만 기록하고 재시뮬레이션|[B] 매 틱 상태(위치 · 방향 · 애니메이션) 스냅샷 ✓"]
+      }
+    },
+    {
+      "key": "interp-code",
+      "from": {
+        "key": "interp-code",
+        "sectionPath": ["5. 플레이를 어떻게 기록하고 되감을 것인가", "5.2 재생: 틱 사이를 보간해 부드럽게"],
+        "sig": ["5.2 재생: 틱 사이를 보간해 부드럽게|code|1|// TimeLineRecorder.cs:669"]
+      }
+    },
+    {
+      "key": "tick-choice",
+      "from": {
+        "key": "tick-choice",
+        "sectionPath": ["5. 플레이를 어떻게 기록하고 되감을 것인가", "5.2.1 기록 단위와 재생 단위를 같게 할 것인가"],
+        "sig": ["5.2.1 기록 단위와 재생 단위를 같게 할 것인가|table|1||[A] 기록 · 재생 모두 FixedUpdate 틱 단위|[B] 기록은 틱, 재생은 Update + 보간 "]
+      }
+    },
+    {
+      "key": "anim-code",
+      "from": {
+        "key": "anim-code",
+        "sectionPath": ["5. 플레이를 어떻게 기록하고 되감을 것인가", "5.3 애니메이션: 루프인지 단발인지는 Animator에 맡기기"],
+        "sig": ["5.3 애니메이션: 루프인지 단발인지는 Animator에 맡기기|code|1|// TimeLineRecorder.cs:910 — 같은 상태면 시간 보간, 다르면 가까운 쪽 상태 사용"]
+      }
+    },
+    {
+      "key": "troubleshoot",
+      "from": {
+        "key": "troubleshoot",
+        "sectionPath": ["5. 플레이를 어떻게 기록하고 되감을 것인가", "5.5 트러블슈팅: 역재생 시 캐릭터가 반대 방향을 보는 문제"],
+        "sig": ["5.5 트러블슈팅: 역재생 시 캐릭터가 반대 방향을 보는 문제|table|1|단계|내용"]
+      }
+    },
+    {
+      "key": "ts-dead",
+      "from": {
+        "key": "ts-dead",
+        "sectionPath": ["5. 플레이를 어떻게 기록하고 되감을 것인가", "5.7 트러블슈팅: 역재생에서 서 있던 구간까지 사망 모션이 나오는 문제"],
+        "sig": ["5.7 트러블슈팅: 역재생에서 서 있던 구간까지 사망 모션이 나오는 문제|table|1|단계|내용"]
+      }
+    },
+    {
+      "key": "reflect",
+      "from": {
+        "key": "reflect",
+        "sectionPath": ["6. 한 방의 손맛을 어떻게 살릴 것인가", "6.1 총알 반사: 공격으로 총알을 되돌려 보내기"],
+        "sig": ["6.1 총알 반사: 공격으로 총알을 되돌려 보내기|code|1|// Bullet.cs:110"]
+      }
+    },
+    {
+      "key": "hit-effect",
+      "from": {
+        "key": "hit-effect",
+        "sectionPath": ["6. 한 방의 손맛을 어떻게 살릴 것인가", "6.2 타격 연출: 한 곳에서 부르고, 재생 중에는 막기"],
+        "sig": ["6.2 타격 연출: 한 곳에서 부르고, 재생 중에는 막기|code|1|// ScreenEffectManager.cs — 외부는 이 함수 하나만 호출"]
+      }
+    },
+    {
+      "key": "effect-choice",
+      "from": {
+        "key": "effect-choice",
+        "sectionPath": ["6. 한 방의 손맛을 어떻게 살릴 것인가", "6.2.1 연출 호출을 어디에 둘 것인가"],
+        "sig": ["6.2.1 연출 호출을 어디에 둘 것인가|table|1||[A] 연출마다 호출하는 쪽에서 직접 처리|[B] ScreenEffectManager 정적 API로 통합 "]
       }
     },
     {
       "key": "camera-choice",
-      "chapter": "combat",
-      "layout": "full",
-      "tab": "선택",
-      "title": {
-        "text": "6.3.1 카메라를 어떻게 따라가게 할 것인가",
-        "verbatim": true
-      },
-      "lead": null,
-      "sectionPath": [
-        "6. 한 방의 손맛을 어떻게 살릴 것인가",
-        "6.3.1 카메라를 어떻게 따라가게 할 것인가"
-      ],
-      "points": [
-        {
-          "label": "결정",
-          "text": "이 게임에 맞는 추적 방식을 쓰면서, 쉐이크가 적용돼도 맵 밖이 보이지 않게 막으려고 직접 만들었습니다.",
-          "verbatim": false
-        }
-      ],
-      "visuals": [
-        {
-          "kind": "table",
-          "n": 1,
-          "fp": "|[A] SimpleFollowCamera (단순 추적)|[B] 데드존 + 맵 경계 제한 CameraController 직접 작성 ✓"
-        }
-      ],
       "from": {
         "key": "camera-choice",
-        "sectionPath": [
-          "6. 한 방의 손맛을 어떻게 살릴 것인가",
-          "6.3.1 카메라를 어떻게 따라가게 할 것인가"
-        ],
-        "sig": [
-          "6.3.1 카메라를 어떻게 따라가게 할 것인가|table|1||[A] SimpleFollowCamera (단순 추적)|[B] 데드존 + 맵 경계 제한 CameraCont"
-        ]
+        "sectionPath": ["6. 한 방의 손맛을 어떻게 살릴 것인가", "6.3.1 카메라를 어떻게 따라가게 할 것인가"],
+        "sig": ["6.3.1 카메라를 어떻게 따라가게 할 것인가|table|1||[A] SimpleFollowCamera (단순 추적)|[B] 데드존 + 맵 경계 제한 CameraCont"]
       }
     },
     {
-      "key": "game-flow",
-      "chapter": "overview",
-      "layout": "visual",
-      "tab": "개요",
-      "title": {
-        "text": "1.1 게임 소개",
-        "verbatim": true
-      },
-      "lead": {
-        "text": "게임 흐름",
-        "verbatim": true
-      },
-      "sectionPath": [
-        "1. 개요",
-        "1.1 게임 소개"
-      ],
-      "points": [
-        {
-          "label": "클리어",
-          "text": "모든 적을 처치하고 출구에 닿으면 정방향으로 재생한 뒤 다음 스테이지(총 8개)로 넘어갑니다.",
-          "verbatim": false
-        },
-        {
-          "label": "사망",
-          "text": "맞거나 시간 초과(100초)가 되면 9배속으로 되감은 뒤 같은 스테이지를 다시 시작합니다.",
-          "verbatim": false
-        }
-      ],
-      "visuals": [
-        {
-          "kind": "mermaid",
-          "n": 1,
-          "fp": "flowchart TB"
-        }
-      ],
-      "after": "what",
-      "group": "split-game-flow"
-    },
-    {
-      "key": "roll-steps",
-      "chapter": "move",
-      "layout": "full",
-      "tab": "구현",
-      "title": {
-        "text": "3.3 구르기 분할 step",
-        "verbatim": true
-      },
-      "lead": {
-        "text": "한 틱 이동량을 계단 높이 단위로 나눠, 조각마다 올라가기 · 수평 이동 · 내려가는 계단에 붙기를 차례로 시도합니다.",
-        "verbatim": false
-      },
-      "sectionPath": [
-        "3. 플레이어의 이동을 어떻게 구현할 것인가",
-        "3.3 구르기 분할 step"
-      ],
-      "points": [],
-      "visuals": [
-        {
-          "kind": "code",
-          "n": 1,
-          "fp": "// CharacterController2D.cs:519 — 한 틱 이동량을 계단 높이 단위로 분할"
-        }
-      ],
-      "after": "roll-code",
-      "group": "split-roll-steps"
+      "key": "state-flow",
+      "from": {
+        "key": "state-flow",
+        "sectionPath": ["2. 시간을 다루는 기능들이 서로 깨지지 않게 하려면", "2.1 게임 상태마다 시간과 녹화기를 함께 바꾸기"],
+        "sig": ["2.1 게임 상태마다 시간과 녹화기를 함께 바꾸기|mermaid|1|stateDiagram-v2"]
+      }
     }
-  ],
-  "hide": []
+  ]
 }
