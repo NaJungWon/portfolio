@@ -27,6 +27,7 @@
   const NOTE_RE = /^\s*note\s+for\s+(\S+)\s+"([^"]*)"\s*$/gim;
   // %% 선 메모: A -> B: 글 — 선 옆에 띄우는 메모 상자(격자 줄 간격도 그 높이만큼 벌림)
   //   `%% 선 메모 왼쪽: A -> B: 글`이면 선 글자 왼쪽에(기본은 오른쪽)
+  const SELF_RE = /^(.+)-cyclic-special-(1|mid|2)$/;                      // 제자리로 도는 화살표(A --> A)를 Mermaid가 나눠 그린 세 토막의 id
   const MEMO_RE = /^\s*%%\s*(?:선\s*메모|edge-note)(?:\s+(왼쪽|오른쪽|left|right))?\s*:\s*(\S+)\s*->\s*(\S+)\s*:\s*(.+?)\s*$/gim;
   const mmdText = (src = '') => (/^\s*classDiagram/m.test(src) ? src.replace(NOTE_RE, '%% (메모는 칸 위에 따로 그림)') : src);
   // 시퀀스 그림: alt·opt·loop 구간 이름([조건]) 아래에 Mermaid가 남기는 빈 줄을 줄여, 이름과 첫 항목 사이를 GAP px로.
@@ -211,7 +212,7 @@
       const overlapCol = (a, b) => a.ci <= b.ce && b.ci <= a.ce;
       const overlapRow = (a, b) => a.ri <= b.re && b.ri <= a.re;
       if (cell.size < 2) return;
-      const labs = [...svg.querySelectorAll('g.edgeLabel')].filter((g) => g.textContent.trim()).map((g) => {
+      const labs = [...svg.querySelectorAll('g.edgeLabel')].filter((g) => g.textContent.trim() && !SELF_RE.test(g.querySelector('[data-id]')?.getAttribute('data-id') || '')).map((g) => {   // 제자리 화살표 글자는 칸 옆에 놓이므로 줄·열 간격에 넣지 않음
         let w = 0, h = 0;
         try { const r = g.getBBox(); w = r.width; h = r.height; } catch { /* 숨긴 상자 */ }
         const fo = g.querySelector('foreignObject');
@@ -547,6 +548,7 @@
     const edges = [];
     svg.querySelectorAll('path[data-points]').forEach((p) => {
       if (p.classList.contains('edge-thickness-invisible')) return;           // ~~~ 보이지 않는 연결은 그대로
+      if (SELF_RE.test(p.id)) return;                                       // 제자리로 도는 화살표 토막은 맨 끝에서 따로(drawSelfLoops)
       let pts; try { pts = JSON.parse(atob(p.getAttribute('data-points'))); } catch { return; }
       if (!pts || pts.length < 2) return;
       const m = toRoot(p);
@@ -1106,6 +1108,79 @@
       g.append(rect, text);
       svg.append(link, g);
       labelBoxes.push({ l, t: top, r: l + w, b: top + h });
+    }
+    drawSelfLoops();
+    // 제자리로 도는 화살표(A --> A): Mermaid는 세 토막(<칸>-cyclic-special-1 · mid · 2)으로 칸에서 멀리 돌아 그리고,
+    //   %% 격자 등으로 칸을 옮겨도 그 토막은 제자리에 남음 → 옮긴 칸의 한 변에 붙은 작은 고리로 다시 그림(글자는 고리 바깥 옆).
+    //   변은 %% 화살표 A -> A: 나감=왼쪽|오른쪽|위|아래 (없으면 오른쪽), 고리 폭은 거리=N(기본 24px)
+    function drawSelfLoops() {
+      const sets = new Map();
+      svg.querySelectorAll('path[id]').forEach((p) => {
+        const m = SELF_RE.exec(p.id);
+        if (!m) return;
+        if (!sets.has(m[1])) sets.set(m[1], {});
+        sets.get(m[1])[m[2]] = p;
+      });
+      sets.forEach((part, name) => {
+        const last = part['2'] || part.mid || part['1'];
+        const bx = boxes.find((b) => !b.cluster && b.name === name);
+        if (!bx || !last) return;
+        const rule = rules.find((r) => r.from === name && r.to === name) || {};
+        const gap = rule.gap || 24;
+        const lab = [part.mid, part['1'], part['2']].map((p) => p && svg.querySelector(`.edgeLabels [data-id="${CSS.escape(p.id)}"]`)?.closest('g.edgeLabel')).find((g) => g && g.textContent.trim());
+        let w = 0, h = 0;
+        if (lab) try { const r = lab.getBBox(); w = r.width; h = r.height; } catch { /* 숨긴 상자 */ }
+        const cx = (bx.l + bx.r) / 2, cy = (bx.t + bx.b) / 2;
+        // 변 s에 붙인 고리 자리와, 글자 자리 lp(out = 고리 바깥 · lo = 고리의 왼쪽(위) 옆 · hi = 오른쪽(아래) 옆)
+        const geo = (s, lp) => {
+          const v = s === 't' || s === 'b', sign = s === 'r' || s === 'b' ? 1 : -1;   // 위·아래 변이면 고리가 세로로 나감
+          const len = v ? bx.r - bx.l : bx.b - bx.t, off = Math.min(14, len / 4);    // 변 가운데에서 off만큼 떨어진 두 점
+          const edge = s === 'r' ? bx.r : s === 'l' ? bx.l : s === 'b' ? bx.b : bx.t, far = edge + sign * gap;
+          const mid = v ? cx : cy, midOut = (edge + far) / 2;               // 고리 가운데(변을 따라) · 고리 깊이의 가운데
+          const along = lp === 'out' ? mid : lp === 'lo' ? mid - off - 6 - (v ? w : h) / 2 : mid + off + 6 + (v ? w : h) / 2;
+          const across = lp === 'out' ? far + sign * (8 + (v ? h : w) / 2) : midOut + sign * Math.max(0, (v ? h : w) / 2 - gap / 2 + 6);   // 옆 자리: 칸 변에서 6px 띄움
+          const at = v ? { x: along, y: across } : { x: across, y: along };
+          const loop = v ? { l: cx - off, r: cx + off, t: Math.min(edge, far), b: Math.max(edge, far) } : { l: Math.min(edge, far), r: Math.max(edge, far), t: cy - off, b: cy + off };
+          const lab2 = { l: at.x - w / 2, r: at.x + w / 2, t: at.y - h / 2, b: at.y + h / 2 };
+          return { v, sign, off, edge, far, at, rects: lab ? [loop, lab2] : [loop] };
+        };
+        // 고리 + 글자가 다른 칸 · 선 · 글자와 겹치는 수
+        const hitsAt = (a) => boxes.filter((b) => !b.cluster && (b !== bx || a.lab) && a.r > b.l - 4 && a.l < b.r + 4 && a.b > b.t - 4 && a.t < b.b + 4).length
+          + edges.filter((e) => !e.skip && e.poly).reduce((n, e) => n + e.poly.slice(1).filter((c, i) => {
+            const p = e.poly[i];
+            return Math.max(p.x, c.x) > a.l - 3 && Math.min(p.x, c.x) < a.r + 3 && Math.max(p.y, c.y) > a.t - 3 && Math.min(p.y, c.y) < a.b + 3;
+          }).length, 0)
+          + labelBoxes.filter((o) => !SELF_RE.test(o.id || '') && a.r > o.l - 4 && a.l < o.r + 4 && a.b > o.t - 4 && a.t < o.b + 4).length;
+        const clash = (g) => g.rects.reduce((n, r, i) => n + hitsAt({ ...r, lab: i === 1 }), 0);
+        // 변: %% 화살표 A -> A: 나감=… 이 있으면 그 변. 없으면 오른쪽 · 아래 · 위 · 왼쪽 순, 글자는 바깥 · 옆 순으로 겹침이 가장 적은 조합
+        const cands = (rule.out ? [rule.out] : ['r', 'b', 't', 'l']).flatMap((k) => ['out', 'lo', 'hi'].map((lp) => [k, lp]));
+        const [s, lp] = cands.map((c) => [c, clash(geo(...c))]).sort((p, q) => p[1] - q[1])[0][0];
+        const { v, sign, off, edge, far, at } = geo(s, lp);
+        const pt = (along, across) => (v ? { x: along, y: across } : { x: across, y: along });
+        const mid = v ? cx : cy;
+        // 화살촉 몫: Mermaid가 마지막 토막 끝을 줄인 길이(marker-end)
+        let trim = 0;
+        try {
+          const dp = JSON.parse(atob(last.getAttribute('data-points') || ''));
+          const nums = (last.getAttribute('d') || '').match(/-?\d*\.?\d+(?:e-?\d+)?/gi)?.map(Number) || [];
+          if (dp?.length && nums.length >= 2) { const lm = toRoot(last), a = tp(lm, { x: nums.at(-2), y: nums.at(-1) }), b = tp(lm, dp.at(-1)); trim = Math.hypot(a.x - b.x, a.y - b.y); if (trim > 30) trim = 0; }
+        } catch { /* data-points 없음 */ }
+        const poly = [pt(mid - off, edge), pt(mid - off, far), pt(mid + off, far), pt(mid + off, edge + sign * trim)];
+        const inv = toRoot(last).inverse(), L = (q) => { const r = tp(inv, q); return `${r.x.toFixed(2)},${r.y.toFixed(2)}`; };
+        let d = `M${L(poly[0])}`;
+        for (let i = 1; i < poly.length - 1; i++) {
+          const a = poly[i - 1], c = poly[i], n = poly[i + 1];
+          const l1 = Math.hypot(c.x - a.x, c.y - a.y), l2 = Math.hypot(n.x - c.x, n.y - c.y), r = Math.min(8, l1 / 2, l2 / 2);
+          d += ` L${L({ x: c.x - (c.x - a.x) / l1 * r, y: c.y - (c.y - a.y) / l1 * r })} Q${L(c)} ${L({ x: c.x + (n.x - c.x) / l2 * r, y: c.y + (n.y - c.y) / l2 * r })}`;
+        }
+        last.setAttribute('d', `${d} L${L(poly.at(-1))}`);
+        [part['1'], part.mid, part['2']].forEach((p) => { if (p && p !== last) p.style.display = 'none'; });
+        edges.push({ skip: false, poly });                                  // 그림 영역 넓히기에 넣음
+        if (!lab) return;
+        const q = tp(toRoot(lab.parentNode).inverse(), at);
+        lab.setAttribute('transform', `translate(${q.x.toFixed(2)}, ${q.y.toFixed(2)})`);
+        labelBoxes.push({ l: at.x - w / 2, r: at.x + w / 2, t: at.y - h / 2, b: at.y + h / 2 });
+      });
     }
     // 바깥으로 돌아간 선·글자가 그림 테두리 밖으로 나가면 그림 영역을 넓힘
     const vb = svg.viewBox?.baseVal;
