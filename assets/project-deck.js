@@ -118,7 +118,14 @@
     for (const el of els) {
       if (svgCache.has(el)) continue;
       const text = el.querySelector('code')?.textContent || '';
-      try { const { svg } = await mermaid.render(`dk-mmd-${n++}`, text, mmdHost); svgCache.set(el, { svg }); }
+      try {
+        const { svg } = await mermaid.render(`dk-mmd-${n++}`, PF.mmdText ? PF.mmdText(text) : text, mmdHost);
+        if (PF.orthoEdges) {                                                // 다이어그램 엔진(assets/diagram-tidy.js): 상세 문서와 같은 직각 화살표
+          mmdHost.innerHTML = svg;
+          PF.orthoEdges(mmdHost.querySelector('svg'), text);
+          svgCache.set(el, { svg: mmdHost.innerHTML });
+        } else svgCache.set(el, { svg });
+      }
       catch (err) { svgCache.set(el, { error: String(err?.message || err).split('\n')[0].slice(0, 120) }); info.errors.push('mermaid: ' + (err?.message || err)); }
     }
     mmdHost.replaceChildren();

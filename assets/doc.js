@@ -169,9 +169,10 @@
       const fig = document.createElement('figure');
       fig.className = 'mmd';
       const div = document.createElement('div');
-      div.className = 'mermaid';
+      div.className = 'mermaid mmd-screen';                               // mmd-screen: /portfolio-diagram 도구가 그림을 찾는 이름
       div.id = `mmd-${n++}`;
-      div.textContent = code.textContent;
+      div.textContent = PF.mmdText ? PF.mmdText(code.textContent) : code.textContent;   // 다이어그램 엔진: classDiagram note for 줄은 빼고 그림(메모는 엔진이 칸 위에)
+      fig._mmdSrc = code.textContent;                                      // 원문 보관(엔진이 %% 격자·%% 화살표 줄을 읽음)
       const acc = /^\s*accTitle\s*:\s*(.+)$/m.exec(code.textContent)?.[1]?.trim();
       fig.dataset.label = acc || PF.t('doc.diagram-n', { n });
       fig.appendChild(div);
@@ -217,6 +218,7 @@
     figs.forEach((fig) => {
       const svg = fig.querySelector('.mermaid svg');
       if (!svg) { fig.querySelector('.mermaid')?.classList.add('pf-mmd-error'); return; }
+      PF.orthoEdges?.(svg, fig._mmdSrc);                                   // 다이어그램 엔진(assets/diagram-tidy.js): 화살표를 수직·수평 직선으로. 엔진이 없으면 건너뜀
       const natural = svg.viewBox?.baseVal?.width || parseFloat(svg.style.maxWidth) || 0;
       if (natural) { svg.setAttribute('width', String(Math.ceil(natural))); svg.style.maxWidth = '100%'; svg.removeAttribute('height'); }
       svg.dataset.naturalWidth = String(natural);
