@@ -567,7 +567,18 @@
             "verbatim": false
           }
         ],
-        "visuals": [{"kind": "mermaid", "n": 1, "fp": "sequenceDiagram"}],
+        "visuals": [
+          {
+            "kind": "image",
+            "src": "images/chronos_timescale.png",
+            "w": 1600,
+            "h": 960,
+            "caption": {
+              "text": "크로노스와 히트스탑이 겹칠 때 Time.timeScale — lShift로 0.25배 → 적중 시 0(히트스탑 0.08초) → 크로노스의 목표 값 0.25로 복귀 → 떼면 1",
+              "verbatim": true
+            }
+          }
+        ],
         "edited": true
       },
       {
@@ -1282,6 +1293,6 @@
         "visuals": [{"kind": "table", "n": 1, "fp": "|[A] SimpleFollowCamera (단순 추적)|[B] 데드존 + 맵 경계 제한 CameraController 직접 작성 ✓"}]
       }
     ],
-    "applied": "3929af772dab8804"
+    "applied": "108cdef3991d4ad7"
   }
 }
